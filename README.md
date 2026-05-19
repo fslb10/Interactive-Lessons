@@ -61,6 +61,7 @@ This repository hosts HRE4M1 lesson apps through GitHub Pages.
 
 ## Unit 4 lesson URLs
 
+- Unit 4 Intro: `https://fslb10.github.io/Interactive-Lessons/Unit-4/apps/4-0-vocation-and-love-intro.html`
 - Lesson 4.1: `https://fslb10.github.io/Interactive-Lessons/Unit-4/apps/4-1-vocation.html`
 - Lesson 4.2: `https://fslb10.github.io/Interactive-Lessons/Unit-4/apps/4-2-what-is-love.html`
 - Lesson 4.3: `https://fslb10.github.io/Interactive-Lessons/Unit-4/apps/4-3-christian-relationships.html`
