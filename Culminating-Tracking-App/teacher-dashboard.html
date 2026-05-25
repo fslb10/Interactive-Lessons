@@ -111,6 +111,16 @@
     background: var(--green);
   }
 
+  button.danger {
+    background: #991b1b;
+  }
+
+  button.small {
+    min-height: 34px;
+    padding: 7px 10px;
+    font-size: 0.82rem;
+  }
+
   button:disabled {
     cursor: wait;
     opacity: 0.65;
@@ -314,10 +324,11 @@
           <th>Updated</th>
           <th>Words</th>
           <th>Responses</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody id="rows">
-        <tr><td colspan="7" class="empty">No responses loaded yet.</td></tr>
+        <tr><td colspan="8" class="empty">No responses loaded yet.</td></tr>
       </tbody>
     </table>
   </section>
@@ -381,7 +392,7 @@ function renderRows() {
   els.jsonButton.disabled = rows.length === 0;
 
   if (!rows.length) {
-    els.rows.innerHTML = '<tr><td colspan="7" class="empty">No tracker responses found.</td></tr>';
+    els.rows.innerHTML = '<tr><td colspan="8" class="empty">No tracker responses found.</td></tr>';
     return;
   }
 
@@ -406,6 +417,9 @@ function renderRows() {
             <summary>${responseEntries(row).length} response sections</summary>
             <div class="responses">${responses || '<div class="empty">No written responses.</div>'}</div>
           </details>
+        </td>
+        <td data-label="Actions">
+          <button class="danger small" type="button" data-delete-id="${esc(row.id)}" data-delete-name="${esc(row.student_name)}">Delete</button>
         </td>
       </tr>
     `;
@@ -445,6 +459,40 @@ async function loadResponses() {
     setStatus(error.message === 'Unauthorized' ? 'Access code was not accepted.' : error.message, 'error');
   } finally {
     els.loadButton.disabled = false;
+  }
+}
+
+async function deleteRow(id, studentName) {
+  const key = els.accessKey.value.trim();
+  if (!key) {
+    setStatus('Enter the teacher access code first.', 'error');
+    return;
+  }
+
+  const label = studentName ? `${studentName}'s tracker row` : 'this tracker row';
+  if (!confirm(`Delete ${label}? This permanently removes the selected draft/submission from Supabase.`)) {
+    return;
+  }
+
+  setStatus('Deleting row...', 'info');
+  try {
+    const url = new URL(ENDPOINT);
+    url.searchParams.set('id', id);
+    const response = await fetch(url.toString(), {
+      method: 'DELETE',
+      headers: { 'x-teacher-key': key },
+    });
+    const body = await response.json().catch(() => ({}));
+
+    if (!response.ok || !body.success) {
+      throw new Error(body.error || 'Could not delete row');
+    }
+
+    rows = rows.filter(row => row.id !== id);
+    renderRows();
+    setStatus('Tracker row deleted.', 'success');
+  } catch (error) {
+    setStatus(error.message === 'Unauthorized' ? 'Access code was not accepted.' : error.message, 'error');
   }
 }
 
@@ -493,6 +541,11 @@ function stamp() {
 }
 
 els.loadButton.addEventListener('click', loadResponses);
+els.rows.addEventListener('click', event => {
+  const button = event.target.closest('button[data-delete-id]');
+  if (!button) return;
+  deleteRow(button.dataset.deleteId, button.dataset.deleteName || '');
+});
 els.statusFilter.addEventListener('change', () => {
   if (rows.length || els.accessKey.value.trim()) loadResponses();
 });

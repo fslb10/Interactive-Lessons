@@ -13,7 +13,7 @@ function corsHeaders(req: Request) {
   return {
     "Access-Control-Allow-Origin": allowOrigin,
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-teacher-key",
-    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, DELETE, OPTIONS",
     "Access-Control-Max-Age": "86400",
     "Vary": "Origin",
   };
@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders(req) });
   }
 
-  if (req.method !== "GET") {
+  if (req.method !== "GET" && req.method !== "DELETE") {
     return json(req, { success: false, error: "Method not allowed" }, 405);
   }
 
@@ -56,14 +56,35 @@ Deno.serve(async (req) => {
     return json(req, { success: false, error: "Server is not configured" }, 500);
   }
 
-  const url = new URL(req.url);
-  const status = url.searchParams.get("status");
-  const limitParam = Number(url.searchParams.get("limit") || "500");
-  const limit = Number.isFinite(limitParam) ? Math.max(1, Math.min(1000, limitParam)) : 500;
-
   const supabase = createClient(supabaseUrl, serviceRoleKey, {
     auth: { persistSession: false },
   });
+
+  const url = new URL(req.url);
+
+  if (req.method === "DELETE") {
+    const id = url.searchParams.get("id") || "";
+    if (!id) {
+      return json(req, { success: false, error: "Missing submission id" }, 400);
+    }
+
+    const { error } = await supabase
+      .from("lesson_submissions")
+      .delete()
+      .eq("id", id)
+      .eq("lesson", "Culminating Tracking App");
+
+    if (error) {
+      console.error("culminating tracker delete failed", error);
+      return json(req, { success: false, error: error.message }, 500);
+    }
+
+    return json(req, { success: true, deleted_id: id });
+  }
+
+  const status = url.searchParams.get("status");
+  const limitParam = Number(url.searchParams.get("limit") || "500");
+  const limit = Number.isFinite(limitParam) ? Math.max(1, Math.min(1000, limitParam)) : 500;
 
   let query = supabase
     .from("lesson_submissions")
