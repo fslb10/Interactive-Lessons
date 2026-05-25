@@ -1,6 +1,14 @@
 (function () {
   const ENDPOINT =
-    "https://okieanoysldlblqdtrau.supabase.co/functions/v1/lesson-submission";
+    "https://ttsxwogjhetzumnoaxey.supabase.co/functions/v1/lesson-submission";
+  const AUTOSAVE_DELAY_MS = 12000;
+  const AUTOSAVE_INTERVAL_MS = 60000;
+
+  let draftTimer = null;
+  let draftInFlight = false;
+  let draftQueued = false;
+  let lastDraftAt = 0;
+  let lastDraftBody = "";
 
   function getGlobal(name) {
     try {
@@ -30,6 +38,15 @@
   }
 
   function getLessonMeta() {
+    const explicit = getGlobal("LESSON_SUBMISSION_META") || getGlobal("LESSON_META");
+    if (explicit && typeof explicit === "object") {
+      return {
+        unit: text(explicit.unit),
+        lesson: text(explicit.lesson),
+        lesson_title: text(explicit.lesson_title || explicit.title),
+      };
+    }
+
     const path = window.location.pathname;
     const match = path.match(/\/(Unit-\d+|unit-\d+)\/apps\/(\d+)-(\d+)-[^/]+\.html$/i);
     const unitNumber = match ? match[1].match(/\d+/)[0] : "";
@@ -178,6 +195,29 @@
     };
   }
 
+  function hasStudentIdentity(payload) {
+    return Boolean(payload.student_name && payload.student_email);
+  }
+
+  function saveToBrowser() {
+    const saved = callGlobal("saveLocal");
+    if (saved === undefined) {
+      callGlobal("persistInputsToState");
+    }
+  }
+
+  function markSavedLocally(message) {
+    callGlobal("markSaveButtonsSaved");
+    const showToast = getGlobal("showToast");
+    if (message && typeof showToast === "function") {
+      try {
+        showToast(message);
+      } catch {
+        // Toasts are a convenience only; saving should not depend on them.
+      }
+    }
+  }
+
   function setStatus(message, kind) {
     const el = document.getElementById("lessonSubmitStatus");
     if (!el) return;
@@ -185,11 +225,126 @@
     el.dataset.kind = kind || "info";
   }
 
-  function setBusy(busy) {
-    const btn = document.getElementById("lessonSubmitButton");
+  function setBusy(buttonId, busy, busyText, idleText) {
+    const btn = document.getElementById(buttonId);
     if (!btn) return;
     btn.disabled = busy;
-    btn.textContent = busy ? "Submitting..." : "Submit Lesson";
+    btn.textContent = busy ? busyText : idleText;
+  }
+
+  async function postPayload(payload) {
+    const response = await fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok || !body.success) {
+      throw new Error(body.error || "Save failed");
+    }
+    return body;
+  }
+
+  async function saveDraft(options) {
+    const mode = options?.mode || "auto";
+    saveToBrowser();
+
+    const payload = buildPayload("draft");
+    if (!hasStudentIdentity(payload)) {
+      if (mode === "manual") {
+        setStatus("Saved on this device. Enter name and email to save to the teacher dashboard.", "info");
+        markSavedLocally("Saved on this device.");
+      }
+      return false;
+    }
+
+    const bodyText = JSON.stringify(payload);
+    if (mode !== "manual" && bodyText === lastDraftBody) return true;
+
+    const now = Date.now();
+    if (mode !== "manual" && now - lastDraftAt < AUTOSAVE_INTERVAL_MS) {
+      scheduleDraftSave(AUTOSAVE_INTERVAL_MS - (now - lastDraftAt));
+      return true;
+    }
+
+    if (draftInFlight) {
+      draftQueued = true;
+      return true;
+    }
+
+    draftInFlight = true;
+    if (mode === "manual") {
+      setBusy("lessonSaveButton", true, "Saving...", "Save Draft");
+      setStatus("Saving draft to teacher dashboard...", "info");
+    }
+
+    try {
+      const body = await postPayload(payload);
+      const state = getState();
+      state.savedToDatabaseAt = new Date().toISOString();
+      state.draftSubmissionId = body.id || state.draftSubmissionId;
+      lastDraftAt = Date.now();
+      lastDraftBody = bodyText;
+      saveToBrowser();
+      markSavedLocally(mode === "manual" ? "Draft saved." : "");
+      setStatus(mode === "manual" ? "Draft saved to the teacher dashboard." : "Autosaved to the teacher dashboard.", "success");
+      return true;
+    } catch (error) {
+      if (mode === "manual") {
+        setStatus("Saved on this device, but the database save failed. Try Save Draft again.", "error");
+      }
+      console.error("Lesson draft save failed:", error);
+      return false;
+    } finally {
+      draftInFlight = false;
+      if (mode === "manual") {
+        setBusy("lessonSaveButton", false, "Saving...", "Save Draft");
+      }
+      if (draftQueued) {
+        draftQueued = false;
+        scheduleDraftSave(1000);
+      }
+    }
+  }
+
+  function scheduleDraftSave(delay) {
+    window.clearTimeout(draftTimer);
+    draftTimer = window.setTimeout(() => {
+      saveDraft({ mode: "auto" });
+    }, typeof delay === "number" ? delay : AUTOSAVE_DELAY_MS);
+  }
+
+  function installDraftSave() {
+    const originalSaveProgress = window.saveProgressNow;
+    window.downloadProgressBackup = function () {
+      if (typeof originalSaveProgress === "function") {
+        return originalSaveProgress.apply(this, arguments);
+      }
+      saveToBrowser();
+      setStatus("Saved on this device. Progress download is not available for this lesson.", "info");
+      return undefined;
+    };
+    window.saveProgressNow = function () {
+      return saveDraft({ mode: "manual" });
+    };
+    window.saveLessonDraft = window.saveProgressNow;
+  }
+
+  function addAutosaveListeners() {
+    document.addEventListener("input", (event) => {
+      if (event.target?.matches?.("input, textarea, select")) scheduleDraftSave();
+    });
+    document.addEventListener("change", (event) => {
+      if (event.target?.matches?.("input, textarea, select")) scheduleDraftSave();
+    });
+    document.addEventListener("click", (event) => {
+      if (event.target?.closest?.(".check-option, .q-option, .term-card, button[data-answer], button[data-opt]")) {
+        scheduleDraftSave();
+      }
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") saveDraft({ mode: "auto" });
+    });
   }
 
   async function submitLesson() {
@@ -200,19 +355,11 @@
       return;
     }
 
-    setBusy(true);
+    setBusy("lessonSubmitButton", true, "Submitting...", "Submit Lesson");
     setStatus("Sending to teacher dashboard...", "info");
 
     try {
-      const response = await fetch(ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const body = await response.json().catch(() => ({}));
-      if (!response.ok || !body.success) {
-        throw new Error(body.error || "Submission failed");
-      }
+      const body = await postPayload(payload);
 
       const state = getState();
       state.finishedAt = state.finishedAt || new Date().toISOString();
@@ -224,7 +371,7 @@
       setStatus("Could not submit. Please try again or use Download Report.", "error");
       console.error("Lesson submission failed:", error);
     } finally {
-      setBusy(false);
+      setBusy("lessonSubmitButton", false, "Submitting...", "Submit Lesson");
     }
   }
 
@@ -264,7 +411,23 @@
         font-weight: 800;
         cursor: pointer;
       }
-      #lessonSubmitButton:disabled {
+      #lessonSubmitPanel .submit-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      #lessonSaveButton {
+        width: 100%;
+        min-height: 38px;
+        border: 1px solid rgba(31, 41, 55, 0.3);
+        border-radius: 8px;
+        background: #fff;
+        color: #1f2937;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      #lessonSubmitButton:disabled,
+      #lessonSaveButton:disabled {
         cursor: wait;
         opacity: 0.72;
       }
@@ -290,12 +453,19 @@
     panel.setAttribute("aria-label", "Lesson submission");
     panel.innerHTML =
       '<p class="submit-title">Teacher Submission</p>' +
+      '<div class="submit-actions">' +
+      '<button id="lessonSaveButton" type="button">Save Draft</button>' +
       '<button id="lessonSubmitButton" type="button">Submit Lesson</button>' +
-      '<p id="lessonSubmitStatus" data-kind="info">Saves your answers to the teacher dashboard.</p>';
+      '</div>' +
+      '<p id="lessonSubmitStatus" data-kind="info">Autosaves after students enter name and email.</p>';
     document.body.appendChild(panel);
 
+    document.getElementById("lessonSaveButton").addEventListener("click", () => saveDraft({ mode: "manual" }));
     document.getElementById("lessonSubmitButton").addEventListener("click", submitLesson);
   }
+
+  installDraftSave();
+  addAutosaveListeners();
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", addSubmitControls);

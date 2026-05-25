@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HRE4M1 — Culminating Task Tracker 2026</title>
+<style>
+  :root {
+    --navy:    #1F4471;
+    --blue:    #2E75B6;
+    --lt-blue: #DEEAF1;
+    --gold:    #BF9000;
+    --lt-gold: #FFF2CC;
+    --green:   #375623;
+    --lt-green:#E2EFDA;
+    --purple:  #5B2C6F;
+    --lt-purple:#F4ECF7;
+    --rust:    #833C00;
+    --lt-rust: #FCE4D6;
+    --gray:    #F5F5F5;
+    --mid-gray:#AAAAAA;
+    --text:    #222222;
+    --white:   #FFFFFF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #EEF2F7;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy);
+    color: white;
+    padding: 18px 30px 12px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+  header .icon { font-size: 2rem; }
+  header h1 { font-size: 1.25rem; font-weight: 700; line-height: 1.2; }
+  header p  { font-size: 0.82rem; opacity: 0.75; margin-top: 2px; }
+
+  /* ── SUBMISSION BANNER ── */
+  .submission-banner {
+    background: var(--rust);
+    color: white;
+    padding: 10px 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .submission-banner span { opacity: 0.9; font-weight: 400; }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 24px 20px 60px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    padding: 22px 26px;
+    margin-bottom: 20px;
+  }
+  .card h2 {
+    font-size: 1rem; font-weight: 700; color: var(--navy);
+    border-bottom: 2px solid var(--lt-blue);
+    padding-bottom: 8px; margin-bottom: 16px;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+
+  /* ── FORM FIELDS ── */
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  label { font-size: 0.82rem; font-weight: 600; color: #555; display: block; margin-bottom: 4px; }
+  input[type="text"], input[type="email"], input[type="date"], select {
+    width: 100%; padding: 8px 12px;
+    border: 1.5px solid #CCCCCC; border-radius: 6px;
+    font-size: 0.92rem; font-family: inherit;
+    transition: border-color 0.2s; background: #FAFAFA;
+  }
+  input[type="text"]:focus, input[type="email"]:focus, input[type="date"]:focus, select:focus {
+    outline: none; border-color: var(--blue); background: white;
+  }
+
+  /* ── DAY SELECTOR ── */
+  .week-label {
+    font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; padding: 4px 0 6px; color: #666;
+  }
+  .day-selector {
+    display: grid; gap: 8px; margin-bottom: 0;
+  }
+  .w1-grid { grid-template-columns: repeat(5, 1fr); }
+  .w2-grid { grid-template-columns: repeat(3, 1fr); }
+
+  .day-btn {
+    border: 2px solid #CCCCCC; background: white; border-radius: 8px;
+    padding: 10px 6px; cursor: pointer; text-align: center;
+    transition: all 0.18s; font-family: inherit;
+  }
+  .day-btn:hover    { border-color: var(--blue); background: var(--lt-blue); }
+  .day-btn.active   { background: var(--navy); border-color: var(--navy); color: white; }
+  .day-btn .num     { font-size: 1.3rem; font-weight: 700; display: block; }
+  .day-btn .lbl     { font-size: 0.67rem; display: block; opacity: 0.75; margin-top: 2px; }
+  .day-btn.w2 .num  { color: var(--purple); }
+  .day-btn.w2:hover { border-color: var(--purple); background: var(--lt-purple); }
+  .day-btn.w2.active{ background: var(--purple); border-color: var(--purple); color: white; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    background: #DDD; border-radius: 4px; height: 8px;
+    margin: 16px 0 4px; overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--navy), var(--blue));
+    border-radius: 4px; transition: width 0.4s ease;
+  }
+  .progress-text { font-size: 0.78rem; color: #777; text-align: right; }
+
+  /* ── NO DAY SELECTED ── */
+  .no-day-msg {
+    background: white; border-radius: 10px; padding: 40px 30px;
+    text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.08); color: #888;
+  }
+  .no-day-msg .icon  { font-size: 3rem; margin-bottom: 12px; }
+  .no-day-msg h3     { font-size: 1.05rem; color: var(--navy); margin-bottom: 8px; }
+  .no-day-msg p      { font-size: 0.875rem; line-height: 1.5; }
+
+  /* ── DAY CONTENT ── */
+  .day-content        { display: none; }
+  .day-content.visible{ display: block; }
+
+  .day-header {
+    border-radius: 8px; padding: 16px 22px;
+    margin-bottom: 16px; color: white;
+  }
+  .day-header h3 { font-size: 1.1rem; font-weight: 700; }
+  .day-header p  { font-size: 0.83rem; opacity: 0.85; margin-top: 4px; }
+  .day-header .dates { font-size: 0.78rem; opacity: 0.7; margin-top: 2px; }
+  .w1-header { background: linear-gradient(135deg, var(--navy), var(--blue)); }
+  .w2-header { background: linear-gradient(135deg, var(--purple), #7D3C98); }
+
+  /* Unit badge pills inside day header */
+  .unit-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .unit-pill {
+    font-size: 0.7rem; font-weight: 700; padding: 2px 8px;
+    border-radius: 20px; background: rgba(255,255,255,0.2);
+    letter-spacing: 0.03em;
+  }
+
+  /* ── TASK COLUMN (single, full width) ── */
+  .task-col-full {
+    background: white; border-radius: 8px;
+    padding: 18px 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    border-top: 4px solid var(--gold);
+    margin-bottom: 14px;
+  }
+  .task-col-full.w2 { border-top-color: var(--purple); }
+  .task-col-full h4 {
+    font-size: 0.82rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; margin-bottom: 6px; color: var(--gold);
+  }
+  .task-col-full.w2 h4 { color: var(--purple); }
+  .task-col-tip {
+    font-size: 0.78rem; color: #888; font-style: italic;
+    margin-bottom: 14px; line-height: 1.4;
+    padding: 8px 12px; background: #FAFAFA;
+    border-radius: 6px; border-left: 3px solid #DDD;
+  }
+
+  .task-items-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 20px;
+  }
+
+  .task-item {
+    display: flex; align-items: flex-start;
+    gap: 10px; margin-bottom: 13px;
+    cursor: pointer; user-select: none;
+  }
+  .task-item:last-child { margin-bottom: 0; }
+  .task-checkbox {
+    width: 22px; height: 22px;
+    border: 2px solid #CCCCCC; border-radius: 5px;
+    flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; background: white;
+  }
+  .task-item.checked .task-checkbox {
+    background: var(--gold); border-color: var(--gold);
+  }
+  .task-col-full.w2 .task-item.checked .task-checkbox {
+    background: var(--purple); border-color: var(--purple);
+  }
+  .task-checkbox svg { display: none; }
+  .task-item.checked .task-checkbox svg { display: block; }
+  .task-text { font-size: 0.875rem; line-height: 1.45; color: var(--text); }
+  .task-item.checked .task-text { text-decoration: line-through; opacity: 0.55; }
+
+  /* ── PROGRESS MINI ── */
+  .tasks-progress {
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .tasks-progress .done-count {
+    font-size: 0.8rem; font-weight: 700; color: var(--navy); white-space: nowrap;
+  }
+  .mini-bar-wrap {
+    flex: 1; background: #E5E5E5; border-radius: 4px; height: 6px; overflow: hidden;
+  }
+  .mini-bar { height: 100%; background: var(--gold); border-radius: 4px; transition: width 0.3s; }
+  .task-col-full.w2 .mini-bar { background: var(--purple); }
+
+  /* ── REFLECTION ── */
+  .reflection-card {
+    background: white; border-radius: 8px;
+    padding: 18px 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    margin-bottom: 14px;
+    border-left: 4px solid var(--blue);
+  }
+  .reflection-card.w2 { border-left-color: var(--purple); }
+  .reflection-card h4 {
+    font-size: 0.82rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em; color: var(--blue); margin-bottom: 8px;
+  }
+  .reflection-card.w2 h4 { color: var(--purple); }
+  .reflection-q {
+    font-size: 0.9rem; color: #333; font-style: italic;
+    margin-bottom: 10px; line-height: 1.5;
+  }
+  textarea {
+    width: 100%; border: 1.5px solid #CCCCCC; border-radius: 6px;
+    padding: 10px 12px; font-size: 0.88rem; font-family: inherit;
+    resize: vertical; min-height: 90px;
+    transition: border-color 0.2s; background: #FAFAFA;
+  }
+  textarea:focus { outline: none; border-color: var(--blue); background: white; }
+  textarea.w2:focus { border-color: var(--purple); }
+
+  /* ── RATING ROW ── */
+  .rating-row {
+    background: white; border-radius: 8px;
+    padding: 14px 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    margin-bottom: 14px; display: flex;
+    align-items: center; gap: 14px; flex-wrap: wrap;
+  }
+  .rating-label { font-size: 0.85rem; font-weight: 600; color: #555; flex-shrink: 0; }
+  .rating-stars  { display: flex; gap: 6px; }
+  .star-btn {
+    width: 36px; height: 36px;
+    border: 2px solid #DDD; border-radius: 50%;
+    background: white; font-size: 0.9rem; font-weight: 700;
+    cursor: pointer; transition: all 0.15s;
+    color: #999; font-family: inherit;
+  }
+  .star-btn:hover   { border-color: var(--gold); color: var(--gold); }
+  .star-btn.selected{ background: var(--gold); border-color: var(--gold); color: white; }
+  .next-class-wrap  { flex: 1; min-width: 200px; }
+  .next-class-wrap label { font-size: 0.82rem; font-weight: 600; color: #555; display: block; margin-bottom: 4px; }
+
+  /* ── SUBMISSION CHECKLIST ── */
+  .submit-check-card {
+    background: var(--lt-rust); border-radius: 8px;
+    padding: 16px 20px; margin-bottom: 14px;
+    border: 2px solid #E8A87C;
+  }
+  .submit-check-card h4 {
+    font-size: 0.82rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em; color: var(--rust); margin-bottom: 10px;
+  }
+  .submit-item {
+    display: flex; align-items: flex-start;
+    gap: 10px; margin-bottom: 10px;
+    cursor: pointer; user-select: none;
+  }
+  .submit-checkbox {
+    width: 22px; height: 22px;
+    border: 2px solid #C07040; border-radius: 5px;
+    flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    background: white; transition: all 0.15s;
+  }
+  .submit-item.checked .submit-checkbox {
+    background: var(--rust); border-color: var(--rust);
+  }
+  .submit-item.checked .task-checkbox svg { display: block; }
+  .submit-item .task-text { font-size: 0.875rem; line-height: 1.45; }
+  .submit-item.checked .task-text { text-decoration: line-through; opacity: 0.55; }
+
+  /* ── BUTTONS ── */
+  .action-bar { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+  .btn {
+    padding: 12px 22px; border: none; border-radius: 8px;
+    font-size: 0.9rem; font-weight: 700; cursor: pointer;
+    font-family: inherit; transition: all 0.18s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-primary   { background: var(--navy); color: white; }
+  .btn-primary:hover { background: #162C4A; }
+  .btn-secondary { background: var(--gray); color: var(--navy); border: 2px solid #DDD; }
+  .btn-secondary:hover { background: var(--lt-blue); border-color: var(--blue); }
+  .btn-print     { background: var(--green); color: white; }
+  .btn-print:hover { background: #254D1A; }
+  .save-card {
+    border-left: 4px solid var(--green);
+  }
+  .save-card p {
+    color: #666;
+    font-size: 0.86rem;
+    line-height: 1.5;
+    margin-bottom: 14px;
+    max-width: 640px;
+  }
+  .save-card .action-bar {
+    max-width: 680px;
+  }
+  .file-restore {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  .file-restore input {
+    display: none;
+  }
+
+  /* ── REPORT OVERLAY ── */
+  #report-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55); z-index: 100;
+    overflow-y: auto; padding: 30px 20px;
+  }
+  #report-overlay.visible { display: flex; justify-content: center; align-items: flex-start; }
+  #report-box {
+    background: white; border-radius: 12px;
+    max-width: 700px; width: 100%;
+    padding: 32px 36px; position: relative;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  }
+  #report-box h2      { font-size: 1.3rem; color: var(--navy); margin-bottom: 4px; }
+  #report-box .report-sub {
+    font-size: 0.85rem; color: #777; margin-bottom: 20px;
+    border-bottom: 2px solid var(--lt-blue); padding-bottom: 12px;
+  }
+  .report-section    { margin-bottom: 18px; }
+  .report-section h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--navy); font-weight: 700; margin-bottom: 8px; }
+  .report-meta       { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .report-meta-item  { background: var(--lt-blue); border-radius: 6px; padding: 8px 12px; }
+  .report-meta-item .key { font-size: 0.75rem; color: #777; }
+  .report-meta-item .val { font-size: 0.9rem; font-weight: 600; color: var(--navy); }
+  .report-task-list  { font-size: 0.875rem; line-height: 1.7; }
+  .report-task-list .done     { color: var(--green); }
+  .report-task-list .not-done { color: #999; text-decoration: line-through; }
+  .report-reflection {
+    background: var(--lt-gold); border-radius: 6px;
+    padding: 12px 14px; font-size: 0.875rem; line-height: 1.6;
+    border-left: 3px solid var(--gold);
+  }
+  .report-reflection .q { font-style: italic; color: #777; font-size: 0.8rem; margin-bottom: 4px; }
+  .close-btn {
+    position: absolute; top: 14px; right: 16px;
+    background: none; border: none; font-size: 1.4rem;
+    cursor: pointer; color: #999; line-height: 1; padding: 4px;
+  }
+  .close-btn:hover { color: var(--navy); }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--navy); color: white;
+    padding: 12px 20px; border-radius: 8px;
+    font-size: 0.88rem; font-weight: 600;
+    opacity: 0; transition: opacity 0.3s;
+    z-index: 200; pointer-events: none;
+  }
+  #toast.show { opacity: 1; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 620px) {
+    .info-grid { grid-template-columns: 1fr; }
+    .task-items-grid { grid-template-columns: 1fr; }
+  }
+  @media print {
+    body { background: white; }
+    header, .submission-banner, .card .day-selector,
+    .action-bar, .week-label, .progress-wrap,
+    .progress-text, #report-overlay { display: none !important; }
+    .container { padding: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="icon">📋</div>
+  <div>
+    <h1>HRE4M1 — Culminating Task: Daily Progress Tracker</h1>
+    <p>My Journey of Faith and Understanding &nbsp;|&nbsp; St. Thomas More Catholic Secondary School &nbsp;|&nbsp; 2026</p>
+  </div>
+</header>
+
+<div class="submission-banner">
+  ⚠️ &nbsp;<strong>Submission Deadline:</strong>
+  <span>All presentation materials AND this completed tracker must be submitted BEFORE presentations begin on June 11 — regardless of which day you are presenting.</span>
+</div>
+
+<div class="container">
+
+  <!-- STUDENT INFO -->
+  <div class="card">
+    <h2>Student Information</h2>
+    <div class="info-grid">
+      <div>
+        <label for="studentName">Full Name</label>
+        <input type="text" id="studentName" placeholder="e.g. Maria Santos" autocomplete="off">
+      </div>
+      <div>
+        <label for="studentEmail">School Email</label>
+        <input type="email" id="studentEmail" placeholder="you@school.ca" autocomplete="email">
+      </div>
+      <div>
+        <label for="studentClass">Period / Class</label>
+        <select id="studentClass">
+          <option value="">Select...</option>
+          <option>Period 1</option>
+          <option>Period 2</option>
+          <option>Period 3</option>
+          <option>Period 4</option>
+        </select>
+      </div>
+      <div>
+        <label for="presentationFormat">Presentation Format Chosen</label>
+        <select id="presentationFormat">
+          <option value="">Select format...</option>
+          <option>A. Slideshow or Video</option>
+          <option>B. Spoken Word or Monologue</option>
+          <option>C. Visual Art with Explanation</option>
+          <option>D. Song or Music</option>
+          <option>E. Photo Essay / Visual Journal</option>
+          <option>F. Short Film</option>
+          <option>G. Other (teacher approved)</option>
+        </select>
+      </div>
+      <div>
+        <label for="presentationDay">My Presentation Day</label>
+        <select id="presentationDay">
+          <option value="">Select...</option>
+          <option>Thursday, June 11</option>
+          <option>Friday, June 12</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAVE / DOWNLOAD -->
+  <div class="card save-card">
+    <h2>Save, Download, and Submit</h2>
+    <p>Save your work as you go, download a backup file to resume later, and submit the completed tracker to your teacher when it is ready.</p>
+    <div class="action-bar">
+      <button class="btn btn-primary" onclick="saveProgressNow()">Save Draft</button>
+      <button class="btn btn-secondary" onclick="downloadProgressFile()">Download Progress File</button>
+      <button class="btn btn-print" onclick="downloadReport()">Download Full Tracker</button>
+      <label class="btn btn-secondary file-restore" for="resumeFile">Resume from File
+        <input type="file" id="resumeFile" accept=".json" onchange="resumeFromFile(event)">
+      </label>
+    </div>
+  </div>
+
+  <!-- DAY SELECTOR -->
+  <div class="card">
+    <h2>Select Today's Working Day</h2>
+    <div class="week-label">📅 Week 1 — Planning and Creating &nbsp;(June 1 – 5)</div>
+    <div class="day-selector w1-grid">
+      <button class="day-btn w1" data-day="1" onclick="selectDay(1)"><span class="num">1</span><span class="lbl">June 1</span></button>
+      <button class="day-btn w1" data-day="2" onclick="selectDay(2)"><span class="num">2</span><span class="lbl">June 2</span></button>
+      <button class="day-btn w1" data-day="3" onclick="selectDay(3)"><span class="num">3</span><span class="lbl">June 3</span></button>
+      <button class="day-btn w1" data-day="4" onclick="selectDay(4)"><span class="num">4</span><span class="lbl">June 4</span></button>
+      <button class="day-btn w1" data-day="5" onclick="selectDay(5)"><span class="num">5</span><span class="lbl">June 5</span></button>
+    </div>
+    <br>
+    <div class="week-label">📅 Week 2 — Developing, Practising, and Presenting &nbsp;(June 8 – 10)</div>
+    <div class="day-selector w2-grid">
+      <button class="day-btn w2" data-day="6" onclick="selectDay(6)"><span class="num">6</span><span class="lbl">June 8</span></button>
+      <button class="day-btn w2" data-day="7" onclick="selectDay(7)"><span class="num">7</span><span class="lbl">June 9</span></button>
+      <button class="day-btn w2" data-day="8" onclick="selectDay(8)"><span class="num">8</span><span class="lbl">June 10</span></button>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progressBar" style="width:0%"></div>
+    </div>
+    <div class="progress-text" id="progressText">Select a day to begin</div>
+  </div>
+
+  <!-- PLACEHOLDER -->
+  <div id="noDayMsg" class="no-day-msg">
+    <div class="icon">✏️</div>
+    <h3>Select a working day above to get started</h3>
+    <p>Each day has specific presentation tasks, a reflection question, and a productivity check-in.<br>Complete everything before the end of class and use the report button to save your progress.</p>
+  </div>
+
+  <!-- DAY CONTENT (injected by JS) -->
+  <div id="dayContentArea"></div>
+
+</div>
+
+<!-- REPORT OVERLAY -->
+<div id="report-overlay">
+  <div id="report-box">
+    <button class="close-btn" onclick="closeReport()">✕</button>
+    <h2>📄 Daily Progress Report</h2>
+    <div class="report-sub" id="reportSub">HRE4M1 Culminating Task 2026</div>
+    <div id="reportContent"></div>
+    <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-print" onclick="printReport()">🖨️ Print / Save as PDF</button>
+      <button class="btn btn-secondary" onclick="closeReport()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast">Progress saved!</div>
+
+<script>
+// ============================================================
+// DAY DATA — matches the revised 8-day .docx tracker exactly
+// ============================================================
+const dayData = {
+  1: {
+    label: "Introduction and Overview",
+    date:  "Monday, June 1",
+    week:  1,
+    units: ["Overview"],
+    tip:   "Pick the format that suits your strengths, not the one that sounds most impressive. Your creativity will show more in what you do with your format than in which format you choose.",
+    tasks: [
+      "Read through the full assignment handout carefully.",
+      "Choose your presentation format (confirm with your teacher if you have a unique idea).",
+      "List 3 to 5 big ideas or themes you want your presentation to express.",
+      "Think about which format best allows your voice and creativity to come through.",
+      "Write down your opening statement idea: how will you begin your presentation?",
+    ],
+    reflectionQ: "What presentation format did you choose, and why does it best match how you want to express yourself?",
+  },
+  2: {
+    label: "Planning: Units 1 and 2",
+    date:  "Tuesday, June 2",
+    week:  1,
+    units: ["Unit 1", "Unit 2"],
+    tip:   "Planning is the most important step. A clear outline now saves hours of rework later. Don't rush past this to start creating.",
+    tasks: [
+      "Go back through your Unit 1 notes (Faith, Reason, and the Nature of God).",
+      "Identify 2 to 3 key ideas from Unit 1 that connect to your personal experience.",
+      "Go back through your Unit 2 notes (Scripture, the Church, and Jesus).",
+      "Identify 2 to 3 key ideas from Unit 2 that connect to your own life.",
+      "Begin mapping out what Units 1 and 2 will look like in your presentation.",
+    ],
+    reflectionQ: "What is the most important idea from Unit 1 or Unit 2 that you want in your presentation? Why did it stand out to you?",
+  },
+  3: {
+    label: "Planning: Units 3 and 4 and Full Outline",
+    date:  "Wednesday, June 3",
+    week:  1,
+    units: ["Unit 3", "Unit 4"],
+    tip:   "The best presentations have a unifying thread — one idea or question that runs through everything. Look for yours as you plan today.",
+    tasks: [
+      "Review your Unit 3 notes (Justice, Conscience, and Catholic Social Teaching).",
+      "Identify 2 to 3 key ideas from Unit 3 that connect to your life or community.",
+      "Review your Unit 4 notes (Vocation, Love, and Living as a Person of Faith).",
+      "Identify 2 to 3 key ideas from Unit 4 that connect to your sense of purpose.",
+      "Write or sketch the full structure and outline of your presentation.",
+    ],
+    reflectionQ: "How do you plan to connect all four units in your presentation? Is there one central theme or idea that ties them all together?",
+  },
+  4: {
+    label: "Start Creating: Units 1 and 2",
+    date:  "Thursday, June 4",
+    week:  1,
+    units: ["Unit 1", "Unit 2"],
+    tip:   "Start rough and refine later. Get your ideas down before worrying about how it looks or sounds. Every section needs a personal connection, not just facts.",
+    tasks: [
+      "Begin actively building your presentation (slides, artwork, writing, film, etc.).",
+      "Focus on Units 1 and 2 content first.",
+      "Make sure each section includes a personal connection, not just a description of the unit.",
+      "Check: does your voice come through in what you have created so far?",
+    ],
+    reflectionQ: "What is working well so far in your presentation? What is the hardest idea to express in the format you chose?",
+  },
+  5: {
+    label: "Continue Creating: Units 3 and 4",
+    date:  "Friday, June 5",
+    week:  1,
+    units: ["Unit 3", "Unit 4"],
+    tip:   "Everything you include should answer one question: what does this mean to me personally? General statements will not score as well as honest, specific ones.",
+    tasks: [
+      "Continue building your presentation with Units 3 and 4.",
+      "Ensure Unit 3 content connects specifically to your own experience with justice or conscience.",
+      "Ensure Unit 4 content reflects your personal sense of vocation, purpose, or calling.",
+      "Include at least one reference to a scripture passage or Catholic teaching somewhere in your presentation.",
+      "Check that your personal voice is coming through in every section.",
+    ],
+    reflectionQ: "Which unit is the hardest for you to connect to your personal life? What would help you go deeper with it?",
+  },
+  6: {
+    label: "Develop and Deepen: All Four Units",
+    date:  "Monday, June 8",
+    week:  2,
+    units: ["All 4 Units"],
+    tip:   "If any section just describes a unit without connecting it to you personally, it needs more work. This is the most common weakness in presentations.",
+    tasks: [
+      "Review your full presentation from start to finish: are all four units clearly represented?",
+      "Strengthen personal connections in any section that still feels surface-level.",
+      "Add intentional symbols, visuals, or creative elements that reinforce your message.",
+      "Ask yourself honestly: does this sound like me? Does it say something true about my experience?",
+      "Ensure your opening statement is clear, confident, and engaging.",
+    ],
+    reflectionQ: "After today, which part of your presentation feels strongest? Which part still needs more personal depth?",
+  },
+  7: {
+    label: "Reflect on Life and Future, Then Refine",
+    date:  "Tuesday, June 9",
+    week:  2,
+    units: ["Life Impact", "Forward Focus"],
+    tip:   "Today is about making sure your presentation answers the central question: how have these themes shaped me this semester, and how will I carry them forward? If that is not clear, it needs to be.",
+    tasks: [
+      "Make sure your presentation clearly reflects how this semester has impacted your life.",
+      "Make sure you have addressed how these themes will continue to matter as you move forward.",
+      "Finalize your cue cards (maximum one index card per unit section; no full written scripts).",
+      "Practise your full presentation out loud at least once and time it.",
+      "Make final adjustments to content, structure, and creative choices.",
+    ],
+    reflectionQ: "What is one thing you want your teacher and classmates to remember or take away from your presentation?",
+  },
+  8: {
+    label: "Final Prep and Practice",
+    date:  "Wednesday, June 10",
+    week:  2,
+    units: ["Submit Today"],
+    tip:   "Under 7 minutes is too short. Over 9 minutes is too long. Time yourself today and adjust. Practise your opening statement until it feels natural.",
+    tasks: [
+      "Deliver your full presentation out loud at least once and time it (target: 7 to 9 minutes).",
+      "Make any final adjustments based on your practice run.",
+      "Confirm all materials are complete and ready for submission.",
+      "Submit all presentation materials and this completed Tracking Sheet BEFORE June 11 presentations begin.",
+      "Test any technology (slides, video, audio) to ensure it works as expected.",
+    ],
+    reflectionQ: "On a scale of 1 to 10, how confident do you feel heading into presentation day? What would help you feel more prepared?",
+    submitChecklist: [
+      "All presentation materials submitted (slides, script, artwork, video, etc.)",
+      "This completed Tracking Sheet / Organizer submitted",
+    ],
+  },
+};
+
+// ============================================================
+// STATE
+// ============================================================
+const LESSON_ID = 'hre4m1-culminating-tracker-2026';
+const STORAGE_KEY = 'hre4m1_culminating_tracker_2026';
+const LESSON_SUBMISSION_META = {
+  unit: 'Culminating Task',
+  lesson: 'Culminating Tracking App',
+  lesson_title: 'Daily Progress Tracker 2026',
+};
+const RESPONSE_ORDER = Array.from({ length: 8 }, (_, i) => `day${i + 1}`);
+const RESPONSE_TITLES = Object.fromEntries(
+  RESPONSE_ORDER.map((key, i) => [key, `Day ${i + 1} Progress`])
+);
+let currentDay = null;
+const state = {
+  lessonId: LESSON_ID,
+  startedAt: new Date().toISOString(),
+  finishedAt: null,
+  currentDay: null,
+  studentInfo: { name: '', email: '', className: '', presentationFormat: '', presentationDay: '' },
+  responses: {},
+  lastSavedAt: null,
+};
+
+function getState(d) {
+  const dd = dayData[d];
+  const numTasks = dd.tasks.length;
+  const numSubmit = dd.submitChecklist ? dd.submitChecklist.length : 0;
+  if (!state[d]) {
+    state[d] = {
+      checked:       Array(numTasks).fill(false),
+      submitChecked: Array(numSubmit).fill(false),
+      reflection:    '',
+      rating:        0,
+      nextClass:     '',
+    };
+  }
+  return state[d];
+}
+
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function cleanFileName(str) {
+  return String(str || 'student').replace(/[^a-z0-9]+/gi, '_').replace(/^_+|_+$/g, '') || 'student';
+}
+
+function triggerDownload(filename, content, mime) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 500);
+}
+
+function buildDaySummary(d) {
+  const dd = dayData[d];
+  const s = getState(d);
+  const completed = s.checked
+    .map((done, i) => `${done ? '[x]' : '[ ]'} ${dd.tasks[i]}`)
+    .join('\n');
+  const submit = dd.submitChecklist
+    ? '\n\nSubmission Checklist:\n' + s.submitChecked.map((done, i) => `${done ? '[x]' : '[ ]'} ${dd.submitChecklist[i]}`).join('\n')
+    : '';
+
+  return [
+    `Day ${d}: ${dd.label}`,
+    `Date: ${dd.date}`,
+    `Tasks completed: ${s.checked.filter(Boolean).length} / ${dd.tasks.length}`,
+    `Productivity rating: ${s.rating ? s.rating + ' / 5' : 'Not rated'}`,
+    '',
+    completed,
+    submit,
+    '',
+    `Reflection prompt: ${dd.reflectionQ}`,
+    `Reflection: ${s.reflection || ''}`,
+    '',
+    `Next class focus: ${s.nextClass || ''}`,
+  ].join('\n');
+}
+
+function rebuildResponses() {
+  RESPONSE_ORDER.forEach((key, index) => {
+    state.responses[key] = buildDaySummary(index + 1);
+  });
+}
+
+function persistInputsToState() {
+  const activeReflection = currentDay ? document.getElementById(`reflection_${currentDay}`) : null;
+  const activeNextClass = currentDay ? document.getElementById(`nextClass_${currentDay}`) : null;
+  if (activeReflection) getState(currentDay).reflection = activeReflection.value;
+  if (activeNextClass) getState(currentDay).nextClass = activeNextClass.value;
+
+  state.currentDay = currentDay;
+  state.studentInfo.name = document.getElementById('studentName')?.value.trim() || '';
+  state.studentInfo.email = document.getElementById('studentEmail')?.value.trim() || '';
+  state.studentInfo.className = document.getElementById('studentClass')?.value || '';
+  state.studentInfo.presentationFormat = document.getElementById('presentationFormat')?.value || '';
+  state.studentInfo.presentationDay = document.getElementById('presentationDay')?.value || '';
+  rebuildResponses();
+}
+
+function saveLocal() {
+  persistInputsToState();
+  state.lastSavedAt = new Date().toISOString();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function markSaveButtonsSaved() {
+  showToast('Progress saved.');
+}
+
+function totalWords() {
+  persistInputsToState();
+  return Object.values(state.responses).reduce((sum, value) => {
+    const text = String(value || '').trim();
+    return sum + (text ? text.split(/\s+/).length : 0);
+  }, 0);
+}
+
+function totalTimeMs() {
+  const started = Date.parse(state.startedAt || '');
+  return Number.isFinite(started) ? Date.now() - started : 0;
+}
+
+function saveProgressNow() {
+  downloadProgressFile();
+}
+
+function downloadProgressFile() {
+  saveLocal();
+  const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+  const name = cleanFileName(state.studentInfo.name);
+  triggerDownload(`HRE4M1_Culminating_Tracker_${name}_${stamp}.json`, JSON.stringify(state, null, 2), 'application/json');
+  showToast('Progress file downloaded.');
+}
+
+function restoreSavedState(saved) {
+  if (!saved || saved.lessonId !== LESSON_ID) throw new Error('Wrong tracker file');
+  Object.assign(state.studentInfo, saved.studentInfo || {});
+  state.startedAt = saved.startedAt || state.startedAt;
+  state.finishedAt = saved.finishedAt || null;
+  state.lastSavedAt = saved.lastSavedAt || null;
+  state.responses = saved.responses || {};
+
+  for (let d = 1; d <= 8; d += 1) {
+    if (saved[d]) state[d] = saved[d];
+  }
+
+  document.getElementById('studentName').value = state.studentInfo.name || '';
+  document.getElementById('studentEmail').value = state.studentInfo.email || '';
+  document.getElementById('studentClass').value = state.studentInfo.className || '';
+  document.getElementById('presentationFormat').value = state.studentInfo.presentationFormat || '';
+  document.getElementById('presentationDay').value = state.studentInfo.presentationDay || '';
+
+  const dayToShow = Number(saved.currentDay || state.currentDay || currentDay || 0);
+  if (dayToShow) selectDay(dayToShow);
+  else rebuildResponses();
+}
+
+function resumeFromFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      restoreSavedState(JSON.parse(e.target.result));
+      saveLocal();
+      showToast('Progress restored.');
+    } catch (err) {
+      alert('Could not load that file. Please upload a valid Culminating Tracker progress file.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function hydrateFromLocalStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) restoreSavedState(JSON.parse(raw));
+  } catch (err) {}
+}
+
+// ============================================================
+// SELECT DAY
+// ============================================================
+function selectDay(d) {
+  currentDay = d;
+  state.currentDay = d;
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.day-btn[data-day="${d}"]`).classList.add('active');
+  const pct = Math.round((d / 8) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `Day ${d} of 8 — ${pct}% through the preparation period`;
+  document.getElementById('noDayMsg').style.display = 'none';
+  renderDayContent(d);
+  saveLocal();
+}
+
+// ============================================================
+// RENDER DAY
+// ============================================================
+function renderDayContent(d) {
+  const dd = dayData[d];
+  const s  = getState(d);
+  const w2 = dd.week === 2;
+  const colClass    = w2 ? 'w2' : '';
+  const headerClass = w2 ? 'w2-header' : 'w1-header';
+
+  const doneCount = s.checked.filter(Boolean).length;
+  const totalTasks = dd.tasks.length;
+  const pct = totalTasks ? Math.round((doneCount / totalTasks) * 100) : 0;
+
+  // Unit pills HTML
+  const pillsHtml = dd.units.map(u =>
+    `<span class="unit-pill">${u}</span>`
+  ).join('');
+
+  let html = `<div class="day-content visible" id="dayContent_${d}">`;
+
+  // Day header
+  html += `
+    <div class="day-header ${headerClass}">
+      <h3>Day ${d}: ${dd.label}</h3>
+      <p>${w2 ? 'Week 2 — Developing, Practising, and Presenting' : 'Week 1 — Planning and Creating'}</p>
+      <div class="dates">${dd.date}</div>
+      <div class="unit-pills">${pillsHtml}</div>
+    </div>`;
+
+  // Task column
+  html += `<div class="task-col-full ${colClass}">
+    <h4>🎨 Today's Tasks</h4>
+    <div class="task-col-tip">${dd.tip}</div>
+    <div class="tasks-progress">
+      <span class="done-count">${doneCount} / ${totalTasks} tasks completed</span>
+      <div class="mini-bar-wrap"><div class="mini-bar" id="miniBar_${d}" style="width:${pct}%"></div></div>
+    </div>
+    <div class="task-items-grid">`;
+
+  dd.tasks.forEach((t, i) => {
+    const checked = s.checked[i] ? 'checked' : '';
+    html += `
+      <div class="task-item ${checked}" onclick="toggleTask(${d},${i})">
+        <div class="task-checkbox">
+          <svg width="13" height="10" viewBox="0 0 13 10">
+            <path d="M1 5l4 4L12 1" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="task-text">${t}</span>
+      </div>`;
+  });
+
+  html += `</div></div>`;
+
+  // Submission checklist (Day 8 only)
+  if (dd.submitChecklist) {
+    html += `<div class="submit-check-card">
+      <h4>⚠️ Submission Checklist — Due Before June 11</h4>`;
+    dd.submitChecklist.forEach((item, i) => {
+      const checked = s.submitChecked[i] ? 'checked' : '';
+      html += `
+        <div class="submit-item ${checked}" onclick="toggleSubmit(${d},${i})">
+          <div class="submit-checkbox">
+            <svg width="13" height="10" viewBox="0 0 13 10">
+              <path d="M1 5l4 4L12 1" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="task-text">${item}</span>
+        </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Reflection
+  html += `
+    <div class="reflection-card ${colClass}">
+      <h4>Daily Reflection</h4>
+      <div class="reflection-q">${dd.reflectionQ}</div>
+      <textarea class="${colClass}" placeholder="Write your response here..."
+        id="reflection_${d}"
+        onchange="saveReflection(${d})">${s.reflection || ''}</textarea>
+    </div>`;
+
+  // Rating + next class
+  html += `<div class="rating-row">
+    <span class="rating-label">Productivity today:</span>
+    <div class="rating-stars">`;
+  [1,2,3,4,5].forEach(n => {
+    const sel = s.rating === n ? 'selected' : '';
+    html += `<button class="star-btn ${sel}" onclick="setRating(${d},${n})" title="${n}/5">${n}</button>`;
+  });
+  html += `</div>
+    <div class="next-class-wrap">
+      <label for="nextClass_${d}">Next class I will focus on:</label>
+      <input type="text" id="nextClass_${d}"
+        placeholder="e.g. Finish Unit 3 section of my slideshow"
+        value="${s.nextClass || ''}"
+        onchange="saveNextClass(${d})">
+    </div>
+  </div>`;
+
+  // Action bar
+  html += `<div class="action-bar">
+    <button class="btn btn-primary" onclick="generateReport()">📄 Generate My Daily Report</button>
+    <button class="btn btn-secondary" onclick="clearDay(${d})">🗑 Clear Today</button>
+  </div>`;
+
+  html += `</div>`;
+  document.getElementById('dayContentArea').innerHTML = html;
+}
+
+// ============================================================
+// TOGGLE TASKS
+// ============================================================
+function toggleTask(d, i) {
+  const s = getState(d);
+  s.checked[i] = !s.checked[i];
+  const items = document.querySelectorAll('.task-col-full .task-item');
+  if (items[i]) items[i].classList.toggle('checked', s.checked[i]);
+
+  // Update mini progress bar
+  const done  = s.checked.filter(Boolean).length;
+  const total = dayData[d].tasks.length;
+  const pct   = total ? Math.round((done / total) * 100) : 0;
+  const bar   = document.getElementById(`miniBar_${d}`);
+  if (bar) bar.style.width = pct + '%';
+  const countEl = document.querySelector('.done-count');
+  if (countEl) countEl.textContent = `${done} / ${total} tasks completed`;
+
+  saveLocal();
+  showToast('Progress saved!');
+}
+
+function toggleSubmit(d, i) {
+  const s = getState(d);
+  s.submitChecked[i] = !s.submitChecked[i];
+  const items = document.querySelectorAll('.submit-item');
+  if (items[i]) items[i].classList.toggle('checked', s.submitChecked[i]);
+  saveLocal();
+  showToast('Submission item updated!');
+}
+
+// ============================================================
+// SAVE HANDLERS
+// ============================================================
+function saveReflection(d) {
+  const el = document.getElementById(`reflection_${d}`);
+  if (el) getState(d).reflection = el.value;
+  saveLocal();
+}
+
+function setRating(d, n) {
+  getState(d).rating = n;
+  document.querySelectorAll('.star-btn').forEach((b, i) => {
+    b.classList.toggle('selected', i + 1 === n);
+  });
+  saveLocal();
+  showToast(`Productivity: ${n}/5 saved`);
+}
+
+function saveNextClass(d) {
+  const el = document.getElementById(`nextClass_${d}`);
+  if (el) getState(d).nextClass = el.value;
+  saveLocal();
+}
+
+function clearDay(d) {
+  if (!confirm('Clear all your entries for today?')) return;
+  const numTasks  = dayData[d].tasks.length;
+  const numSubmit = dayData[d].submitChecklist ? dayData[d].submitChecklist.length : 0;
+  state[d] = {
+    checked:       Array(numTasks).fill(false),
+    submitChecked: Array(numSubmit).fill(false),
+    reflection:    '',
+    rating:        0,
+    nextClass:     '',
+  };
+  renderDayContent(d);
+  saveLocal();
+  showToast('Day cleared.');
+}
+
+// ============================================================
+// REPORT GENERATION
+// ============================================================
+function buildFullTrackerHTML() {
+  saveLocal();
+  const info = state.studentInfo;
+  const today = new Date().toLocaleDateString('en-CA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  const daySections = RESPONSE_ORDER.map((key, index) => {
+    const d = index + 1;
+    const dd = dayData[d];
+    const s = getState(d);
+    const tasks = dd.tasks.map((task, i) => `<li class="${s.checked[i] ? 'done' : 'todo'}">${s.checked[i] ? 'Done' : 'Not done'} - ${escapeHTML(task)}</li>`).join('');
+    const submit = dd.submitChecklist
+      ? `<h3>Submission Checklist</h3><ul>${dd.submitChecklist.map((item, i) => `<li class="${s.submitChecked[i] ? 'done' : 'todo'}">${s.submitChecked[i] ? 'Done' : 'Not done'} - ${escapeHTML(item)}</li>`).join('')}</ul>`
+      : '';
+    return `<section>
+      <h2>Day ${d}: ${escapeHTML(dd.label)}</h2>
+      <p class="meta">${escapeHTML(dd.date)} | Tasks completed: ${s.checked.filter(Boolean).length} / ${dd.tasks.length} | Productivity: ${s.rating ? s.rating + ' / 5' : 'Not rated'}</p>
+      <h3>Tasks</h3>
+      <ul>${tasks}</ul>
+      ${submit}
+      <h3>Daily Reflection</h3>
+      <p class="question">${escapeHTML(dd.reflectionQ)}</p>
+      <div class="response">${escapeHTML(s.reflection || 'No response recorded.')}</div>
+      <h3>Next Class Focus</h3>
+      <div class="response">${escapeHTML(s.nextClass || 'No next class focus recorded.')}</div>
+    </section>`;
+  }).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HRE4M1 Culminating Tracker - ${escapeHTML(info.name || 'Student')}</title>
+<style>
+body{font-family:Arial,sans-serif;background:#eef2f7;color:#222;margin:0;padding:36px;line-height:1.55;}
+.wrap{max-width:900px;margin:0 auto;background:white;border:1px solid #d7dee8;border-radius:10px;padding:34px 38px;}
+.label{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:#1f4471;font-weight:700;}
+h1{color:#1f4471;margin:6px 0 4px;font-size:30px;} h2{color:#1f4471;font-size:20px;margin:28px 0 4px;} h3{color:#555;font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin:16px 0 6px;}
+.meta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:20px 0 26px;}
+.box{background:#deeaf1;border-radius:6px;padding:10px 12px;}.key{font-size:11px;color:#666;text-transform:uppercase;}.val{font-weight:700;color:#1f4471;}
+section{border-top:1px solid #d7dee8;padding-top:10px;}.meta,.question{color:#666;font-size:13px;}.response{white-space:pre-wrap;background:#fff2cc;border-left:4px solid #bf9000;padding:12px 14px;border-radius:4px;}
+li{margin:5px 0;}.done{color:#375623;}.todo{color:#777;}
+@media print{body{background:white;padding:0}.wrap{border:none;border-radius:0}}
+</style></head><body><div class="wrap">
+<div class="label">HRE4M1 Culminating Task Tracker 2026</div>
+<h1>Daily Progress Tracker</h1>
+<p class="meta">Generated ${escapeHTML(today)}</p>
+<div class="meta-grid">
+  <div class="box"><div class="key">Student</div><div class="val">${escapeHTML(info.name || '')}</div></div>
+  <div class="box"><div class="key">Email</div><div class="val">${escapeHTML(info.email || '')}</div></div>
+  <div class="box"><div class="key">Class</div><div class="val">${escapeHTML(info.className || '')}</div></div>
+  <div class="box"><div class="key">Presentation Format</div><div class="val">${escapeHTML(info.presentationFormat || '')}</div></div>
+  <div class="box"><div class="key">Presentation Day</div><div class="val">${escapeHTML(info.presentationDay || '')}</div></div>
+  <div class="box"><div class="key">Total Words</div><div class="val">${totalWords()}</div></div>
+</div>
+${daySections}
+</div></body></html>`;
+}
+
+function downloadReport() {
+  state.finishedAt = new Date().toISOString();
+  saveLocal();
+  const stamp = new Date().toISOString().slice(0, 10);
+  triggerDownload(`HRE4M1_Culminating_Tracker_${cleanFileName(state.studentInfo.name)}_${stamp}.html`, buildFullTrackerHTML(), 'text/html');
+  showToast('Full tracker downloaded.');
+}
+
+function generateReport() {
+  if (!currentDay) return;
+  saveLocal();
+  const d  = currentDay;
+  const dd = dayData[d];
+  const s  = getState(d);
+
+  // Capture live values
+  const reflEl = document.getElementById(`reflection_${d}`);
+  if (reflEl) s.reflection = reflEl.value;
+  const ncEl = document.getElementById(`nextClass_${d}`);
+  if (ncEl) s.nextClass = ncEl.value;
+
+  const name   = document.getElementById('studentName').value     || '[Name not entered]';
+  const period = document.getElementById('studentClass').value   || '[Period not selected]';
+  const fmt    = document.getElementById('presentationFormat').value || '[Not selected]';
+  const presDay= document.getElementById('presentationDay').value || '[Not selected]';
+  const today  = new Date().toLocaleDateString('en-CA', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+  document.getElementById('reportSub').textContent = `${name}  |  ${period}  |  ${today}`;
+
+  const done  = s.checked.filter(Boolean).length;
+  const total = dd.tasks.length;
+
+  let html = `
+    <div class="report-section">
+      <h3>Student Information</h3>
+      <div class="report-meta">
+        <div class="report-meta-item"><div class="key">Name</div><div class="val">${name}</div></div>
+        <div class="report-meta-item"><div class="key">Period</div><div class="val">${period}</div></div>
+        <div class="report-meta-item"><div class="key">Presentation Format</div><div class="val">${fmt}</div></div>
+        <div class="report-meta-item"><div class="key">Presentation Day</div><div class="val">${presDay}</div></div>
+      </div>
+    </div>
+    <div class="report-section">
+      <h3>Day ${d} — ${dd.label} &nbsp;(${dd.date})</h3>
+      <div class="report-meta">
+        <div class="report-meta-item"><div class="key">Tasks Completed</div><div class="val">${done} / ${total}</div></div>
+        <div class="report-meta-item"><div class="key">Productivity Rating</div><div class="val">${s.rating ? s.rating + ' / 5' : 'Not rated'}</div></div>
+      </div>
+    </div>
+    <div class="report-section">
+      <h3>Today's Tasks</h3>
+      <div class="report-task-list">`;
+
+  dd.tasks.forEach((t, i) => {
+    const cls  = s.checked[i] ? 'done' : 'not-done';
+    const icon = s.checked[i] ? '✅' : '☐';
+    html += `<div class="${cls}">${icon} ${t}</div>`;
+  });
+  html += `</div></div>`;
+
+  if (dd.submitChecklist) {
+    html += `<div class="report-section">
+      <h3>Submission Checklist</h3>
+      <div class="report-task-list">`;
+    dd.submitChecklist.forEach((item, i) => {
+      const cls  = s.submitChecked[i] ? 'done' : 'not-done';
+      const icon = s.submitChecked[i] ? '✅' : '☐';
+      html += `<div class="${cls}">${icon} ${item}</div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  html += `
+    <div class="report-section">
+      <h3>Daily Reflection</h3>
+      <div class="report-reflection">
+        <div class="q">${dd.reflectionQ}</div>
+        ${s.reflection
+          ? `<div>${s.reflection.replace(/\n/g, '<br>')}</div>`
+          : '<div style="color:#aaa;font-style:italic;">No response recorded.</div>'}
+      </div>
+    </div>`;
+
+  if (s.nextClass) {
+    html += `<div class="report-section">
+      <h3>Next Class Focus</h3>
+      <div class="report-reflection"><div>${s.nextClass}</div></div>
+    </div>`;
+  }
+
+  document.getElementById('reportContent').innerHTML = html;
+  document.getElementById('report-overlay').classList.add('visible');
+}
+
+function closeReport() {
+  document.getElementById('report-overlay').classList.remove('visible');
+}
+
+// ============================================================
+// PRINT REPORT
+// ============================================================
+function printReport() {
+  if (!currentDay) return;
+  saveLocal();
+  const d  = currentDay;
+  const dd = dayData[d];
+  const s  = getState(d);
+  const reflEl = document.getElementById(`reflection_${d}`);
+  if (reflEl) s.reflection = reflEl.value;
+  const ncEl = document.getElementById(`nextClass_${d}`);
+  if (ncEl) s.nextClass = ncEl.value;
+
+  const name   = document.getElementById('studentName').value     || 'Student';
+  const period = document.getElementById('studentClass').value   || '';
+  const fmt    = document.getElementById('presentationFormat').value || '';
+  const presDay= document.getElementById('presentationDay').value || '';
+  const today  = new Date().toLocaleDateString('en-CA', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+  const taskRows = dd.tasks.map((t, i) =>
+    `<tr><td style="text-align:center;">${s.checked[i] ? '✅' : '☐'}</td><td>${t}</td></tr>`
+  ).join('');
+
+  const submitRows = dd.submitChecklist
+    ? dd.submitChecklist.map((item, i) =>
+        `<tr><td style="text-align:center;">${s.submitChecked[i] ? '✅' : '☐'}</td><td>${item}</td></tr>`
+      ).join('')
+    : '';
+
+  const pw = window.open('', '_blank', 'width=800,height=700');
+  pw.document.write(`<!DOCTYPE html><html><head>
+<title>Daily Report — ${name} Day ${d}</title>
+<style>
+  body{font-family:Arial,sans-serif;font-size:12pt;padding:24px 32px;color:#222;max-width:720px;margin:auto;}
+  h1{font-size:16pt;color:#1F4471;margin-bottom:4px;}
+  .sub{font-size:10pt;color:#777;margin-bottom:18px;border-bottom:2px solid #DEEAF1;padding-bottom:8px;}
+  h2{font-size:11pt;color:#1F4471;margin:16px 0 6px;text-transform:uppercase;letter-spacing:.04em;}
+  table{width:100%;border-collapse:collapse;margin-bottom:8px;font-size:11pt;}
+  td{padding:5px 8px;border:1px solid #DDD;vertical-align:top;}
+  .meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;}
+  .meta-item{background:#DEEAF1;border-radius:4px;padding:6px 10px;}
+  .meta-item .k{font-size:9pt;color:#777;}
+  .meta-item .v{font-weight:700;color:#1F4471;}
+  .refl{background:#FFF2CC;border-left:3px solid #BF9000;padding:10px 14px;border-radius:4px;font-size:11pt;}
+  .refl .q{font-style:italic;color:#999;font-size:9.5pt;margin-bottom:4px;}
+  .done{color:#375623;} .not-done{color:#999;text-decoration:line-through;}
+  .submit-box{background:#FCE4D6;border-left:3px solid #833C00;border-radius:4px;padding:8px 12px;margin-top:4px;}
+  @media print{body{padding:12px;}}
+</style></head><body>
+<h1>HRE4M1 — Daily Progress Report</h1>
+<div class="sub">${name} &nbsp;|&nbsp; ${period} &nbsp;|&nbsp; ${today}</div>
+<h2>Day ${d} — ${dd.label} (${dd.date})</h2>
+<div class="meta-grid">
+  <div class="meta-item"><div class="k">Tasks Completed</div><div class="v">${s.checked.filter(Boolean).length} / ${dd.tasks.length}</div></div>
+  <div class="meta-item"><div class="k">Productivity Rating</div><div class="v">${s.rating ? s.rating+' / 5' : 'Not rated'}</div></div>
+  <div class="meta-item"><div class="k">Presentation Format</div><div class="v">${fmt || '-'}</div></div>
+  <div class="meta-item"><div class="k">Presentation Day</div><div class="v">${presDay || '-'}</div></div>
+</div>
+<h2>Today's Tasks</h2>
+<table>${taskRows}</table>
+${submitRows ? `<h2>Submission Checklist</h2><div class="submit-box"><table>${submitRows}</table></div>` : ''}
+<h2>Daily Reflection</h2>
+<p style="font-size:10pt;font-style:italic;color:#555;margin-bottom:6px;">${dd.reflectionQ}</p>
+<div class="refl">${s.reflection ? s.reflection.replace(/\n/g,'<br>') : '<span style="color:#aaa">No response recorded.</span>'}</div>
+${s.nextClass ? `<h2>Next Class Focus</h2><div class="refl">${s.nextClass}</div>` : ''}
+<p style="margin-top:28px;font-size:9pt;color:#bbb;border-top:1px solid #EEE;padding-top:8px;">
+  Generated by HRE4M1 Daily Progress Tracker 2026 &nbsp;|&nbsp; St. Thomas More Catholic Secondary School
+</p>
+<script>window.onload=function(){window.print();}<\/script>
+</body></html>`);
+  pw.document.close();
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+// Auto-detect and select the current working day based on today's date
+document.addEventListener('DOMContentLoaded', () => {
+  hydrateFromLocalStorage();
+  ['studentName', 'studentEmail', 'studentClass', 'presentationFormat', 'presentationDay'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', saveLocal);
+    if (el) el.addEventListener('input', saveLocal);
+  });
+
+  const dateMap = {
+    '2026-06-01': 1, '2026-06-02': 2, '2026-06-03': 3,
+    '2026-06-04': 4, '2026-06-05': 5,
+    '2026-06-08': 6, '2026-06-09': 7, '2026-06-10': 8,
+  };
+  const today = new Date().toISOString().split('T')[0];
+  const autoDay = dateMap[today];
+  if (autoDay && !currentDay) {
+    selectDay(autoDay);
+    showToast(`Day ${autoDay} auto-selected for today`);
+  }
+});
+</script>
+<script src="../assets/lesson-submit.js"></script>
+</body>
+</html>
