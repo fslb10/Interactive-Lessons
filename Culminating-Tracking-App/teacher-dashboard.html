@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HRE4M1 Culminating Tracker Teacher Dashboard</title>
+<style>
+  :root {
+    --navy: #1f4471;
+    --blue: #2e75b6;
+    --green: #375623;
+    --rust: #833c00;
+    --paper: #ffffff;
+    --bg: #eef2f7;
+    --line: #d8e0ea;
+    --text: #222222;
+    --muted: #667085;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+  }
+
+  header {
+    background: var(--navy);
+    color: #fff;
+    padding: 24px 32px;
+  }
+
+  header p {
+    margin: 4px 0 0;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    letter-spacing: 0;
+  }
+
+  main {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 24px 0 64px;
+  }
+
+  .panel {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(31, 68, 113, 0.1);
+    padding: 18px 20px;
+    margin-bottom: 18px;
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) 180px auto auto auto;
+    gap: 12px;
+    align-items: end;
+  }
+
+  label {
+    display: block;
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  input,
+  select,
+  button {
+    min-height: 42px;
+    border-radius: 7px;
+    font: inherit;
+  }
+
+  input,
+  select {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    padding: 9px 11px;
+    background: #fff;
+  }
+
+  button {
+    border: 0;
+    padding: 9px 15px;
+    background: var(--navy);
+    color: #fff;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  button.secondary {
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    color: var(--navy);
+  }
+
+  button.green {
+    background: var(--green);
+  }
+
+  button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(120px, 1fr));
+    gap: 12px;
+  }
+
+  .stat {
+    border-left: 4px solid var(--blue);
+    background: #f8fbff;
+    padding: 12px 14px;
+    border-radius: 6px;
+  }
+
+  .stat strong {
+    display: block;
+    color: var(--navy);
+    font-size: 1.4rem;
+  }
+
+  .stat span {
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  .status {
+    min-height: 22px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .status[data-kind="error"] { color: #991b1b; }
+  .status[data-kind="success"] { color: #166534; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    border-bottom: 1px solid var(--line);
+    padding: 10px 9px;
+    text-align: left;
+    vertical-align: top;
+    font-size: 0.9rem;
+  }
+
+  th {
+    color: var(--navy);
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .badge {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 3px 9px;
+    background: #e8f0fb;
+    color: var(--navy);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: capitalize;
+  }
+
+  .badge.submitted {
+    background: #e2efda;
+    color: var(--green);
+  }
+
+  .badge.draft {
+    background: #fff2cc;
+    color: var(--rust);
+  }
+
+  details {
+    margin-top: 8px;
+  }
+
+  summary {
+    color: var(--blue);
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  .responses {
+    display: grid;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .response {
+    border-left: 3px solid var(--blue);
+    background: #f8fbff;
+    padding: 10px 12px;
+    white-space: pre-wrap;
+  }
+
+  .response h3 {
+    margin: 0 0 6px;
+    color: var(--navy);
+    font-size: 0.9rem;
+  }
+
+  .empty {
+    color: var(--muted);
+    padding: 32px 12px;
+    text-align: center;
+  }
+
+  @media (max-width: 860px) {
+    .controls,
+    .stats {
+      grid-template-columns: 1fr;
+    }
+
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+      display: block;
+    }
+
+    thead {
+      display: none;
+    }
+
+    tr {
+      border-bottom: 1px solid var(--line);
+      padding: 12px 0;
+    }
+
+    td {
+      border: 0;
+      padding: 5px 0;
+    }
+
+    td::before {
+      content: attr(data-label);
+      display: block;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Culminating Tracking App Dashboard</h1>
+  <p>View drafts and submissions, then download student tracker responses.</p>
+</header>
+
+<main>
+  <section class="panel">
+    <div class="controls">
+      <div>
+        <label for="accessKey">Teacher Access Code</label>
+        <input id="accessKey" type="password" autocomplete="current-password" placeholder="Enter access code">
+      </div>
+      <div>
+        <label for="statusFilter">Status</label>
+        <select id="statusFilter">
+          <option value="">All</option>
+          <option value="submitted">Submitted</option>
+          <option value="draft">Draft</option>
+        </select>
+      </div>
+      <button id="loadButton" type="button">Load Responses</button>
+      <button id="csvButton" class="green" type="button" disabled>Download CSV</button>
+      <button id="jsonButton" class="secondary" type="button" disabled>Download JSON</button>
+    </div>
+    <p class="status" id="status" data-kind="info">Enter the access code to load tracker responses.</p>
+  </section>
+
+  <section class="panel stats">
+    <div class="stat"><strong id="totalCount">0</strong><span>Total Rows</span></div>
+    <div class="stat"><strong id="submittedCount">0</strong><span>Submitted</span></div>
+    <div class="stat"><strong id="draftCount">0</strong><span>Drafts</span></div>
+    <div class="stat"><strong id="studentCount">0</strong><span>Students</span></div>
+  </section>
+
+  <section class="panel">
+    <table>
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Email</th>
+          <th>Class</th>
+          <th>Status</th>
+          <th>Updated</th>
+          <th>Words</th>
+          <th>Responses</th>
+        </tr>
+      </thead>
+      <tbody id="rows">
+        <tr><td colspan="7" class="empty">No responses loaded yet.</td></tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+
+<script>
+const ENDPOINT = 'https://ttsxwogjhetzumnoaxey.supabase.co/functions/v1/culminating-tracker-dashboard';
+let rows = [];
+
+const els = {
+  accessKey: document.getElementById('accessKey'),
+  statusFilter: document.getElementById('statusFilter'),
+  loadButton: document.getElementById('loadButton'),
+  csvButton: document.getElementById('csvButton'),
+  jsonButton: document.getElementById('jsonButton'),
+  status: document.getElementById('status'),
+  rows: document.getElementById('rows'),
+  totalCount: document.getElementById('totalCount'),
+  submittedCount: document.getElementById('submittedCount'),
+  draftCount: document.getElementById('draftCount'),
+  studentCount: document.getElementById('studentCount'),
+};
+
+function setStatus(message, kind) {
+  els.status.textContent = message;
+  els.status.dataset.kind = kind || 'info';
+}
+
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  })[ch]);
+}
+
+function formatDate(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString('en-CA', { dateStyle: 'medium', timeStyle: 'short' });
+}
+
+function responseEntries(row) {
+  const responses = row.responses && typeof row.responses === 'object' ? row.responses : {};
+  return Object.entries(responses);
+}
+
+function renderStats() {
+  els.totalCount.textContent = rows.length;
+  els.submittedCount.textContent = rows.filter(row => row.status === 'submitted').length;
+  els.draftCount.textContent = rows.filter(row => row.status === 'draft').length;
+  els.studentCount.textContent = new Set(rows.map(row => row.student_email).filter(Boolean)).size;
+}
+
+function renderRows() {
+  renderStats();
+  els.csvButton.disabled = rows.length === 0;
+  els.jsonButton.disabled = rows.length === 0;
+
+  if (!rows.length) {
+    els.rows.innerHTML = '<tr><td colspan="7" class="empty">No tracker responses found.</td></tr>';
+    return;
+  }
+
+  els.rows.innerHTML = rows.map(row => {
+    const responses = responseEntries(row).map(([title, text]) => `
+      <div class="response">
+        <h3>${esc(title)}</h3>
+        <div>${esc(text || '')}</div>
+      </div>
+    `).join('');
+
+    return `
+      <tr>
+        <td data-label="Student">${esc(row.student_name)}</td>
+        <td data-label="Email">${esc(row.student_email)}</td>
+        <td data-label="Class">${esc(row.class_period)}</td>
+        <td data-label="Status"><span class="badge ${esc(row.status)}">${esc(row.status)}</span></td>
+        <td data-label="Updated">${esc(formatDate(row.updated_at))}</td>
+        <td data-label="Words">${row.total_words ?? ''}</td>
+        <td data-label="Responses">
+          <details>
+            <summary>${responseEntries(row).length} response sections</summary>
+            <div class="responses">${responses || '<div class="empty">No written responses.</div>'}</div>
+          </details>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function loadResponses() {
+  const key = els.accessKey.value.trim();
+  if (!key) {
+    setStatus('Enter the teacher access code first.', 'error');
+    return;
+  }
+
+  els.loadButton.disabled = true;
+  setStatus('Loading responses...', 'info');
+
+  try {
+    const status = els.statusFilter.value;
+    const url = new URL(ENDPOINT);
+    if (status) url.searchParams.set('status', status);
+
+    const response = await fetch(url.toString(), {
+      headers: { 'x-teacher-key': key },
+    });
+    const body = await response.json().catch(() => ({}));
+
+    if (!response.ok || !body.success) {
+      throw new Error(body.error || 'Could not load responses');
+    }
+
+    rows = body.rows || [];
+    renderRows();
+    setStatus(`Loaded ${rows.length} tracker row${rows.length === 1 ? '' : 's'}.`, 'success');
+  } catch (error) {
+    rows = [];
+    renderRows();
+    setStatus(error.message === 'Unauthorized' ? 'Access code was not accepted.' : error.message, 'error');
+  } finally {
+    els.loadButton.disabled = false;
+  }
+}
+
+function csvCell(value) {
+  return `"${String(value ?? '').replace(/"/g, '""')}"`;
+}
+
+function toCsv() {
+  const headers = [
+    'student_name',
+    'student_email',
+    'class_period',
+    'status',
+    'submitted_at',
+    'created_at',
+    'updated_at',
+    'total_words',
+    'time_spent_seconds',
+    'responses',
+  ];
+
+  const lines = [headers.join(',')];
+  rows.forEach(row => {
+    lines.push(headers.map(header => {
+      if (header === 'responses') return csvCell(JSON.stringify(row.responses || {}));
+      return csvCell(row[header]);
+    }).join(','));
+  });
+  return lines.join('\r\n');
+}
+
+function download(filename, content, mime) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 500);
+}
+
+function stamp() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+els.loadButton.addEventListener('click', loadResponses);
+els.statusFilter.addEventListener('change', () => {
+  if (rows.length || els.accessKey.value.trim()) loadResponses();
+});
+els.accessKey.addEventListener('keydown', event => {
+  if (event.key === 'Enter') loadResponses();
+});
+els.csvButton.addEventListener('click', () => download(`culminating-tracker-responses-${stamp()}.csv`, toCsv(), 'text/csv'));
+els.jsonButton.addEventListener('click', () => download(`culminating-tracker-responses-${stamp()}.json`, JSON.stringify(rows, null, 2), 'application/json'));
+</script>
+</body>
+</html>

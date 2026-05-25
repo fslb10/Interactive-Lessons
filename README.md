@@ -11,6 +11,7 @@ This repository hosts HRE4M1 lesson apps through GitHub Pages.
 - Unit 3: `https://fslb10.github.io/Interactive-Lessons/Unit-3/`
 - Unit 4: `https://fslb10.github.io/Interactive-Lessons/Unit-4/`
 - Culminating Tracking App: `https://fslb10.github.io/Interactive-Lessons/Culminating-Tracking-App/`
+- Culminating Tracking Teacher Dashboard: `https://fslb10.github.io/Interactive-Lessons/Culminating-Tracking-App/teacher-dashboard.html`
 
 ## Unit 0 lesson URLs
 
