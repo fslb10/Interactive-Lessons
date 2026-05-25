@@ -61,9 +61,24 @@
 
   .controls {
     display: grid;
-    grid-template-columns: minmax(220px, 1fr) 180px auto auto auto;
+    grid-template-columns: minmax(220px, 1fr) 180px auto;
     gap: 12px;
     align-items: end;
+  }
+
+  .download-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 14px;
+  }
+
+  .selection-summary {
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-right: auto;
   }
 
   label {
@@ -90,6 +105,13 @@
     border: 1px solid #cbd5e1;
     padding: 9px 11px;
     background: #fff;
+  }
+
+  input[type="checkbox"] {
+    width: 18px;
+    min-height: 18px;
+    height: 18px;
+    accent-color: var(--navy);
   }
 
   button {
@@ -300,8 +322,14 @@
         </select>
       </div>
       <button id="loadButton" type="button">Load Responses</button>
-      <button id="csvButton" class="green" type="button" disabled>Download CSV</button>
-      <button id="jsonButton" class="secondary" type="button" disabled>Download JSON</button>
+    </div>
+    <div class="download-tools">
+      <span class="selection-summary" id="selectionSummary">0 selected</span>
+      <button id="clearSelectionButton" class="secondary" type="button" disabled>Clear Selection</button>
+      <button id="csvButton" class="green" type="button" disabled>Download All CSV</button>
+      <button id="jsonButton" class="secondary" type="button" disabled>Download All JSON</button>
+      <button id="selectedCsvButton" class="green" type="button" disabled>Download Selected CSV</button>
+      <button id="selectedJsonButton" class="secondary" type="button" disabled>Download Selected JSON</button>
     </div>
     <p class="status" id="status" data-kind="info">Enter the access code to load tracker responses.</p>
   </section>
@@ -317,6 +345,7 @@
     <table>
       <thead>
         <tr>
+          <th><input id="selectAllRows" type="checkbox" aria-label="Select all loaded rows"></th>
           <th>Student</th>
           <th>Email</th>
           <th>Class</th>
@@ -328,7 +357,7 @@
         </tr>
       </thead>
       <tbody id="rows">
-        <tr><td colspan="8" class="empty">No responses loaded yet.</td></tr>
+        <tr><td colspan="9" class="empty">No responses loaded yet.</td></tr>
       </tbody>
     </table>
   </section>
@@ -337,6 +366,7 @@
 <script>
 const ENDPOINT = 'https://ttsxwogjhetzumnoaxey.supabase.co/functions/v1/culminating-tracker-dashboard';
 let rows = [];
+let selectedIds = new Set();
 
 const els = {
   accessKey: document.getElementById('accessKey'),
@@ -344,6 +374,11 @@ const els = {
   loadButton: document.getElementById('loadButton'),
   csvButton: document.getElementById('csvButton'),
   jsonButton: document.getElementById('jsonButton'),
+  selectedCsvButton: document.getElementById('selectedCsvButton'),
+  selectedJsonButton: document.getElementById('selectedJsonButton'),
+  clearSelectionButton: document.getElementById('clearSelectionButton'),
+  selectAllRows: document.getElementById('selectAllRows'),
+  selectionSummary: document.getElementById('selectionSummary'),
   status: document.getElementById('status'),
   rows: document.getElementById('rows'),
   totalCount: document.getElementById('totalCount'),
@@ -386,13 +421,33 @@ function renderStats() {
   els.studentCount.textContent = new Set(rows.map(row => row.student_email).filter(Boolean)).size;
 }
 
+function selectedRows() {
+  return rows.filter(row => selectedIds.has(row.id));
+}
+
+function syncSelectionControls() {
+  const selectedCount = selectedRows().length;
+  const hasRows = rows.length > 0;
+  const hasSelection = selectedCount > 0;
+
+  els.csvButton.disabled = !hasRows;
+  els.jsonButton.disabled = !hasRows;
+  els.selectedCsvButton.disabled = !hasSelection;
+  els.selectedJsonButton.disabled = !hasSelection;
+  els.clearSelectionButton.disabled = !hasSelection;
+  els.selectionSummary.textContent = `${selectedCount} selected`;
+  els.selectAllRows.disabled = !hasRows;
+  els.selectAllRows.checked = hasRows && selectedCount === rows.length;
+  els.selectAllRows.indeterminate = selectedCount > 0 && selectedCount < rows.length;
+}
+
 function renderRows() {
   renderStats();
-  els.csvButton.disabled = rows.length === 0;
-  els.jsonButton.disabled = rows.length === 0;
+  selectedIds = new Set([...selectedIds].filter(id => rows.some(row => row.id === id)));
+  syncSelectionControls();
 
   if (!rows.length) {
-    els.rows.innerHTML = '<tr><td colspan="8" class="empty">No tracker responses found.</td></tr>';
+    els.rows.innerHTML = '<tr><td colspan="9" class="empty">No tracker responses found.</td></tr>';
     return;
   }
 
@@ -406,6 +461,7 @@ function renderRows() {
 
     return `
       <tr>
+        <td data-label="Select"><input class="row-select" type="checkbox" data-select-id="${esc(row.id)}" aria-label="Select ${esc(row.student_name)}" ${selectedIds.has(row.id) ? 'checked' : ''}></td>
         <td data-label="Student">${esc(row.student_name)}</td>
         <td data-label="Email">${esc(row.student_email)}</td>
         <td data-label="Class">${esc(row.class_period)}</td>
@@ -451,6 +507,7 @@ async function loadResponses() {
     }
 
     rows = body.rows || [];
+    selectedIds.clear();
     renderRows();
     setStatus(`Loaded ${rows.length} tracker row${rows.length === 1 ? '' : 's'}.`, 'success');
   } catch (error) {
@@ -489,6 +546,7 @@ async function deleteRow(id, studentName) {
     }
 
     rows = rows.filter(row => row.id !== id);
+    selectedIds.delete(id);
     renderRows();
     setStatus('Tracker row deleted.', 'success');
   } catch (error) {
@@ -500,7 +558,7 @@ function csvCell(value) {
   return `"${String(value ?? '').replace(/"/g, '""')}"`;
 }
 
-function toCsv() {
+function toCsv(sourceRows = rows) {
   const headers = [
     'student_name',
     'student_email',
@@ -515,7 +573,7 @@ function toCsv() {
   ];
 
   const lines = [headers.join(',')];
-  rows.forEach(row => {
+  sourceRows.forEach(row => {
     lines.push(headers.map(header => {
       if (header === 'responses') return csvCell(JSON.stringify(row.responses || {}));
       return csvCell(row[header]);
@@ -543,8 +601,24 @@ function stamp() {
 els.loadButton.addEventListener('click', loadResponses);
 els.rows.addEventListener('click', event => {
   const button = event.target.closest('button[data-delete-id]');
-  if (!button) return;
-  deleteRow(button.dataset.deleteId, button.dataset.deleteName || '');
+  if (button) {
+    deleteRow(button.dataset.deleteId, button.dataset.deleteName || '');
+    return;
+  }
+
+  const checkbox = event.target.closest('input[data-select-id]');
+  if (!checkbox) return;
+  if (checkbox.checked) selectedIds.add(checkbox.dataset.selectId);
+  else selectedIds.delete(checkbox.dataset.selectId);
+  syncSelectionControls();
+});
+els.selectAllRows.addEventListener('change', () => {
+  selectedIds = els.selectAllRows.checked ? new Set(rows.map(row => row.id)) : new Set();
+  renderRows();
+});
+els.clearSelectionButton.addEventListener('click', () => {
+  selectedIds.clear();
+  renderRows();
 });
 els.statusFilter.addEventListener('change', () => {
   if (rows.length || els.accessKey.value.trim()) loadResponses();
@@ -552,8 +626,10 @@ els.statusFilter.addEventListener('change', () => {
 els.accessKey.addEventListener('keydown', event => {
   if (event.key === 'Enter') loadResponses();
 });
-els.csvButton.addEventListener('click', () => download(`culminating-tracker-responses-${stamp()}.csv`, toCsv(), 'text/csv'));
-els.jsonButton.addEventListener('click', () => download(`culminating-tracker-responses-${stamp()}.json`, JSON.stringify(rows, null, 2), 'application/json'));
+els.csvButton.addEventListener('click', () => download(`culminating-tracker-all-responses-${stamp()}.csv`, toCsv(rows), 'text/csv'));
+els.jsonButton.addEventListener('click', () => download(`culminating-tracker-all-responses-${stamp()}.json`, JSON.stringify(rows, null, 2), 'application/json'));
+els.selectedCsvButton.addEventListener('click', () => download(`culminating-tracker-selected-responses-${stamp()}.csv`, toCsv(selectedRows()), 'text/csv'));
+els.selectedJsonButton.addEventListener('click', () => download(`culminating-tracker-selected-responses-${stamp()}.json`, JSON.stringify(selectedRows(), null, 2), 'application/json'));
 </script>
 </body>
 </html>
