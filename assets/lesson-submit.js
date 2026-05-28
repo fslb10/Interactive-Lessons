@@ -1,6 +1,6 @@
 (function () {
   const ENDPOINT =
-    "https://ttsxwogjhetzumnoaxey.supabase.co/functions/v1/lesson-submission";
+    "https://okieanoysldlblqdtrau.supabase.co/functions/v1/lesson-submission";
   const AUTOSAVE_DELAY_MS = 12000;
   const AUTOSAVE_INTERVAL_MS = 60000;
 
