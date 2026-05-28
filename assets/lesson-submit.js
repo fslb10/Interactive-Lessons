@@ -232,6 +232,12 @@
     btn.textContent = busy ? busyText : idleText;
   }
 
+  function confirmSubmissionOverwrite() {
+    return window.confirm(
+      "Submit this lesson to your teacher?\n\nIf you already submitted this lesson, this will replace your previous submission for this same lesson.",
+    );
+  }
+
   async function postPayload(payload) {
     const response = await fetch(ENDPOINT, {
       method: "POST",
@@ -281,6 +287,17 @@
     try {
       const body = await postPayload(payload);
       const state = getState();
+      if (body.ignored_draft) {
+        lastDraftAt = Date.now();
+        lastDraftBody = bodyText;
+        setStatus(
+          mode === "manual"
+            ? "This lesson is already submitted. Submit again to replace the previous submission."
+            : "Already submitted. Submit again to replace the previous submission.",
+          "info",
+        );
+        return true;
+      }
       state.savedToDatabaseAt = new Date().toISOString();
       state.draftSubmissionId = body.id || state.draftSubmissionId;
       lastDraftAt = Date.now();
@@ -352,6 +369,11 @@
 
     if (!payload.student_name || !payload.student_email) {
       setStatus("Enter your name and email before submitting.", "error");
+      return;
+    }
+
+    if (!confirmSubmissionOverwrite()) {
+      setStatus("Submission cancelled. Your previous submission was not changed.", "info");
       return;
     }
 
