@@ -44,9 +44,7 @@
 
   function enhanceLogin() {
     const nameEl = document.getElementById("studentName");
-    const emailEl = document.getElementById("studentEmail");
-    const classEl = document.getElementById("studentClass");
-    if (!nameEl || !emailEl || !classEl || document.body.dataset.simplifiedLogin === "1") return;
+    if (!nameEl || document.body.dataset.simplifiedLogin === "1") return;
     document.body.dataset.simplifiedLogin = "1";
     installSelectStyle();
 
@@ -56,6 +54,8 @@
     }
     nameEl.placeholder = "Last name, First name";
 
+    let emailEl = document.getElementById("studentEmail");
+    let classEl = document.getElementById("studentClass");
     let periodEl = document.getElementById("studentPeriod");
     if (!periodEl) {
       periodEl = document.createElement("select");
@@ -78,6 +78,18 @@
       const parent = emailField?.parentNode || nameField?.parentNode;
       if (parent && emailField) parent.insertBefore(periodField, emailField);
       else if (nameField) nameField.insertAdjacentElement("afterend", periodField);
+    }
+
+    if (!emailEl) {
+      emailEl = document.createElement("input");
+      emailEl.id = "studentEmail";
+      document.body.appendChild(emailEl);
+    }
+
+    if (!classEl) {
+      classEl = document.createElement("input");
+      classEl.id = "studentClass";
+      document.body.appendChild(classEl);
     }
 
     [fieldFor(emailEl), fieldFor(classEl)].forEach(field => {
