@@ -3,6 +3,14 @@
     return value === null || value === undefined ? "" : String(value);
   }
 
+  function getGlobal(name) {
+    try {
+      return Function("return typeof " + name + " !== 'undefined' ? " + name + " : undefined")();
+    } catch {
+      return undefined;
+    }
+  }
+
   function fieldFor(element) {
     return element?.closest?.(".field") || null;
   }
@@ -30,22 +38,23 @@
   }
 
   function updateState(name, period, email, className) {
-    if (typeof window.state !== "object" || !window.state) return;
-    const info = window.state.studentInfo || window.state.student || {};
+    const state = getGlobal("state");
+    if (typeof state !== "object" || !state) return;
+    const info = state.studentInfo || state.student || {};
     info.name = name;
     info.email = email;
     info.period = period;
     info.className = className;
     info.classPeriod = className;
     if ("class" in info) info.class = className;
-    if (window.state.studentInfo) window.state.studentInfo = info;
-    if (window.state.student) window.state.student = info;
+    if (state.studentInfo) state.studentInfo = info;
+    if (state.student) state.student = info;
   }
 
   function enhanceLogin() {
     const nameEl = document.getElementById("studentName");
-    if (!nameEl || document.body.dataset.simplifiedLogin === "1") return;
-    document.body.dataset.simplifiedLogin = "1";
+    if (!nameEl || nameEl.dataset.simplifiedLogin === "1") return;
+    nameEl.dataset.simplifiedLogin = "1";
     installSelectStyle();
 
     const nameLabel = document.querySelector('label[for="studentName"]');
@@ -136,7 +145,26 @@
           }
           return undefined;
         }
-        return originalBegin.apply(this, arguments);
+        const result = originalBegin.apply(this, arguments);
+        sync();
+        return result;
+      };
+    }
+
+    const originalBeginAlt = window.begin;
+    if (typeof originalBeginAlt === "function") {
+      window.begin = function () {
+        const info = sync();
+        if (!info.name || !info.period) {
+          if (alertEl) {
+            alertEl.textContent = "Please fill in your name and select your period before starting.";
+            alertEl.classList.add("show");
+          }
+          return undefined;
+        }
+        const result = originalBeginAlt.apply(this, arguments);
+        sync();
+        return result;
       };
     }
 
@@ -161,4 +189,8 @@
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", enhanceLogin);
   }
+  new MutationObserver(enhanceLogin).observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+  });
 })();

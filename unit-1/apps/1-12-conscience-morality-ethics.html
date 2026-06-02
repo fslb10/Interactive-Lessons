@@ -1152,6 +1152,31 @@
 .note-panel { background: rgba(184, 70, 50, 0.12); border-left: 3px solid var(--gold-deep); padding: 18px 22px; margin: 22px 0; color: var(--ink); line-height: 1.65; }
 
 
+
+  .field select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(31, 41, 55, 0.2);
+    background: #FDF8E8;
+    color: var(--ink);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 16px;
+    border-radius: 2px;
+    transition: border-color 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238C7135' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+  .field select:focus {
+    outline: none;
+    border-color: var(--gold-deep, #8C7135);
+    box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.2);
+  }
+
 </style>
 </head>
 <body>
@@ -1183,8 +1208,8 @@ function progress() { const total=SECTIONS.length+4; const pct=Math.round((state
 function setScreen(n) { state.screen=Math.max(0,Math.min(n,SECTIONS.length+4)); save(); render(); scrollTo({top:0,behavior:'smooth'}); }
 function nav(canNext) { return `<div class="btn-row"><button class="btn btn-ghost" onclick="setScreen(state.screen-1)">← Back</button><div class="btn-row-split"><button class="btn-save-row" onclick="downloadProgress()">💾 Save</button><button class="btn btn-primary" ${canNext?'':'disabled'} onclick="setScreen(state.screen+1)">Continue →</button></div></div>`; }
 function showToast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1600); }
-function begin() { state.student.name=document.getElementById('studentName').value.trim(); state.student.email=document.getElementById('studentEmail').value.trim(); state.student.className=document.getElementById('studentClass').value.trim(); if(!state.student.name||!state.student.email) { document.getElementById('setupAlert').classList.add('show'); return; } if(!state.startedMs) state.startedMs=Date.now(); setScreen(1); }
-function renderWelcome() { root.innerHTML = `<section class="screen active"><div class="card"><div class="hero-banner"><div class="ornament-line"><svg width="40" height="12" viewBox="0 0 40 12"><line x1="0" y1="6" x2="40" y2="6" stroke="currentColor" stroke-width="1"></line></svg><span style="font-family:'DM Sans',sans-serif; font-size:10px; letter-spacing:0.3em; text-transform:uppercase;">${LESSON.heroLabel}</span><svg width="40" height="12" viewBox="0 0 40 12"><line x1="0" y1="6" x2="40" y2="6" stroke="currentColor" stroke-width="1"></line></svg></div><h2>${LESSON.welcomeTitle}</h2><p>${LESSON.welcomeText}</p></div><p class="prose" style="margin-bottom:24px;">Enter your information before you begin. Your final report will include your responses and quiz results.</p><div class="field"><label>Full Name</label><input id="studentName" value="${esc(state.student.name)}" placeholder="First and last name"></div><div class="field"><label>School Email</label><input id="studentEmail" value="${esc(state.student.email)}" placeholder="you@school.ca"></div><div class="field"><label>Class / Period</label><input id="studentClass" value="${esc(state.student.className)}" placeholder="e.g., HRE4M1 · Period 2"></div><div class="alert" id="setupAlert">Please fill in your name and email before starting.</div><div class="btn-row"><div></div><button class="btn btn-primary" onclick="begin()">Begin Lesson →</button></div><div class="upload-zone"><div style="font-family:'DM Sans',sans-serif; font-size:12px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:8px;">Returning to finish?</div><label for="resumeFile">Upload your saved progress file</label><input type="file" id="resumeFile" accept=".json" onchange="resumeFile(event)"></div></div></section>`; }
+function begin() { state.student.name=document.getElementById('studentName').value.trim(); state.student.period=document.getElementById('studentPeriod').value; if(!state.student.name||!state.student.period) { document.getElementById('setupAlert').classList.add('show'); return; } if(!state.startedMs) state.startedMs=Date.now(); setScreen(1); }
+function renderWelcome() { root.innerHTML = `<section class="screen active"><div class="card"><div class="hero-banner"><div class="ornament-line"><svg width="40" height="12" viewBox="0 0 40 12"><line x1="0" y1="6" x2="40" y2="6" stroke="currentColor" stroke-width="1"></line></svg><span style="font-family:'DM Sans',sans-serif; font-size:10px; letter-spacing:0.3em; text-transform:uppercase;">${LESSON.heroLabel}</span><svg width="40" height="12" viewBox="0 0 40 12"><line x1="0" y1="6" x2="40" y2="6" stroke="currentColor" stroke-width="1"></line></svg></div><h2>${LESSON.welcomeTitle}</h2><p>${LESSON.welcomeText}</p></div><p class="prose" style="margin-bottom:24px;">Enter your information before you begin. Your final report will include your responses and quiz results.</p><div class="field"><label>Full Name <span style="font-weight:400; font-style:italic; letter-spacing:0; text-transform:none; font-size:11px;">(e.g. Smith, John)</span></label><input id="studentName" value="${esc(state.student.name)}" placeholder="First and last name"></div><div class="field"><label>Period</label><select id="studentPeriod"><option value="">Select your period...</option><option value="1">Period 1</option><option value="2">Period 2</option><option value="3">Period 3</option><option value="4">Period 4</option><option value="5">Period 5</option></select></div><div class="alert" id="setupAlert">Please fill in your name and select your period before starting.</div><div class="btn-row"><div></div><button class="btn btn-primary" onclick="begin()">Begin Lesson →</button></div><div class="upload-zone"><div style="font-family:'DM Sans',sans-serif; font-size:12px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:8px;">Returning to finish?</div><label for="resumeFile">Upload your saved progress file</label><input type="file" id="resumeFile" accept=".json" onchange="resumeFile(event)"></div></div></section>`; }
 function renderContent(sec) { const r=state.responses[sec.id]||''; const ck=sec.check; const checked=ck ? state.checks[sec.id]!==undefined : true; const count=words(r); const canNext=count>=(sec.min||0)&&checked; const content=(sec.content||[]).map(p=>`<p>${p}</p>`).join(''); let check=''; if(ck) { check=`<div class="check"><div class="check-label">Quick Check</div><div class="check-q">${esc(ck.q)}</div><div class="check-options">${ck.options.map((o,i)=>`<button class="check-option ${state.checks[sec.id]===i?(i===ck.answer?'correct':'incorrect'):''} ${state.checks[sec.id]!==undefined&&i===ck.answer?'correct':''}" onclick="answerCheck('${sec.id}',${i})"><span class="letter">${'abcd'[i]}.</span><span>${esc(o)}</span></button>`).join('')}</div><div class="check-feedback show">${state.checks[sec.id]===undefined?'Choose an answer before continuing.':(state.checks[sec.id]===ck.answer?'Correct.':'Not quite. The correct answer is highlighted.')}</div></div>`; } root.innerHTML=`<section class="screen active"><div class="card"><div class="screen-label">${esc(sec.label)}</div><h2 class="screen-title">${esc(sec.title)}</h2><p class="screen-intro">${esc(sec.intro)}</p><div class="prose">${content}</div>${check}<div class="pause"><div class="pause-label">Pause and Reflect</div><div class="pause-q">${esc(sec.prompt)}</div><textarea id="resp" oninput="state.responses['${sec.id}']=this.value;save();renderWordCount(${sec.min||0})">${esc(r)}</textarea><div class="word-count" id="wc"><span>${count} words</span><span class="${count>=(sec.min||0)?'met':'short'}">Minimum: ${sec.min||0} words</span></div></div>${nav(canNext)}</div></section>`; }
 function renderWordCount(min) { const count=words(document.getElementById('resp').value); document.getElementById('wc').innerHTML=`<span>${count} words</span><span class="${count>=min?'met':'short'}">Minimum: ${min} words</span>`; }
 function answerCheck(id, choice) { state.checks[id]=choice; save(); render(); }
@@ -1204,22 +1229,26 @@ function render() { progress(); if(state.screen===0) return renderWelcome(); if(
 function downloadProgress() { save(); trigger(LESSON.filePrefix+'_progress.json', JSON.stringify(state,null,2),'application/json'); showToast('Progress downloaded.'); }
 function resumeFile(e) { const file=e.target.files[0]; if(!file) return; const r=new FileReader(); r.onload=()=>{ try{ const loaded=JSON.parse(r.result); if(loaded && loaded.screen!==undefined) { state=loaded; save(); render(); showToast('Progress restored.'); } else throw new Error('bad'); }catch(err){ alert('Could not load that file. Please upload a valid Unit 1.12 progress file.'); } }; r.readAsText(file); }
 function trigger(name, content, type) { const blob=new Blob([content],{type}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),800); }
-function downloadReport() { const score=QUIZ.reduce((s,q,i)=>s+(state.quiz[i]===q.answer?1:0),0); const responses=SECTIONS.filter(s=>s.prompt).map(s=>`<h2>${esc(s.title)}</h2><p><em>${esc(s.prompt)}</em></p><div class="box">${esc(state.responses[s.id]||'')}</div>`).join('')+DEEP_PROMPTS.map((p,i)=>`<h2>${esc(p[0])}</h2><p><em>${esc(p[1])}</em></p><div class="box">${esc(state.responses['td'+(i+1)]||'')}</div>`).join('')+`<h2>Final Synthesis</h2><p><em>${esc(SYNTHESIS_PROMPT)}</em></p><div class="box">${esc(state.responses.synthesis||'')}</div>`; const report=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${LESSON.title} Report</title><style>body{font-family:Georgia,serif;background:#f7f1e1;color:#1f2937;margin:0;padding:40px;line-height:1.6}.wrap{max-width:900px;margin:0 auto;background:white;padding:42px;border:1px solid #d8c9a0}.label{font-family:Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#8c1d18;font-size:12px}h1{color:#7f1d1d}.meta{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:24px 0}.card{background:#fff8f0;border:1px solid #e5d5bd;padding:14px}.box{white-space:pre-wrap;background:#fff8f0;border-left:4px solid #8c1d18;padding:16px;margin-bottom:20px}</style></head><body><div class="wrap"><div class="label">${LESSON.unit}</div><h1>${LESSON.title}</h1><div class="meta"><div class="card"><strong>Name:</strong> ${esc(state.student.name)}</div><div class="card"><strong>Email:</strong> ${esc(state.student.email)}</div><div class="card"><strong>Class:</strong> ${esc(state.student.className)}</div><div class="card"><strong>Quiz:</strong> ${score} / ${QUIZ.length}</div></div>${responses}</div></body></html>`; trigger(LESSON.filePrefix+'_report.html', report, 'text/html'); }
+function downloadReport() { const score=QUIZ.reduce((s,q,i)=>s+(state.quiz[i]===q.answer?1:0),0); const responses=SECTIONS.filter(s=>s.prompt).map(s=>`<h2>${esc(s.title)}</h2><p><em>${esc(s.prompt)}</em></p><div class="box">${esc(state.responses[s.id]||'')}</div>`).join('')+DEEP_PROMPTS.map((p,i)=>`<h2>${esc(p[0])}</h2><p><em>${esc(p[1])}</em></p><div class="box">${esc(state.responses['td'+(i+1)]||'')}</div>`).join('')+`<h2>Final Synthesis</h2><p><em>${esc(SYNTHESIS_PROMPT)}</em></p><div class="box">${esc(state.responses.synthesis||'')}</div>`; const report=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${LESSON.title} Report</title><style>body{font-family:Georgia,serif;background:#f7f1e1;color:#1f2937;margin:0;padding:40px;line-height:1.6}.wrap{max-width:900px;margin:0 auto;background:white;padding:42px;border:1px solid #d8c9a0}.label{font-family:Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#8c1d18;font-size:12px}h1{color:#7f1d1d}.meta{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:24px 0}.card{background:#fff8f0;border:1px solid #e5d5bd;padding:14px}.box{white-space:pre-wrap;background:#fff8f0;border-left:4px solid #8c1d18;padding:16px;margin-bottom:20px}</style></head><body><div class="wrap"><div class="label">${LESSON.unit}</div><h1>${LESSON.title}</h1><div class="meta"><div class="card"><strong>Name:</strong> ${esc(state.student.name)}</div><div class="card"><strong>Period:</strong> ${state.student.period ? 'Period ' + esc(state.student.period) : ''}</div><div class="card"><strong>Quiz:</strong> ${score} / ${QUIZ.length}</div></div>${responses}</div></body></html>`; trigger(LESSON.filePrefix+'_report.html', report, 'text/html'); }
 render();
 
 
 /* No-paste safeguard for student written responses */
-document.querySelectorAll("textarea").forEach(field => {
-  field.addEventListener("paste", e => {
+document.addEventListener("paste", e => {
+  if (e.target && e.target.closest && e.target.closest("textarea")) {
     e.preventDefault();
     alert("Pasting is disabled here. Please type your response in your own words.");
-  });
+  }
+}, true);
 
-  field.addEventListener("drop", e => {
+document.addEventListener("drop", e => {
+  if (e.target && e.target.closest && e.target.closest("textarea")) {
     e.preventDefault();
-  });
-});
+  }
+}, true);
 </script>
+
+  <script src="../../assets/simplified-login.js"></script>
   <script src="../../assets/lesson-submit.js"></script>
 </body>
 </html>
