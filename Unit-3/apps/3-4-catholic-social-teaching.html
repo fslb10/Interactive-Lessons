@@ -1183,10 +1183,20 @@
           <p>This lesson explores the Church’s moral framework for building a just, compassionate, and dignified society.</p>
         </div>
         <p class="prose" style="margin-bottom:24px;">Enter your information before you begin. At the end, you will be able to download a report of your responses and quiz results.</p>
-        <div class="field"><label for="studentName">Full Name</label><input type="text" id="studentName" placeholder="First and last name" autocomplete="name"></div>
-        <div class="field"><label for="studentEmail">School Email</label><input type="email" id="studentEmail" placeholder="you@school.ca" autocomplete="email"></div>
-        <div class="field"><label for="studentClass">Class / Period</label><input type="text" id="studentClass" placeholder="e.g., HRE4M1 · Period 2"></div>
-        <div class="alert" id="setupAlert">Please fill in your name and email before starting.</div>
+        <div class="field"><label for="studentName">Full Name <span style="font-weight:400; font-style:italic; letter-spacing:0; text-transform:none; font-size:11px;">(e.g. Smith, John)</span></label><input type="text" id="studentName" placeholder="Last name, First name" autocomplete="name"></div>
+
+        <div class="field">
+<label for="studentPeriod">Period</label>
+<select id="studentPeriod">
+<option value="">Select your period...</option>
+<option value="1">Period 1</option>
+<option value="2">Period 2</option>
+<option value="3">Period 3</option>
+<option value="4">Period 4</option>
+<option value="5">Period 5</option>
+</select>
+</div>
+        <div class="alert" id="setupAlert">Please fill in your name and select your period before starting.</div>
         <div class="btn-row"><div></div><button class="btn btn-primary" onclick="beginLesson()">Begin Lesson →</button></div>
         <div class="upload-zone">
           <div style="font-family:'DM Sans',sans-serif; font-size:12px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:8px;">Returning to finish?</div>
@@ -1515,7 +1525,7 @@ const REPORT_TITLE = 'Catholic Social Teaching';
 const REPORT_SUBTITLE = 'Student Report';
 const RESUME_ERROR = 'Could not load that file. Please upload a valid Lesson 3.4 progress file.';
 
-const state = {lessonId: LESSON_ID, startedAt: null, finishedAt: null, currentScreen: 'welcome', studentInfo: {name:'', email:'', className:''}, termsViewed: [], inlineChecks: {}, responses: {}, quiz: {answers: {}, scoreCount: 0}, sectionTimes: {}, lastSavedAt: null};
+const state = {lessonId: LESSON_ID, startedAt: null, finishedAt: null, currentScreen: 'welcome', studentInfo: {name:'', period:''}, termsViewed: [], inlineChecks: {}, responses: {}, quiz: {answers: {}, scoreCount: 0}, sectionTimes: {}, lastSavedAt: null};
 RESPONSE_ORDER.forEach(key => state.responses[key] = '');
 let screenEnterTime = Date.now();
 
@@ -1523,10 +1533,8 @@ function countWords(str) { return (str || '').trim().split(/\s+/).filter(Boolean
 function escapeHTML(str) { if (str === null || str === undefined) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function formatTime(ms) { const totalMin = Math.floor(ms / 60000); if (totalMin < 1) return '< 1 min'; if (totalMin < 60) return totalMin + ' min'; const hrs = Math.floor(totalMin / 60); const mins = totalMin % 60; return hrs + 'h ' + mins + 'm'; }
 function persistInputsToState() {
-  const nameEl = document.getElementById('studentName'), emailEl = document.getElementById('studentEmail'), classEl = document.getElementById('studentClass');
-  if (nameEl) state.studentInfo.name = nameEl.value.trim();
-  if (emailEl) state.studentInfo.email = emailEl.value.trim();
-  if (classEl) state.studentInfo.className = classEl.value.trim();
+  const nameEl = document.getElementById('studentName');
+  if (nameEl) state.studentInfo.name = nameEl.value.trim(); const periodEl = document.getElementById('studentPeriod'); state.studentInfo.period = periodEl ? periodEl.value : '';
   RESPONSE_ORDER.forEach(key => { const el = document.getElementById(key); if (el) state.responses[key] = el.value.trim(); });
 }
 function saveLocal() { state.lastSavedAt = new Date().toISOString(); persistInputsToState(); localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
@@ -1537,7 +1545,7 @@ function markSaveButtonsSaved() { document.querySelectorAll('.btn-save-row, .sav
 function updateProgress() { const idx = SCREEN_ORDER.indexOf(state.currentScreen); const activeStep = Math.max(0, Math.min(TOTAL_STEPS, idx)); const pct = Math.max(0, Math.min(100, Math.round((activeStep / TOTAL_STEPS) * 100))); document.getElementById('progressFill').style.width = pct + '%'; document.getElementById('progressPercent').textContent = pct + '%'; document.getElementById('progressLabel').textContent = 'Section ' + Math.max(1, activeStep) + ' of ' + TOTAL_STEPS; }
 function showScreen(screenId) { persistInputsToState(); const now = Date.now(); if (state.currentScreen) state.sectionTimes[state.currentScreen] = (state.sectionTimes[state.currentScreen] || 0) + (now - screenEnterTime); screenEnterTime = now; state.currentScreen = screenId; document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); const target = document.querySelector('.screen[data-screen="' + screenId + '"]'); if (target) target.classList.add('active'); document.getElementById('progressContainer').style.display = screenId === 'welcome' ? 'none' : 'block'; if (screenId === 'quiz') renderQuiz(); if (screenId === 'finish') refreshFinishStats(); updateProgress(); refreshGating(); saveLocal(); window.scrollTo({top:0, behavior:'smooth'}); }
 function prevScreen() { const idx = SCREEN_ORDER.indexOf(state.currentScreen); if (idx > 0) showScreen(SCREEN_ORDER[idx - 1]); }
-function beginLesson() { const name = document.getElementById('studentName').value.trim(); const email = document.getElementById('studentEmail').value.trim(); if (!name || !email) { document.getElementById('setupAlert').classList.add('show'); return; } document.getElementById('setupAlert').classList.remove('show'); if (!state.startedAt) state.startedAt = new Date().toISOString(); showScreen('hook'); }
+function beginLesson() { const name = document.getElementById('studentName').value.trim(); const period = document.getElementById('studentPeriod').value; if (!name || !period) { document.getElementById('setupAlert').classList.add('show'); return; } document.getElementById('setupAlert').classList.remove('show'); if (!state.startedAt) state.startedAt = new Date().toISOString(); showScreen('hook'); }
 function updateWordCount(textareaId, countId, minimum) { const el = document.getElementById(textareaId); const words = countWords(el.value); state.responses[textareaId] = el.value.trim(); const counter = document.getElementById(countId); const met = words >= minimum; counter.innerHTML = '<span>' + words + ' words</span><span class="' + (met ? 'met' : 'short') + '">Minimum: ' + minimum + ' words</span>'; saveLocal(); refreshGating(); }
 function updatePause(textareaId, countId, minimum, nextBtnId, checkId) { updateWordCount(textareaId, countId, minimum); refreshGating(); }
 function openTerm(card) { const term = card.getAttribute('data-term'); card.classList.toggle('open'); if (!state.termsViewed.includes(term)) state.termsViewed.push(term); card.classList.add('viewed'); document.getElementById('termsViewed').textContent = state.termsViewed.length; saveLocal(); refreshGating(); }
@@ -1550,31 +1558,31 @@ function restoreQuiz() { QUIZ.forEach(q => { const qEl = document.getElementById
 function triggerDownload(filename, content, mime) { const blob = new Blob([content], {type: mime}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 500); }
 function saveProgressNow() { saveLocal(); const stamp = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-'); triggerDownload(`HRE4M1_L3_4_progress_${stamp}.json`, JSON.stringify(state, null, 2), 'application/json'); markSaveButtonsSaved(); showToast('Progress downloaded.'); }
 function refreshFinishStats() { document.getElementById('finishQuiz').textContent = state.quiz.scoreCount + ' / ' + QUIZ.length; document.getElementById('finishWords').textContent = totalWords(); document.getElementById('finishTime').textContent = formatTime(totalTimeMs()); }
-function buildReportHTML() { persistInputsToState(); const rows = RESPONSE_ORDER.map(key => `<section style="margin:0 0 28px 0;"><h3 style="font-family:Georgia,serif;font-size:24px;margin:0 0 8px 0;color:#2F6A59;">${escapeHTML(RESPONSE_TITLES[key])}</h3><div style="font-size:13px;color:#956A32;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;">${countWords(state.responses[key])} words</div><div style="white-space:pre-wrap;line-height:1.7;font-size:16px;border:1px solid #ddd7c6;background:#fffdf7;padding:16px 18px;">${escapeHTML(state.responses[key] || '')}</div></section>`).join(''); return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${REPORT_TITLE} Report</title><style>body{font-family:Georgia,serif;background:#f5f1e7;color:#1e2a2f;margin:0;padding:40px;line-height:1.6;}.wrap{max-width:900px;margin:0 auto;background:#fff;padding:42px 46px;border:1px solid #d8c9a0;box-shadow:0 10px 30px rgba(0,0,0,.08);}.small{font-family:Arial,sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#956A32;}h1{font-size:42px;color:#2F6A59;margin:8px 0 4px;}h2{font-size:18px;font-style:italic;color:#4B5C61;margin:0 0 26px;}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:24px 0 28px;}.card{border:1px solid #ddd7c6;background:#fffdf7;padding:14px 16px;}.label{font-family:Arial,sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#956A32;margin-bottom:6px;}.value{font-size:18px;color:#2F6A59;}hr{border:none;border-top:1px solid #d8c9a0;margin:26px 0;}@media print{body{background:white;padding:0;} .wrap{box-shadow:none;border:none;}}</style></head><body><div class="wrap"><div class="small">${REPORT_HEADER_LABEL}</div><h1>${REPORT_TITLE}</h1><h2>${REPORT_SUBTITLE}</h2><div class="grid"><div class="card"><div class="label">Student</div><div class="value">${escapeHTML(state.studentInfo.name || '')}</div></div><div class="card"><div class="label">Email</div><div class="value">${escapeHTML(state.studentInfo.email || '')}</div></div><div class="card"><div class="label">Class</div><div class="value">${escapeHTML(state.studentInfo.className || '')}</div></div><div class="card"><div class="label">Quiz Score</div><div class="value">${state.quiz.scoreCount} / ${QUIZ.length}</div></div><div class="card"><div class="label">Total Words</div><div class="value">${totalWords()}</div></div><div class="card"><div class="label">Time in Lesson</div><div class="value">${formatTime(totalTimeMs())}</div></div></div><hr>${rows}</div>
-</body></html>`; }
+function buildReportHTML() { persistInputsToState(); const rows = RESPONSE_ORDER.map(key => `<section style="margin:0 0 28px 0;"><h3 style="font-family:Georgia,serif;font-size:24px;margin:0 0 8px 0;color:#2F6A59;">${escapeHTML(RESPONSE_TITLES[key])}</h3><div style="font-size:13px;color:#956A32;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;">${countWords(state.responses[key])} words</div><div style="white-space:pre-wrap;line-height:1.7;font-size:16px;border:1px solid #ddd7c6;background:#fffdf7;padding:16px 18px;">${escapeHTML(state.responses[key] || '')}</div></section>`).join(''); return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${REPORT_TITLE} Report</title><style>body{font-family:Georgia,serif;background:#f5f1e7;color:#1e2a2f;margin:0;padding:40px;line-height:1.6;}.wrap{max-width:900px;margin:0 auto;background:#fff;padding:42px 46px;border:1px solid #d8c9a0;box-shadow:0 10px 30px rgba(0,0,0,.08);}.small{font-family:Arial,sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#956A32;}h1{font-size:42px;color:#2F6A59;margin:8px 0 4px;}h2{font-size:18px;font-style:italic;color:#4B5C61;margin:0 0 26px;}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:24px 0 28px;}.card{border:1px solid #ddd7c6;background:#fffdf7;padding:14px 16px;}.label{font-family:Arial,sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#956A32;margin-bottom:6px;}.value{font-size:18px;color:#2F6A59;}hr{border:none;border-top:1px solid #d8c9a0;margin:26px 0;}@media print{body{background:white;padding:0;} .wrap{box-shadow:none;border:none;}}</style></head><body><div class="wrap"><div class="small">${REPORT_HEADER_LABEL}</div><h1>${REPORT_TITLE}</h1><h2>${REPORT_SUBTITLE}</h2><div class="grid"><div class="card"><div class="label">Student</div><div class="value">${escapeHTML(state.studentInfo.name || '')}</div></div><div class="card"><div class="label">Period</div><div class="value">${state.studentInfo.period ? 'Period ' + escapeHTML(state.studentInfo.period) : ''}</div></div><div class="card"><div class="label">Quiz Score</div><div class="value">${state.quiz.scoreCount} / ${QUIZ.length}</div></div><div class="card"><div class="label">Total Words</div><div class="value">${totalWords()}</div></div><div class="card"><div class="label">Time in Lesson</div><div class="value">${formatTime(totalTimeMs())}</div></div></div><hr>${rows}</div></body></html>`; }
 function downloadReport() { const stamp = new Date().toISOString().slice(0,10); const safeName = (state.studentInfo.name || 'student').replace(/[^a-z0-9]+/gi,'_'); triggerDownload(`${REPORT_FILE_PREFIX}_${safeName}_${stamp}.html`, buildReportHTML(), 'text/html'); showToast('Report downloaded.'); }
 function finishLesson() { state.finishedAt = new Date().toISOString(); saveLocal(); showScreen('complete'); }
 function restoreChecks() { Object.entries(state.inlineChecks).forEach(([checkId, chosen]) => { const wrap = document.querySelector('.check[data-check="' + checkId + '"]'); if (!wrap) return; const correct = CORRECT_MAP[checkId]; wrap.querySelectorAll('.check-option').forEach(opt => { opt.classList.add('answered'); if (opt.getAttribute('data-answer') === correct) opt.classList.add('correct'); else if (opt.getAttribute('data-answer') === chosen) opt.classList.add('incorrect'); }); const fb = document.getElementById('fb-' + checkId); if (fb) { fb.textContent = chosen === correct ? 'Correct. You matched the main lesson idea.' : 'Not quite. The correct answer is highlighted for you.'; fb.classList.add('show'); } }); }
 function restoreTextAndCounts() { const countIdMap = {hookResponse:'hookWC', pauseIntro:'pauseIntroWC', pauseHistory:'pauseHistoryWC', pausePrinciples:'pausePrinciplesWC', pauseDignityPoor:'pauseDignityPoorWC', pauseWorkCreation:'pauseWorkCreationWC', pauseLiving:'pauseLivingWC', pauseTradition:'pauseTraditionWC', td1:'td1WC', td2:'td2WC', synthesis:'synthesisWC'}; RESPONSE_ORDER.forEach(key => { const el = document.getElementById(key); if (el) el.value = state.responses[key] || ''; const wcId = countIdMap[key]; if (el && document.getElementById(wcId)) updateWordCount(key, wcId, MINIMUMS[key]); }); }
-function resumeFromFile(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { try { const loaded = JSON.parse(e.target.result); if (!loaded || loaded.lessonId !== LESSON_ID) throw new Error('Wrong lesson file'); Object.assign(state, loaded); document.getElementById('studentName').value = state.studentInfo.name || ''; document.getElementById('studentEmail').value = state.studentInfo.email || ''; document.getElementById('studentClass').value = state.studentInfo.className || ''; restoreTextAndCounts(); document.querySelectorAll('.term-card').forEach(card => { if (state.termsViewed.includes(card.getAttribute('data-term'))) card.classList.add('viewed'); }); document.getElementById('termsViewed').textContent = state.termsViewed.length; restoreChecks(); renderQuiz(); refreshGating(); showScreen(state.currentScreen || 'hook'); showToast('Progress restored.'); } catch (err) { alert(RESUME_ERROR); } }; reader.readAsText(file); }
-function hydrateFromLocalStorage() { try { const raw = localStorage.getItem(STORAGE_KEY); if (!raw) return; const saved = JSON.parse(raw); if (!saved || saved.lessonId !== LESSON_ID) return; Object.assign(state, saved); document.getElementById('studentName').value = state.studentInfo.name || ''; document.getElementById('studentEmail').value = state.studentInfo.email || ''; document.getElementById('studentClass').value = state.studentInfo.className || ''; restoreTextAndCounts(); document.querySelectorAll('.term-card').forEach(card => { if (state.termsViewed.includes(card.getAttribute('data-term'))) card.classList.add('viewed'); }); document.getElementById('termsViewed').textContent = state.termsViewed.length; restoreChecks(); renderQuiz(); showScreen(state.currentScreen || 'welcome'); } catch (err) {} }
+function resumeFromFile(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { try { const loaded = JSON.parse(e.target.result); if (!loaded || loaded.lessonId !== LESSON_ID) throw new Error('Wrong lesson file'); Object.assign(state, loaded); document.getElementById('studentName').value = state.studentInfo.name || ''; const pEl = document.getElementById('studentPeriod'); if (pEl) pEl.value = state.studentInfo.period || ''; restoreTextAndCounts(); document.querySelectorAll('.term-card').forEach(card => { if (state.termsViewed.includes(card.getAttribute('data-term'))) card.classList.add('viewed'); }); document.getElementById('termsViewed').textContent = state.termsViewed.length; restoreChecks(); renderQuiz(); refreshGating(); showScreen(state.currentScreen || 'hook'); showToast('Progress restored.'); } catch (err) { alert(RESUME_ERROR); } }; reader.readAsText(file); }
+function hydrateFromLocalStorage() { try { const raw = localStorage.getItem(STORAGE_KEY); if (!raw) return; const saved = JSON.parse(raw); if (!saved || saved.lessonId !== LESSON_ID) return; Object.assign(state, saved); document.getElementById('studentName').value = state.studentInfo.name || ''; const pEl = document.getElementById('studentPeriod'); if (pEl) pEl.value = state.studentInfo.period || ''; restoreTextAndCounts(); document.querySelectorAll('.term-card').forEach(card => { if (state.termsViewed.includes(card.getAttribute('data-term'))) card.classList.add('viewed'); }); document.getElementById('termsViewed').textContent = state.termsViewed.length; restoreChecks(); renderQuiz(); showScreen(state.currentScreen || 'welcome'); } catch (err) {} }
 hydrateFromLocalStorage();
 updateProgress();
 refreshGating();
-
-// Disable paste and drag-drop in student written response boxes only.
-document.querySelectorAll("textarea").forEach(field => {
-  field.addEventListener("paste", e => {
+/* No-paste safeguard for student written responses */
+document.addEventListener("paste", e => {
+  if (e.target && e.target.closest && e.target.closest("textarea")) {
     e.preventDefault();
     alert("Pasting is disabled here. Please type your response in your own words.");
-  });
+  }
+}, true);
 
-  field.addEventListener("drop", e => {
+document.addEventListener("drop", e => {
+  if (e.target && e.target.closest && e.target.closest("textarea")) {
     e.preventDefault();
-  });
-});
-
+  }
+}, true);
 </script>
+  <script src="../../assets/simplified-login.js"></script>
   <script src="../../assets/lesson-submit.js"></script>
 </body>
 </html>

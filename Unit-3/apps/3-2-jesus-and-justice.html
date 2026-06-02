@@ -1189,19 +1189,23 @@
         <p class="prose" style="margin-bottom:24px;">Before you begin, enter your information. Your name will appear on the final report you can download and submit at the end of the lesson.</p>
 
         <div class="field">
-          <label for="studentName">Full Name</label>
-          <input type="text" id="studentName" placeholder="First and last name" autocomplete="name">
-        </div>
-        <div class="field">
-          <label for="studentEmail">School Email</label>
-          <input type="email" id="studentEmail" placeholder="you@school.ca" autocomplete="email">
-        </div>
-        <div class="field">
-          <label for="studentClass">Class / Period</label>
-          <input type="text" id="studentClass" placeholder="e.g., HRE4M1 · Period 2">
+          <label for="studentName">Full Name <span style="font-weight:400; font-style:italic; letter-spacing:0; text-transform:none; font-size:11px;">(e.g. Smith, John)</span></label>
+          <input type="text" id="studentName" placeholder="Last name, First name" autocomplete="name">
         </div>
 
-        <div class="alert" id="setupAlert">Please fill in your name and email before starting.</div>
+        <div class="field">
+<label for="studentPeriod">Period</label>
+<select id="studentPeriod">
+<option value="">Select your period...</option>
+<option value="1">Period 1</option>
+<option value="2">Period 2</option>
+<option value="3">Period 3</option>
+<option value="4">Period 4</option>
+<option value="5">Period 5</option>
+</select>
+</div>
+
+        <div class="alert" id="setupAlert">Please fill in your name and select your period before starting.</div>
 
         <div class="btn-row">
           <div></div>
@@ -1856,16 +1860,14 @@ function updateProgress() {
 
 function beginLesson() {
   const name = document.getElementById('studentName').value.trim();
-  const email = document.getElementById('studentEmail').value.trim();
-  const cls = document.getElementById('studentClass').value.trim();
-  if (!name || !email) {
+  const period = document.getElementById('studentPeriod').value;
+  if (!name || !period) {
     document.getElementById('setupAlert').classList.add('show');
     return;
   }
   document.getElementById('setupAlert').classList.remove('show');
   state.studentInfo.name = name;
-  state.studentInfo.email = email;
-  state.studentInfo.class = cls;
+  state.studentInfo.period = period;
   if (!state.startedAt) state.startedAt = new Date().toISOString();
   saveLocal();
   showScreen('hook');
@@ -1873,11 +1875,7 @@ function beginLesson() {
 
 function updateStudentInfoFromForm() {
   const name = document.getElementById('studentName');
-  const email = document.getElementById('studentEmail');
-  const cls = document.getElementById('studentClass');
   if (name) state.studentInfo.name = name.value.trim();
-  if (email) state.studentInfo.email = email.value.trim();
-  if (cls) state.studentInfo.class = cls.value.trim();
 }
 
 function updateWordCount(textareaId, countId, minimum) {
@@ -1998,8 +1996,7 @@ function refreshButtons() {
 
 function restoreStateToUi() {
   document.getElementById('studentName').value = state.studentInfo.name || '';
-  document.getElementById('studentEmail').value = state.studentInfo.email || '';
-  document.getElementById('studentClass').value = state.studentInfo.class || '';
+  const pEl = document.getElementById('studentPeriod'); if (pEl) pEl.value = state.studentInfo.period || '';
 
   const mapping = {
     hookResponse:['hookWC', MINIMUMS.hookResponse],
@@ -2222,7 +2219,6 @@ function buildReportHtml(inProgress) {
     (inProgress ? '<div class="progress-banner">In Progress <span class="percent">' + Math.round((SCREEN_ORDER.indexOf(state.currentScreen) / TOTAL_STEPS) * 100) + '%</span></div>' : '') +
     '<div class="meta"><dl>' +
       '<dt>Name</dt><dd>' + escapeHTML(state.studentInfo.name) + '</dd>' +
-      '<dt>Email</dt><dd>' + escapeHTML(state.studentInfo.email) + '</dd>' +
       '<dt>Class</dt><dd>' + escapeHTML(state.studentInfo.class) + '</dd>' +
       '<dt>Started</dt><dd>' + (state.startedAt ? new Date(state.startedAt).toLocaleString('en-CA') : '') + '</dd>' +
       '<dt>Completed</dt><dd>' + (state.finishedAt ? new Date(state.finishedAt).toLocaleString('en-CA') : (inProgress ? 'In progress' : '')) + '</dd>' +
@@ -2232,8 +2228,7 @@ function buildReportHtml(inProgress) {
     '<h2>Quiz Score</h2><div class="score-big">' + state.quiz.scoreCount + ' / ' + QUIZ.length + '</div>' +
     lensSummary + checksHtml + responseBlocks + '<h2>Quiz Review</h2>' + quizReview +
     '<script type="application/json" id="hre4m1-save-data">' + stateJson + '<\/script>' +
-    '
-</body></html>';
+    '</body></html>';
 
   return { filename, report };
 }
@@ -2329,21 +2324,25 @@ function hydrateFromLocalStorage() {
 hydrateFromLocalStorage();
 
 function blockPasteInResponseFields() {
-  document.querySelectorAll("textarea").forEach(field => {
-    field.addEventListener("paste", e => {
-      e.preventDefault();
-      alert("Pasting is disabled here. Please type your response in your own words.");
-    });
+/* No-paste safeguard for student written responses */
+document.addEventListener("paste", e => {
+  if (e.target && e.target.closest && e.target.closest("textarea")) {
+    e.preventDefault();
+    alert("Pasting is disabled here. Please type your response in your own words.");
+  }
+}, true);
 
-    field.addEventListener("drop", e => {
-      e.preventDefault();
-    });
-  });
+document.addEventListener("drop", e => {
+  if (e.target && e.target.closest && e.target.closest("textarea")) {
+    e.preventDefault();
+  }
+}, true);
 }
 
 blockPasteInResponseFields();
 
 </script>
+  <script src="../../assets/simplified-login.js"></script>
   <script src="../../assets/lesson-submit.js"></script>
 </body>
 </html>

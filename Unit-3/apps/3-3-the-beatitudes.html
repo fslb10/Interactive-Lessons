@@ -1187,19 +1187,23 @@
         <p class="prose" style="margin-bottom:24px;">Enter your information before you begin. At the end, you will be able to download a report of your responses and quiz results.</p>
 
         <div class="field">
-          <label for="studentName">Full Name</label>
-          <input type="text" id="studentName" placeholder="First and last name" autocomplete="name">
-        </div>
-        <div class="field">
-          <label for="studentEmail">School Email</label>
-          <input type="email" id="studentEmail" placeholder="you@school.ca" autocomplete="email">
-        </div>
-        <div class="field">
-          <label for="studentClass">Class / Period</label>
-          <input type="text" id="studentClass" placeholder="e.g., HRE4M1 · Period 2">
+          <label for="studentName">Full Name <span style="font-weight:400; font-style:italic; letter-spacing:0; text-transform:none; font-size:11px;">(e.g. Smith, John)</span></label>
+          <input type="text" id="studentName" placeholder="Last name, First name" autocomplete="name">
         </div>
 
-        <div class="alert" id="setupAlert">Please fill in your name and email before starting.</div>
+        <div class="field">
+<label for="studentPeriod">Period</label>
+<select id="studentPeriod">
+<option value="">Select your period...</option>
+<option value="1">Period 1</option>
+<option value="2">Period 2</option>
+<option value="3">Period 3</option>
+<option value="4">Period 4</option>
+<option value="5">Period 5</option>
+</select>
+</div>
+
+        <div class="alert" id="setupAlert">Please fill in your name and select your period before starting.</div>
 
         <div class="btn-row">
           <div></div>
@@ -1689,7 +1693,7 @@ const state = {
   startedAt: null,
   finishedAt: null,
   currentScreen: 'welcome',
-  studentInfo: { name: '', email: '', className: '' },
+  studentInfo: { name: '', period: '' },
   termsViewed: [],
   inlineChecks: {},
   responses: {},
@@ -1726,11 +1730,7 @@ function formatTime(ms) {
 
 function persistInputsToState() {
   const nameEl = document.getElementById('studentName');
-  const emailEl = document.getElementById('studentEmail');
-  const classEl = document.getElementById('studentClass');
-  if (nameEl) state.studentInfo.name = nameEl.value.trim();
-  if (emailEl) state.studentInfo.email = emailEl.value.trim();
-  if (classEl) state.studentInfo.className = classEl.value.trim();
+  if (nameEl) state.studentInfo.name = nameEl.value.trim(); const periodEl = document.getElementById('studentPeriod'); state.studentInfo.period = periodEl ? periodEl.value : '';
   RESPONSE_ORDER.forEach(key => {
     const el = document.getElementById(key);
     if (el) state.responses[key] = el.value.trim();
@@ -1810,8 +1810,8 @@ function prevScreen() {
 
 function beginLesson() {
   const name = document.getElementById('studentName').value.trim();
-  const email = document.getElementById('studentEmail').value.trim();
-  if (!name || !email) {
+  const period = document.getElementById('studentPeriod').value;
+  if (!name || !period) {
     document.getElementById('setupAlert').classList.add('show');
     return;
   }
@@ -2079,8 +2079,8 @@ function resumeFromFile(event) {
       if (!loaded || loaded.lessonId !== LESSON_ID) throw new Error('Wrong lesson file');
       Object.assign(state, loaded);
       document.getElementById('studentName').value = state.studentInfo.name || '';
-      document.getElementById('studentEmail').value = state.studentInfo.email || '';
-      document.getElementById('studentClass').value = state.studentInfo.className || '';
+
+      const pEl = document.getElementById('studentPeriod'); if (pEl) pEl.value = state.studentInfo.period || '';
       restoreTextAndCounts();
       document.querySelectorAll('.term-card').forEach(card => {
         if (state.termsViewed.includes(card.getAttribute('data-term'))) card.classList.add('viewed');
@@ -2106,8 +2106,8 @@ function hydrateFromLocalStorage() {
     if (!saved || saved.lessonId !== LESSON_ID) return;
     Object.assign(state, saved);
     document.getElementById('studentName').value = state.studentInfo.name || '';
-    document.getElementById('studentEmail').value = state.studentInfo.email || '';
-    document.getElementById('studentClass').value = state.studentInfo.className || '';
+
+    const pEl = document.getElementById('studentPeriod'); if (pEl) pEl.value = state.studentInfo.period || '';
     restoreTextAndCounts();
     document.querySelectorAll('.term-card').forEach(card => {
       if (state.termsViewed.includes(card.getAttribute('data-term'))) card.classList.add('viewed');
@@ -2124,18 +2124,22 @@ updateProgress();
 refreshGating();
 
 // Prevent students from pasting or dragging text into written response fields.
-document.querySelectorAll("textarea").forEach(field => {
-  field.addEventListener("paste", e => {
+/* No-paste safeguard for student written responses */
+document.addEventListener("paste", e => {
+  if (e.target && e.target.closest && e.target.closest("textarea")) {
     e.preventDefault();
     alert("Pasting is disabled here. Please type your response in your own words.");
-  });
+  }
+}, true);
 
-  field.addEventListener("drop", e => {
+document.addEventListener("drop", e => {
+  if (e.target && e.target.closest && e.target.closest("textarea")) {
     e.preventDefault();
-  });
-});
-
+  }
+}, true);
 </script>
+
+  <script src="../../assets/simplified-login.js"></script>
   <script src="../../assets/lesson-submit.js"></script>
 </body>
 </html>
