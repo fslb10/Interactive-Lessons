@@ -1659,7 +1659,21 @@ function hydrateFromLocalStorage() {
 hydrateFromLocalStorage();
 updateProgress();
 refreshGating();
+
+
+/* Disable paste and drag/drop into written response boxes only */
+document.querySelectorAll("textarea").forEach(field => {
+  field.addEventListener("paste", e => {
+    e.preventDefault();
+    alert("Pasting is disabled here. Please type your response in your own words.");
+  });
+
+  field.addEventListener("drop", e => {
+    e.preventDefault();
+  });
+});
 </script>
+  <script src="../../assets/simplified-login.js"></script>
   <script src="../../assets/lesson-submit.js"></script>
 </body>
 </html>

@@ -74,23 +74,39 @@
       document.getElementById("studentName")?.value ||
       document.querySelector("input[autocomplete='name']")?.value ||
       "";
-    const email =
-      info.email ||
-      document.getElementById("studentEmail")?.value ||
-      document.querySelector("input[type='email']")?.value ||
+    const period =
+      info.period ||
+      document.getElementById("studentPeriod")?.value ||
       "";
     const classPeriod =
       info.classPeriod ||
       info.className ||
       info.class ||
       document.getElementById("studentClass")?.value ||
+      (period ? "Period " + period : "");
+    const explicitEmail =
+      info.email ||
+      document.getElementById("studentEmail")?.value ||
+      document.querySelector("input[type='email']")?.value ||
       "";
+    const trimmedName = text(name).trim();
+    const trimmedPeriod = text(classPeriod).trim();
+    const email = text(explicitEmail).trim() || makeSyntheticEmail(trimmedName, trimmedPeriod || text(period).trim());
 
     return {
-      student_name: text(name).trim(),
-      student_email: text(email).trim(),
-      class_period: text(classPeriod).trim(),
+      student_name: trimmedName,
+      student_email: email,
+      class_period: trimmedPeriod,
     };
+  }
+
+  function makeSyntheticEmail(name, classPeriod) {
+    if (!name || !classPeriod) return "";
+    const slug = (name + "-" + classPeriod)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    return (slug || "student") + "@lesson.local";
   }
 
   function getResponses(state) {
@@ -258,7 +274,7 @@
     const payload = buildPayload("draft");
     if (!hasStudentIdentity(payload)) {
       if (mode === "manual") {
-        setStatus("Saved on this device. Enter name and email to save to the teacher dashboard.", "info");
+        setStatus("Saved on this device. Enter name and period to save to the teacher dashboard.", "info");
         markSavedLocally("Saved on this device.");
       }
       return false;
@@ -368,7 +384,7 @@
     const payload = buildPayload("submitted");
 
     if (!payload.student_name || !payload.student_email) {
-      setStatus("Enter your name and email before submitting.", "error");
+      setStatus("Enter your name and period before submitting.", "error");
       return;
     }
 
@@ -479,7 +495,7 @@
       '<button id="lessonSaveButton" type="button">Save Draft</button>' +
       '<button id="lessonSubmitButton" type="button">Submit Lesson</button>' +
       '</div>' +
-      '<p id="lessonSubmitStatus" data-kind="info">Autosaves after students enter name and email.</p>';
+      '<p id="lessonSubmitStatus" data-kind="info">Autosaves after students enter name and period.</p>';
     document.body.appendChild(panel);
 
     document.getElementById("lessonSaveButton").addEventListener("click", () => saveDraft({ mode: "manual" }));
