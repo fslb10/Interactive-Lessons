@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#102734">
+<title>Psalm 22 | The Paschal Mystery Investigation · HRE4M1</title>
+<style>
+:root { --ink:#122d38;--dark:#102734;--dark2:#183846;--teal:#2d706d;--gold:#d5a354;--paper:#f7f5ee;--canvas:#f1eee5;--white:#fff;--muted:#687b80;--line:#e5e1d8;--rose:#bd7169;--success:#267665;--shadow:0 18px 55px rgba(12,39,47,.12);--round:20px; }
+* {box-sizing:border-box}
+html {scroll-behavior:smooth}
+body {margin:0;background:var(--canvas);font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--ink);font-size:16px;line-height:1.55}
+button,input,textarea,select {font:inherit}
+button {cursor:pointer}
+a {color:var(--teal)}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible {outline:3px solid #d9ad62;outline-offset:3px}
+.site-header {position:sticky;top:0;z-index:20;background:#102734;box-shadow:0 3px 22px rgba(0,0,0,.16)}
+.header-inner {max-width:1440px;margin:auto;padding:13px 28px;display:flex;gap:18px;align-items:center;justify-content:space-between}
+.brand {display:flex;gap:12px;align-items:center;color:white;min-width:0}
+.brand-icon {height:42px;width:42px;border:1px solid rgba(222,174,91,.62);border-radius:13px;display:grid;place-items:center;color:#f8cf8c;flex:none;background:rgba(255,255,255,.06)}
+.brand-icon svg {width:24px;height:24px;stroke:currentColor;stroke-width:1.5;fill:none}
+.brand small {display:block;color:#a8c4c5;letter-spacing:1.9px;font-size:10px;font-weight:850}
+.brand strong {display:block;font-size:15px;line-height:1.28;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.header-tools {display:flex;align-items:center;gap:13px}
+.progress-block {min-width:114px;text-align:right}
+.progress-block small,.timer-block small {display:block;color:#a8c4c5;font-size:10px;letter-spacing:1.35px;font-weight:850;text-transform:uppercase}
+.progress-block strong {display:block;color:white;font-size:13px}
+.progress-track {height:4px;background:#344e5c;border-radius:99px;margin-top:4px;overflow:hidden}
+.progress-fill {height:100%;background:linear-gradient(90deg,#d5a354,#f3d39c);width:0%;transition:width .3s}
+.timer-block {color:white;display:flex;align-items:center;gap:9px;padding:4px 0 4px 16px;border-left:1px solid rgba(255,255,255,.14)}
+.timer-block strong {font-family:Georgia,serif;font-size:23px;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap}
+.timer-btn {min-height:34px;min-width:34px;border:1px solid rgba(237,224,204,.35);background:rgba(255,255,255,.08);color:#fff;border-radius:10px;font-weight:900;transition:background .2s}
+.timer-btn:hover {background:rgba(255,255,255,.18)}
+.stage-nav {background:#193745;border-top:1px solid rgba(255,255,255,.09)}
+.stage-nav-inner {max-width:1440px;margin:auto;padding:7px 25px;display:flex;gap:7px;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#52727d transparent}
+.stage-tab {border:0;background:transparent;color:#b5c9c8;font-size:12px;padding:9px 11px;border-radius:9px;white-space:nowrap;display:flex;align-items:center;gap:7px;font-weight:760;letter-spacing:.12px}
+.stage-tab:hover {background:#284a59;color:white}
+.stage-tab.active {background:#f0d5a9;color:#243a3e}
+.stage-tab .number {font-size:10px;opacity:.74}
+.stage-tab .check {color:#84c2b0;font-size:11px}
+.stage-tab.active .check {color:#217160}
+main {min-height:calc(100vh - 125px)}
+.app-shell {max-width:1260px;margin:0 auto;padding:42px 26px 62px}
+.kicker {text-transform:uppercase;letter-spacing:2.5px;font-weight:900;font-size:11px;color:#b18341}
+.serif {font-family:Georgia,"Times New Roman",serif}
+.intro-layout {display:grid;grid-template-columns:1.15fr .85fr;gap:23px;align-items:stretch}
+.intro-hero {background:var(--dark);border-radius:24px;box-shadow:var(--shadow);min-height:660px;overflow:hidden;color:white;position:relative;padding:45px 46px;display:flex;flex-direction:column;justify-content:space-between;isolation:isolate}
+.intro-hero:before {content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 72% 42%,rgba(222,171,89,.16),transparent 34%),radial-gradient(ellipse at 0% 100%,rgba(58,120,121,.19),transparent 54%),repeating-linear-gradient(90deg,transparent 0 59px,rgba(255,255,255,.022) 60px 61px)}
+.intro-hero:after {content:"";position:absolute;top:20%;right:-170px;width:550px;height:550px;border:1px solid rgba(232,190,127,.12);border-radius:50%;box-shadow:0 0 0 58px rgba(238,199,133,.026),0 0 0 124px rgba(238,199,133,.026)}
+.intro-super {display:flex;gap:10px;align-items:center;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#d4b17b}
+.intro-line {width:38px;height:1px;background:#bb965c}
+.intro-title {max-width:650px;margin:30px 0 0;font-family:Georgia,serif;font-weight:400;font-size:clamp(51px,6.1vw,88px);line-height:1.055;letter-spacing:-2.8px}
+.intro-title em {font-style:italic;color:#e6ba75}
+.intro-copy {font-size:17px;max-width:500px;color:#c8d7d7;line-height:1.75;margin:23px 0 0}
+.intro-orbit {position:absolute;right:42px;top:66px;opacity:.8}
+.orbit-small {width:86px;height:86px;border:1px solid rgba(237,207,154,.45);border-radius:50%;display:grid;place-items:center;color:#e6b96e;font-family:Georgia,serif;font-size:19px;transform:rotate(-12deg)}
+.intro-foot {display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.tag {padding:9px 13px;border:1px solid rgba(255,255,255,.2);border-radius:99px;font-size:12px;color:#dce5e3;display:inline-flex;gap:7px;align-items:center;background:rgba(255,255,255,.04)}
+.intro-right {display:flex;flex-direction:column;gap:22px}
+.panel {background:#fff;border:1px solid #e7e1d5;border-radius:24px;box-shadow:0 5px 25px rgba(14,43,50,.04)}
+.start-card {padding:34px 35px 30px}
+.start-card h2 {font-family:Georgia,serif;font-size:32px;letter-spacing:-.7px;font-weight:500;line-height:1.15;margin:13px 0 14px}
+.start-card p {color:#5d6e73;margin:0 0 24px}
+.field-row {display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-field {display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.form-field label {font-size:11px;text-transform:uppercase;letter-spacing:1.15px;color:#66797b;font-weight:850}
+.form-field input,.form-field select {border:1px solid #d8dcd9;border-radius:11px;background:#f9faf8;width:100%;padding:11px 12px;color:var(--ink);min-height:46px}
+.btn {border:0;border-radius:12px;font-weight:850;letter-spacing:.2px;display:inline-flex;justify-content:center;align-items:center;gap:9px;padding:13px 18px;transition:transform .12s,box-shadow .12s,background .12s;min-height:47px}
+.btn:hover:not(:disabled){transform:translateY(-1px)}
+.btn-primary {background:#d4a45a;color:#17323b;box-shadow:0 6px 18px rgba(163,115,49,.16)}
+.btn-primary:hover {background:#ebbc74}
+.btn-teal {background:#205e5e;color:white}
+.btn-teal:hover {background:#174e4d}
+.btn-muted {border:1px solid #dce1dc;background:#fff;color:#29444a}
+.btn-muted:hover {background:#eef5f2}
+.btn-text {background:none;color:#296667;padding:10px 6px}
+.btn:disabled {opacity:.55;cursor:not-allowed}
+.btn-full {width:100%}
+.mini-note {font-size:12px;color:#82908d;line-height:1.55;margin-top:12px!important}
+.warmup-card {padding:26px 30px}
+.warmup-title {font-family:Georgia,serif;font-size:21px;margin:8px 0 6px}
+.warmup-desc {font-size:13px;color:#667879;margin:0 0 15px}
+.sequence-picks,.sequence-result {display:flex;gap:7px;flex-wrap:wrap;min-height:38px;align-items:center}
+.sequence-picks button {font-size:12px;border:1px solid #cbd6d1;background:#eef5f0;border-radius:9px;padding:8px 10px;color:#285e58;font-weight:760}
+.sequence-picks button:disabled {opacity:.42;cursor:default}
+.slot {border:1px dashed #d7c8b1;background:#faf7ef;border-radius:9px;color:#637576;padding:8px 9px;min-width:66px;text-align:center;font-size:12px}
+.sequence-arrow {color:#b79963;font-size:14px}
+.sequence-feedback {font-size:12px;margin-top:10px;min-height:21px;color:#58716e;font-weight:690}
+.section-top {display:flex;gap:15px;justify-content:space-between;align-items:flex-end;margin-bottom:23px}
+.section-top h1 {font:normal clamp(35px,4.5vw,56px)/1.12 Georgia,serif;letter-spacing:-1.6px;margin:8px 0 0}
+.section-top h1 em {color:#9e7442;font-weight:400}
+.section-top p {max-width:575px;color:#637478;font-size:15px;margin:13px 0 0}
+.case-num-box {display:flex;gap:9px;align-items:center;color:#6d7b7d;font-size:12px;font-weight:700;white-space:nowrap;border:1px solid #dadbd5;background:white;padding:10px 14px;border-radius:10px}
+.case-num-box strong {color:#244e52}
+.case-grid {display:grid;grid-template-columns:1.07fr .93fr;gap:22px;align-items:start}
+.evidence-column,.answer-column {display:flex;flex-direction:column;gap:17px}
+.box-head {display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:17px}
+.box-head strong {font-size:12px;letter-spacing:1.2px;color:#526c6d;text-transform:uppercase}
+.box-head span {font-size:12px;color:#8c918b}
+.evidence-area {padding:26px 26px 24px}
+.evidence-card {display:grid;grid-template-columns:6px minmax(0,1fr);gap:15px;margin:0 0 13px;background:#f8f6f0;border:1px solid #e9e2d6;border-radius:14px;padding:17px 16px 18px 0;transition:border-color .2s}
+.evidence-card:hover {border-color:#d2b88a}
+.stripe {width:6px;background:#b58a59;border-radius:12px 0 0 12px}
+.evidence-card.gospel .stripe {background:#32807c}
+.evidence-card.support .stripe {background:#b58c94}
+.evidence-top {display:flex;align-items:center;flex-wrap:wrap;justify-content:space-between;gap:6px}
+.evidence-top small {color:#9a7848;letter-spacing:1.2px;text-transform:uppercase;font-weight:900;font-size:10px}
+.evidence-card.gospel .evidence-top small {color:#2a746e}
+.evidence-ref {font-size:13px;color:#1c444a;font-weight:900}
+.evidence-excerpt {font-family:Georgia,serif;color:#193844;font-size:clamp(19px,2vw,23px);line-height:1.38;margin:11px 0 8px}
+.evidence-desc {font-size:13px;color:#617475;line-height:1.65;margin:0 0 9px}
+.scripture-link {font-size:12px;font-weight:800;text-decoration:none;border-bottom:1px solid #91aaa4;padding-bottom:2px}
+.scripture-link:hover {color:#a27540}
+.reading-prompt {display:flex;gap:11px;background:#eaf2ef;border-radius:12px;padding:14px 15px;margin-top:14px;align-items:flex-start;font-size:13px;color:#416562;line-height:1.55}
+.reading-prompt strong {color:#204f4d}
+.reading-prompt .spark {font-size:20px;line-height:1.2;color:#2c766b}
+.caution {background:#fff4e3;border:1px solid #ead3b1;color:#6d563b;padding:13px 14px;font-size:12.5px;line-height:1.65;border-radius:12px;margin-top:13px}
+.caution strong {color:#765426}
+.micro {background:#153440;color:white;border:1px solid #22434c;border-radius:19px;padding:23px 25px;overflow:hidden;position:relative}
+.micro:after {content:"";position:absolute;width:130px;height:130px;border:1px solid rgba(255,255,255,.1);border-radius:50%;right:-55px;top:-65px}
+.micro small {color:#e1bc83;font-size:10px;letter-spacing:1.8px;text-transform:uppercase;font-weight:900}
+.micro h3 {font:normal 22px/1.28 Georgia,serif;margin:8px 0 17px;max-width:490px}
+.micro-options {display:grid;gap:9px}
+.option {text-align:left;background:#244652;border:1px solid #3d5b64;color:#e5eeee;border-radius:11px;display:flex;align-items:flex-start;gap:10px;padding:11px 13px;font-size:13px;line-height:1.4;position:relative;z-index:1;transition:background .18s}
+.option:hover {background:#2c5660}
+.option.selected {background:#e6d0a9;border-color:#d8b376;color:#193a40}
+.option-dot {display:grid;place-items:center;width:20px;height:20px;flex:none;border:1px solid currentColor;border-radius:50%;font-size:11px;opacity:.85}
+.micro-feedback {border-radius:10px;padding:11px 12px;margin-top:13px;font-size:12px;line-height:1.5;background:rgba(239,206,150,.14);color:#f5e0b8}
+.micro-feedback.right {background:rgba(113,191,161,.18);color:#c6f0de}
+.micro-feedback[hidden] {display:none}
+.answer-panel {padding:29px 29px 25px;position:relative}
+.answer-topline {display:flex;justify-content:space-between;gap:12px;align-items:center}
+.answer-topline small {font-size:10px;font-weight:900;letter-spacing:1.5px;color:#a17b46;text-transform:uppercase}
+.answer-status {display:flex;gap:7px;align-items:center;color:#78908b;font-size:11px;white-space:nowrap}
+.status-dot {background:#c9d0cd;height:7px;width:7px;border-radius:50%;display:inline-block}
+.status-dot.done {background:#279475}
+.question-title {font-family:Georgia,serif;font-size:clamp(21px,2.3vw,26px);line-height:1.37;margin:14px 0 24px;font-weight:500}
+.scaffold {background:#f1f4ee;border-radius:12px;padding:16px 18px;color:#465f60}
+.scaffold-header {color:#346561;font-size:11px;letter-spacing:1.25px;font-weight:900;text-transform:uppercase;margin-bottom:9px}
+.scaffold-steps {padding-left:18px;margin:0;font-size:13px;line-height:1.75}
+.scaffold-steps li+li{margin-top:3px}
+.answer-label {display:flex;justify-content:space-between;gap:9px;align-items:flex-end;margin:22px 0 8px}
+.answer-label strong {font-size:13px;color:#345b5a}
+.answer-label span {font-size:11px;color:#91a09d}
+.answer-area {display:block;width:100%;min-height:187px;resize:vertical;background:#fffefa;border:1px solid #cfd9d4;border-radius:12px;padding:14px 15px;color:#273d43;font-size:15px;line-height:1.7}
+.answer-area::placeholder {color:#9da8a5}
+.answer-foot {display:flex;justify-content:space-between;gap:10px;align-items:center;color:#889895;font-size:12px;margin:8px 0 17px}
+.word-count.ready {color:#24796b;font-weight:800}
+.hint-card {padding:18px 21px}
+.hint-header {display:flex;gap:8px;justify-content:space-between;align-items:center}
+.hint-header strong {font-size:13px;color:#314c4e}
+.hint-card button {border:0;border-radius:9px;background:#eef3ee;color:#236966;font-weight:800;font-size:12px;padding:10px 12px}
+.hint-card button:hover {background:#d9e8e0}
+.hint-text {padding:12px 0 0;color:#536c6b;font-size:13px;line-height:1.6;margin:0}
+.bottom-actions {display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:22px;border-top:1px solid #e5e9e5;padding-top:20px}
+.save-label {font-size:11px;color:#7e928d;margin-top:15px;display:flex;align-items:center;gap:7px}
+.save-label span {color:#23796c}
+.review-head {background:var(--dark);padding:37px 43px;color:white;border-radius:23px;position:relative;overflow:hidden;margin-bottom:25px}
+.review-head:after {content:"";position:absolute;border:1px solid rgba(241,202,144,.14);border-radius:50%;width:270px;height:270px;right:-90px;top:-130px;box-shadow:0 0 0 50px rgba(240,201,143,.035)}
+.review-head .kicker {color:#edc58f}
+.review-head h1 {font:normal clamp(35px,4vw,52px)/1.18 Georgia,serif;margin:9px 0 10px;position:relative;z-index:1}
+.review-head p {color:#c5d7d5;margin:0;max-width:670px;position:relative;z-index:1}
+.review-tools {display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;position:relative;z-index:1}
+.review-tools .btn-primary {box-shadow:none}
+.review-tools .btn-muted {background:rgba(255,255,255,.08);color:#ecf3f1;border:1px solid #45606b}
+.review-layout {display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;align-items:start}
+.review-list {display:grid;gap:13px}
+.review-item {padding:22px 25px}
+.review-meta {display:flex;justify-content:space-between;gap:9px;align-items:center;margin-bottom:9px}
+.review-meta small {color:#987848;font-weight:850;text-transform:uppercase;letter-spacing:1.2px;font-size:11px}
+.review-meta button {border:none;background:#edf3f0;border-radius:8px;color:#276962;font-size:12px;font-weight:850;padding:7px 11px}
+.review-q {font-weight:700;font-size:14px;color:#2a454a;margin:0 0 12px}
+.review-response {white-space:pre-wrap;overflow-wrap:anywhere;border-left:3px solid #d1b079;padding:10px 14px;background:#f9f7f1;border-radius:0 9px 9px 0;color:#43585b;font-size:14px;margin:0}
+.review-response.empty {color:#a2a8a4;font-style:italic}
+.review-side {padding:25px 24px}
+.review-side h3 {font:normal 26px Georgia,serif;margin:3px 0 12px}
+.review-side p {color:#687d7d;font-size:13px}
+.review-side ul {margin:0;padding-left:19px;font-size:13px;color:#4f6968;line-height:1.7}
+.review-side li+li {margin-top:9px}
+.review-side label {font-size:12px;font-weight:850;color:#466462;display:block;margin-top:25px;margin-bottom:9px}
+.review-side textarea {width:100%;border-radius:11px;border:1px solid #d6ded8;padding:12px;min-height:118px;resize:vertical;font-size:13px;line-height:1.6}
+.review-side .mini-note {margin-bottom:0}
+.student-print-head {display:none}
+.toast {position:fixed;z-index:50;right:22px;bottom:22px;max-width:390px;background:#123a42;color:white;padding:13px 18px;border:1px solid #3d6b67;border-radius:12px;box-shadow:0 12px 30px rgba(10,30,40,.18);font-size:13px;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.show {opacity:1;transform:translateY(0)}
+.footer-note {max-width:1260px;margin:0 auto;padding:0 26px 28px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;color:#8c9995}
+.footer-note .link-button {border:0;background:none;color:#6a8280;text-decoration:underline;font-size:11px;padding:5px}
+@media (max-width:1050px) {.intro-hero {padding:36px;min-height:590px}.intro-title {font-size:62px}.intro-layout {grid-template-columns:1.02fr .98fr}.field-row {grid-template-columns:1fr}.case-grid {grid-template-columns:1fr 1fr}.answer-panel {padding:24px}.evidence-area {padding:22px}}
+@media (max-width:800px) {.header-inner{padding:9px 15px}.brand strong{font-size:13px}.brand-icon{width:35px;height:35px}.progress-block{display:none}.stage-nav-inner{padding:6px 13px}.app-shell{padding:22px 16px 48px}.intro-layout,.case-grid,.review-layout{grid-template-columns:1fr}.intro-hero{min-height:430px;padding:31px 30px}.intro-title{font-size:58px;max-width:560px}.intro-copy{max-width:490px}.intro-orbit{right:16px;top:25px;opacity:.5}.intro-right{gap:14px}.start-card{padding:28px}.warmup-card{padding:25px}.case-grid{gap:14px}.section-top{align-items:flex-start}.case-num-box{display:none}.review-head{padding:28px}.review-side{order:-1}}
+@media (max-width:520px) {.brand small{font-size:9px;letter-spacing:1px}.brand strong{max-width:166px}.header-tools{gap:7px}.timer-block{padding-left:9px;gap:6px}.timer-block strong{font-size:19px}.timer-block small{font-size:8px}.stage-tab{padding:8px}.intro-hero{padding:26px 23px;min-height:445px}.intro-title{font-size:49px;letter-spacing:-1.8px}.intro-copy{font-size:15px}.start-card h2{font-size:30px}.field-row{grid-template-columns:1fr}.section-top h1{font-size:39px}.section-top p{font-size:14px}.evidence-area,.answer-panel{padding:21px 17px}.micro{padding:20px 18px}.question-title{font-size:22px}.hint-card{padding:15px 17px}.bottom-actions{flex-wrap:wrap}.bottom-actions .btn{flex:1}.review-item{padding:20px 18px}.review-head{padding:26px 23px}.review-tools .btn{width:100%}.footer-note{flex-direction:column;align-items:flex-start;padding:0 16px 24px}}
+@media (prefers-reduced-motion:reduce) {*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media print {body{background:white;font:12pt Georgia,serif;color:#111} .site-header,.footer-note,.toast,.review-tools,.review-side,.review-meta button{display:none!important}.app-shell{max-width:none;padding:0}.review-head{display:none}.student-print-head{display:block;margin:0 0 24px;padding:0 0 14px;border-bottom:2px solid #111}.student-print-head h1{margin:5px 0;font-size:21pt}.student-print-head p{font:10pt Arial,sans-serif}.review-layout{display:block}.review-list{display:block}.review-item{border:0;box-shadow:none;break-inside:avoid;padding:0 0 16px;margin-bottom:18px;border-bottom:1px solid #bbb}.review-q{font-size:11pt}.review-response{font-size:11pt;background:#fff;border:0;padding:0;line-height:1.5}.review-meta small{font-size:9pt;color:#333}.panel{border:0}.review-item .kicker{color:#333}}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20M5 8h14"/><circle cx="12" cy="8" r="10" stroke-opacity=".45"/></svg></div>
+      <div><small>HRE4M1 · UNIT 1.5</small><strong>Scripture Investigation: Psalm 22</strong></div>
+    </div>
+    <div class="header-tools">
+      <div class="progress-block"><small>Responses drafted</small><strong id="progressText">0 / 5</strong><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div></div>
+      <div class="timer-block"><div><small>25-minute guide</small><strong id="timerText">25:00</strong></div><button class="timer-btn" id="timerButton" type="button" title="Start or pause activity timer" aria-label="Start activity timer">▶</button></div>
+    </div>
+  </div>
+  <nav class="stage-nav" aria-label="Activity stages"><div class="stage-nav-inner" id="stageNav"></div></nav>
+</header>
+<main id="main"><div class="app-shell" id="stageArea"></div></main>
+<footer class="footer-note"><span>© HRE4M1 · Individual or pair work · No grades or answer key displayed · Responses stay on this device</span><button type="button" class="link-button" id="clearButton">Clear saved work on this device</button></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(()=>{'use strict';
+const KEY='hre4m1_psalm22_casefiles_v1';
+const sourceUrl=(ref)=>'https://www.biblegateway.com/passage/?search='+encodeURIComponent(ref)+'&version=NRSVCE';
+const caseFiles=[
+{
+ number:'01',tab:'The Cry',slug:'THE CRY',time:'4 min',name:'A cry that echoes',em:'echoes',sub:'A familiar sentence changes meaning when you read the whole poem.',
+ evidence:[
+  {kind:'psalm',source:'OLD TESTAMENT',ref:'Psalm 22:1',excerpt:'“My God, my God, why have you forsaken me?”',desc:'The psalm begins with intense suffering and the feeling of being abandoned.'},
+  {kind:'gospel',source:'THE GOSPELS',ref:'Matthew 27:46; Mark 15:34',excerpt:'Jesus cries out the opening words of Psalm 22.',desc:'As He suffers on the cross, Jesus gives voice to real human anguish.'},
+  {kind:'support',source:'ADDITIONAL CLUE',ref:'Psalm 22:22–24; Luke 23:46',excerpt:'The psalm later moves toward praise. Jesus also entrusts His spirit to the Father.',desc:'What do these later words contribute to the meaning of His cry?'}
+ ],
+ notice:'What should you do before deciding Jesus has completely lost trust in God?',
+ choices:['Read only the first line of Psalm 22.','Read how the rest of Psalm 22 develops.','Assume Jesus did not experience real suffering.'],correct:1,
+ right:'Exactly. The larger context can change how a single line is understood.',wrong:'Try again. What might be missing when we interpret only one sentence?',
+ question:'How does Psalm 22:1 help us understand Jesus’ suffering on the cross? What does this tell us about His trust in God despite His suffering?',
+ steps:['Describe what Jesus’ cry reveals about His suffering.','Look at how Psalm 22 develops, especially verses 22–24.','Explain how pain and trust in the Father can exist together.'],
+ hints:['Re-read the opening line. What human emotion do you hear?','Now look at Psalm 22:22–24 and Luke 23:46. Does the story end with the feeling expressed in verse 1?']
+},
+{
+ number:'02',tab:'The Mockery',slug:'THE MOCKERY',time:'4 min',name:'Power or weakness?',em:'weakness?',sub:'When people mock Jesus, what kind of Messiah are they expecting?',
+ evidence:[
+  {kind:'psalm',source:'OLD TESTAMENT',ref:'Psalm 22:7–8',excerpt:'“All who see me mock at me.”',desc:'The sufferer is ridiculed; people challenge God to rescue someone who trusts in Him.'},
+  {kind:'gospel',source:'THE GOSPELS',ref:'Matthew 27:39–43',excerpt:'The onlookers mock Jesus and challenge Him to save Himself.',desc:'They see His remaining on the cross as evidence against His claim to be the Messiah.'}
+ ],
+ notice:'What assumption is behind the mockers’ words in both passages?',
+ choices:['A true saviour should visibly escape humiliation and suffering.','The Messiah’s mission involves reaching all nations.','A faithful person should always keep silent.'],correct:0,
+ right:'Good observation. Now ask how Jesus’ self-giving love challenges that assumption.',wrong:'Look again at what the crowd demands. What would convince them that Jesus has power?',
+ question:'Compare Psalm 22:7–8 with Matthew 27:39–43. How does the mockery Jesus received on the cross echo the psalm? What does it reveal about how people misunderstood His mission?',
+ steps:['Identify one similar action or idea in the two passages.','Explain what the mockers expect Jesus to do.','Contrast their idea of power with Jesus’ mission of sacrificial love.'],
+ hints:['In both passages, someone who suffers is laughed at for trusting God.','Why do the onlookers think coming down from the cross would prove Jesus is the Messiah?']
+},
+{
+ number:'03',tab:'The Wounds',slug:'THE WOUNDS',time:'4 min',name:'Read the details carefully',em:'carefully',sub:'Two texts, one striking connection, and a translation detail worth noticing.',
+ evidence:[
+  {kind:'psalm',source:'OLD TESTAMENT',ref:'Psalm 22:16',excerpt:'“My hands and feet have shriveled.”',desc:'This is the wording of the NRSV-CE. Some other translations use “they have pierced my hands and feet.” The Hebrew phrase is uncertain.'},
+  {kind:'gospel',source:'THE GOSPELS',ref:'John 19:18; John 20:25–27',excerpt:'Jesus is crucified; the risen Jesus bears the marks of nails.',desc:'Thomas asks to examine the marks. Jesus later invites him to do so, although John does not say that Thomas actually touches them.'},
+  {kind:'support',source:'ONE MORE PARALLEL',ref:'Psalm 22:18; John 19:23–24',excerpt:'Clothing is divided, and lots are cast.',desc:'Compare this additional detail in the psalm with John’s crucifixion account.'}
+ ],
+ notice:'Which statement shows the most careful reading of the evidence?',
+ choices:['Every Bible translation uses precisely the same words.','John explicitly says Thomas touches Jesus’ wounds.','Psalm 22:16 has translation differences; Christians read it alongside the Gospel accounts.'],correct:2,
+ right:'Good scholarship. You can make a meaningful Christian connection while recognizing translation uncertainty.',wrong:'Check the translation note and what John says Thomas asked to do versus what John records him doing.',
+ question:'Some translations of Psalm 22:16 describe pierced hands and feet. Compare this verse with John 19:18 and John 20:25–27. How do Christians connect this earlier psalm with Jesus’ crucifixion, and why is that connection significant?',
+ steps:['Describe the imagery of suffering in Psalm 22 and the wounds mentioned in John.','Explain the connection Christians see between the earlier text and Jesus.','Acknowledge that the wording of Psalm 22:16 varies between translations.'],
+ hints:['Look closely at John 20:25. What proof does Thomas ask for?','How might Christians understand earlier Scripture more deeply in light of Jesus’ Passion, while still reading the wording accurately?'],
+ caveat:'Translation detective: The NRSV-CE has “My hands and feet have shriveled” and notes that the Hebrew is uncertain. Some Christian translations read “they have pierced my hands and feet.” Do not claim that all translations agree, or that crucifixion was invented by the Romans.'
+},
+{
+ number:'04',tab:'The Turn',slug:'THE TURN',time:'4 min',name:'The turning point',em:'turning point',sub:'Psalm 22 does not end where it begins. Neither does the Gospel story.',
+ evidence:[
+  {kind:'psalm',source:'OLD TESTAMENT',ref:'Psalm 22:1, 22–24',excerpt:'The poem moves from a cry of distress to a declaration of praise.',desc:'The speaker tells others about God and affirms that God has heard the suffering one.'},
+  {kind:'gospel',source:'THE GOSPELS',ref:'Luke 23:46; John 20:25–27',excerpt:'Jesus entrusts Himself to the Father; afterward the risen Jesus appears.',desc:'The Passion and death of Jesus are not the final chapter of the Paschal Mystery.'}
+ ],
+ notice:'Which two-part pattern best captures the movement of Psalm 22?',
+ choices:['Praise and celebration → isolation and fear','Lament and suffering → trust and praise','Resurrection → the Last Supper'],correct:1,
+ right:'That movement is key. Explain how Christians see it illuminated by Christ’s Resurrection.',wrong:'Find the contrast between verse 1 and verses 22–24. What changes?',
+ question:'Psalm 22 moves from suffering to hope in verses 22–24. How does this transition mirror the shift from Jesus’ Passion to His Resurrection? How does it illuminate the Christian belief in redemption?',
+ steps:['Name the mood at the beginning and near the end of the psalm.','Connect that shift with Jesus’ Passion, death, and Resurrection.','Explain why the Resurrection, not suffering by itself, is central to Christian hope.'],
+ hints:['Think about the difference between the opening cry and the later praise of God.','Christian faith does not say every difficulty ends quickly or happily. What is unique about Christ’s victory over death?']
+},
+{
+ number:'05',tab:'All Nations',slug:'ALL NATIONS',time:'4 min',name:'A message for the world',em:'world',sub:'The hope at the end of the psalm reaches far beyond one person.',
+ evidence:[
+  {kind:'psalm',source:'OLD TESTAMENT',ref:'Psalm 22:27–28',excerpt:'“All the ends of the earth” turn to the Lord.',desc:'The conclusion imagines the families of the nations worshipping God.'},
+  {kind:'gospel',source:'THE GOSPELS',ref:'Matthew 28:19–20',excerpt:'“Go therefore and make disciples of all nations.”',desc:'The risen Jesus sends His disciples beyond their immediate community and promises to be with them.'}
+ ],
+ notice:'Who is included in the scope of this mission?',
+ choices:['Only those who witnessed the crucifixion','Every nation and people, not just one group','Only the first twelve apostles'],correct:1,
+ right:'Yes. Now explain what makes that mission universal and what the disciples are asked to do.',wrong:'Find the words that describe the range of people in Psalm 22 and Matthew 28.',
+ question:'Psalm 22:27–28 speaks of “all the ends of the earth” turning to God. How does this connect to the Great Commission in Matthew 28:19–20? What does it teach us about the universal mission of salvation?',
+ steps:['Identify the phrase showing the wide reach of Psalm 22.','Explain what Jesus tells the disciples to do after His Resurrection.','Connect both to the Christian belief that the Gospel is offered to every nation.'],
+ hints:['Underline the idea that appears in both passages: “all the ends of the earth” and “all nations.”','The psalm describes a vision. Matthew records a mission. What is the connection between the two?']
+}
+];
+const stages=[{tab:'The Brief'},...caseFiles.map(x=>({tab:x.tab})),{tab:'Take-Up Sheet'}];
+const fresh=()=>({name1:'',name2:'',period:'',answers:['','','','',''],picks:{},hints:{},warmup:[],followup:'',elapsed:0,started:false,current:0});
+let state=fresh();
+try{const old=JSON.parse(localStorage.getItem(KEY)||'null');if(old&&typeof old==='object'){state={...fresh(),...old};if(!Array.isArray(state.answers)||state.answers.length!==5)state.answers=['','','','',''];if(!Array.isArray(state.warmup))state.warmup=[];}}catch(e){}
+let current=Math.max(0,Math.min(6,Number(state.current)||0)),running=false,lastTick=0,timerInterval=null,toastTimer=null;
+const $=id=>document.getElementById(id);
+const esc=x=>String(x??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const wordCount=text=>String(text||'').trim().split(/\s+/).filter(Boolean).length;
+const doneCount=()=>state.answers.filter(a=>wordCount(a)>=17).length;
+const save=()=>{state.current=current;try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+const toast=t=>{const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3100)};
+function updateHeader(){const n=doneCount();$('progressText').textContent=n+' / 5';$('progressFill').style.width=n*20+'%';const remaining=Math.max(0,1500-state.elapsed);$('timerText').textContent=String(Math.floor(remaining/60)).padStart(2,'0')+':'+String(remaining%60).padStart(2,'0');$('timerButton').textContent=running?'Ⅱ':'▶';$('timerButton').setAttribute('aria-label',running?'Pause activity timer':'Start activity timer');$('timerButton').title=running?'Pause activity timer':'Start activity timer';}
+function syncClock(){if(!running)return;const now=Date.now(),delta=Math.floor((now-lastTick)/1000);if(delta>=1){state.elapsed=Math.min(1500,state.elapsed+delta);lastTick+=delta*1000;if(state.elapsed>=1500){pauseTimer(true);toast('25 minutes reached. Finish your current thought and get ready for class discussion.')}else if(state.elapsed%10===0){save()}updateHeader();}}
+function startTimer(){if(running||state.elapsed>=1500)return;running=true;state.started=true;lastTick=Date.now();timerInterval=setInterval(syncClock,750);updateHeader();save();}
+function pauseTimer(expired=false){if(running&&!expired)syncClock();running=false;clearInterval(timerInterval);timerInterval=null;updateHeader();save();}
+function nav(){const wrap=$('stageNav');wrap.innerHTML=stages.map((s,i)=>`<button type="button" class="stage-tab ${i===current?'active':''}" data-go="${i}" ${i===current?'aria-current="step"':''}><span class="number">${String(i).padStart(2,'0')}</span>${esc(s.tab)}${i>0&&i<=5&&wordCount(state.answers[i-1])>=17?'<span class="check" aria-label="Response drafted">●</span>':''}</button>`).join('');const selected=wrap.querySelector('.active');if(selected)selected.scrollIntoView({block:'nearest',inline:'nearest'});}
+function heroSvg(){return `<div class="intro-orbit" aria-hidden="true"><div class="orbit-small">XXII</div></div>`}
+function intro(){const options=['Ascension','Death','Passion','Resurrection'];const names={Passion:'Passion',Death:'Death',Resurrection:'Resurrection',Ascension:'Ascension'};const filled=state.warmup.map((s,i)=>`<span class="slot">${esc(names[s])}</span>${i<3?'<span class="sequence-arrow">→</span>':''}`).join('');const remaining=4-state.warmup.length;const slots=Array.from({length:remaining},(_,i)=>`<span class="slot">${state.warmup.length+i+1}</span>${i<remaining-1?'<span class="sequence-arrow">→</span>':''}`).join('');const complete=state.warmup.length===4;const correct=complete&&state.warmup.join('|')==='Passion|Death|Resurrection|Ascension';
+return `<div class="intro-layout"><section class="intro-hero" aria-label="Investigation introduction">${heroSvg()}<div><div class="intro-super"><span class="intro-line"></span>A 25-minute scripture investigation</div><h1 class="intro-title">Five clues.<br>One <em>mystery.</em></h1><p class="intro-copy">Hundreds of years before the Gospels, Psalm 22 told a story that moved from anguish to hope. Why did Jesus speak its opening words from the cross?</p></div><div class="intro-foot"><span class="tag">✦ Five case files</span><span class="tag">◇ Your own conclusions</span><span class="tag">◷ 25 minutes</span></div></section>
+<div class="intro-right"><section class="panel start-card"><div class="kicker">YOUR MISSION</div><h2>Follow the evidence.</h2><p>Work on your own or with a partner. Read the short Scripture clues, try each mini-challenge, then write a thoughtful response to the question. We will compare answers as a class.</p>
+<div class="field-row"><div class="form-field"><label for="name1">Your first name (optional)</label><input id="name1" type="text" autocomplete="off" maxlength="60" placeholder="Student 1" value="${esc(state.name1)}"></div><div class="form-field"><label for="name2">Partner (optional)</label><input id="name2" type="text" autocomplete="off" maxlength="60" placeholder="Student 2" value="${esc(state.name2)}"></div></div>
+<div class="form-field"><label for="period">Class period (optional)</label><select id="period"><option value="">Select your period</option>${[1,2,3,4,5].map(i=>`<option value="${i}" ${state.period===String(i)?'selected':''}>Period ${i}</option>`).join('')}</select></div>
+<button type="button" class="btn btn-primary btn-full" id="begin">Begin the investigation <span aria-hidden="true">→</span></button><p class="mini-note">Your typing automatically saves in this browser. Nothing is submitted online. At the end, use the Take-Up Sheet to view or export your answers.</p></section>
+<section class="panel warmup-card"><div class="kicker">30-SECOND WARM-UP</div><h3 class="warmup-title">Put the Paschal Mystery in order.</h3><p class="warmup-desc">Tap the four moments in the order we studied them.</p><div class="sequence-picks" aria-label="Tap the moments in order">${options.map(o=>`<button type="button" data-moment="${o}" ${state.warmup.includes(o)?'disabled':''}>${o}</button>`).join('')}</div><div class="sequence-result" aria-label="Your selected order" style="margin-top:13px">${filled}${filled&&remaining?'<span class="sequence-arrow">→</span>':''}${slots}</div><div class="sequence-feedback" aria-live="polite">${complete?(correct?'✓ Correct sequence. You are ready.':'Not quite. Check the sequence you learned in the lesson.'):'Start with the suffering and Passion of Jesus.'}</div><button type="button" class="btn btn-text" id="resetSequence" style="min-height:24px;padding:3px 0;font-size:12px">↻ Reset sequence</button></section></div></div>`}
+function evidenceCard(ev){const supporting=ev.kind==='support'?'support':ev.kind==='gospel'?'gospel':'';return `<div class="evidence-card ${supporting}"><div class="stripe"></div><div><div class="evidence-top"><small>${esc(ev.source)}</small><strong class="evidence-ref">${esc(ev.ref)}</strong></div><div class="evidence-excerpt">${esc(ev.excerpt)}</div><p class="evidence-desc">${esc(ev.desc)}</p><a class="scripture-link" href="${sourceUrl(ev.ref)}" target="_blank" rel="noopener noreferrer">Read passage (NRSV-CE) ↗</a></div></div>`}
+function casePage(index){const d=caseFiles[index],picked=state.picks[index],hintN=Math.min(2,Math.max(0,state.hints[index]||0)),wc=wordCount(state.answers[index]),done=wc>=17;
+const choices=d.choices.map((x,i)=>`<button type="button" class="option ${picked===i?'selected':''}" data-pick="${i}" data-case="${index}" aria-pressed="${picked===i?'true':'false'}"><span class="option-dot">${picked===i?'✓':String.fromCharCode(65+i)}</span><span>${esc(x)}</span></button>`).join('');
+return `<div class="section-top"><div><div class="kicker">CASE FILE ${d.number} / 05 · ${d.time} suggested</div><h1 class="serif">${esc(d.name)}</h1><p>${esc(d.sub)}</p></div><div class="case-num-box"><span>✦</span> Scripture investigation <strong>${d.number}/05</strong></div></div>
+<div class="case-grid"><div class="evidence-column"><section class="panel evidence-area"><div class="box-head"><strong>① Read the clues</strong><span>Look for a connection</span></div>${d.evidence.map(evidenceCard).join('')}<div class="reading-prompt"><span class="spark" aria-hidden="true">✧</span><div><strong>Reading tip:</strong> Compare the language and the larger context of the psalm and the Gospel. You can also open the complete passages in the NRSV-CE above.</div></div>${d.caveat?`<div class="caution"><strong>Important text note:</strong> ${esc(d.caveat)}</div>`:''}</section>
+<section class="micro" aria-label="Quick evidence check"><small>② Stop &amp; notice</small><h3>${esc(d.notice)}</h3><div class="micro-options">${choices}</div><div class="micro-feedback ${picked===d.correct?'right':''}" ${picked===undefined?'hidden':''} id="microFeedback" role="status">${picked===undefined?'':esc(picked===d.correct?d.right:d.wrong)}</div></section></div>
+<div class="answer-column"><section class="panel answer-panel"><div class="answer-topline"><small>③ Make your case</small><span class="answer-status"><span id="answerDot" class="status-dot ${done?'done':''}"></span><span id="draftStatus">${done?'Draft ready':'Your own words'}</span></span></div><h2 class="question-title">${esc(d.question)}</h2><div class="scaffold"><div class="scaffold-header">Build your answer</div><ol class="scaffold-steps">${d.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></div><div class="answer-label"><label for="caseAnswer"><strong>Your response</strong></label><span>Aim for 2–4 clear sentences</span></div><textarea id="caseAnswer" class="answer-area" spellcheck="true" placeholder="Use the evidence from Scripture, then explain what it means in your own words.">${esc(state.answers[index])}</textarea><div class="answer-foot"><span id="wordCount" class="word-count ${done?'ready':''}">${wc} words ${done?' · drafted':''}</span><span>Auto-saved locally</span></div><div class="bottom-actions"><button class="btn btn-muted" data-go="${index===0?0:index}">← Back</button><button class="btn btn-teal" data-go="${index===4?6:index+2}">${index===4?'Prepare Take-Up Sheet':'Next case file →'}</button></div><div class="save-label"><span aria-hidden="true">✓</span> No score. No automatic marking. We will discuss the responses together.</div></section><section class="panel hint-card"><div class="hint-header"><strong>Need a nudge?</strong><button type="button" data-hint="${index}" ${hintN>=2?'disabled':''}>${hintN===0?'Reveal hint 1':hintN===1?'Reveal hint 2':'All hints revealed'}</button></div>${hintN>0?`<p class="hint-text"><strong>Hint 1:</strong> ${esc(d.hints[0])}</p>`:''}${hintN>1?`<p class="hint-text"><strong>Hint 2:</strong> ${esc(d.hints[1])}</p>`:''}</section></div></div>`}
+function studentMeta(){const names=[state.name1.trim(),state.name2.trim()].filter(Boolean).join(' & ')||'Student(s)';return `${names}${state.period?' | Period '+state.period:''}`}
+function review(){const n=doneCount();const cards=caseFiles.map((d,i)=>`<section class="panel review-item"><div class="review-meta"><small>Question ${i+1} · ${esc(d.tab)}</small><button type="button" data-go="${i+1}">Edit response ↗</button></div><p class="review-q">${esc(d.question)}</p><p class="review-response ${wordCount(state.answers[i])?'':'empty'}">${esc(state.answers[i]||'No response written yet. You can return to this case file and add your ideas.')}</p></section>`).join('');
+return `<div class="student-print-head"><h1>Psalm 22 · The Paschal Mystery</h1><p>HRE4M1, Unit 1.5 · ${esc(studentMeta())} · Student discussion responses</p></div><section class="review-head"><div class="kicker">CLASS DISCUSSION / YOUR NOTES</div><h1>Your take-up sheet.</h1><p>You drafted ${n} of 5 responses. Keep these handy during our class take-up. Listen for different ways to use the passages and improve your thinking.</p><div class="review-tools"><button class="btn btn-primary" type="button" id="downloadAnswers">↓ Download answers (.txt)</button><button class="btn btn-muted" type="button" id="printAnswers">▣ Print / Save as PDF</button><button class="btn btn-muted" type="button" id="copyAnswers">▤ Copy all answers</button></div></section><div class="review-layout"><div class="review-list">${cards}</div><aside class="panel review-side"><div class="kicker">BEFORE WE DISCUSS</div><h3>Ready to share?</h3><ul><li>Choose one answer you can explain using a specific verse.</li><li>Be prepared to explain a connection, not just repeat a quotation.</li><li>Listen for an idea you missed or want to clarify.</li></ul><label for="followup">A question or idea I want to raise in class (optional)</label><textarea id="followup" placeholder="One idea I'm curious about is…">${esc(state.followup)}</textarea><p class="mini-note">Remember: a good interpretation considers both what the text says and its wider context.</p><button class="btn btn-muted btn-full" type="button" data-go="1">← Review the case files</button></aside></div>`}
+function render(){nav();$('stageArea').innerHTML=current===0?intro():current===6?review():casePage(current-1);updateHeader();save();}
+function go(to){const v=Number(to);if(!Number.isInteger(v)||v<0||v>6)return;current=v;render();window.scrollTo({top:0,behavior:'instant'});}
+function allText(){let out='THE PASCHAL MYSTERY AND PSALM 22\nHRE4M1 · UNIT 1.5 · CLASS DISCUSSION NOTES\n';out+='Student(s): '+studentMeta()+'\n\n';caseFiles.forEach((d,i)=>{out+=`QUESTION ${i+1}: ${d.tab.toUpperCase()}\n${d.question}\n\n${state.answers[i].trim()||'[No response entered]'}\n\n`;});if(state.followup.trim())out+='QUESTION FOR CLASS DISCUSSION\n'+state.followup.trim()+'\n';out+='\nResponses prepared for in-class discussion. No automatic grading.\n';return out;}
+function download(){const blob=new Blob([allText()],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const link=document.createElement('a');const name=(state.name1||'student').replace(/[^a-z0-9_-]/gi,'_').slice(0,30);link.href=url;link.download=`Psalm22_CaseFiles_${name}.txt`;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);toast('Your answers were saved as a text file.');}
+async function copy(){const t=allText();try{await navigator.clipboard.writeText(t);toast('Answers copied.')}catch(e){const temp=document.createElement('textarea');temp.value=t;temp.style.position='fixed';temp.style.opacity='0';document.body.appendChild(temp);temp.focus();temp.select();let yes=false;try{yes=document.execCommand('copy')}catch(e){}temp.remove();toast(yes?'Answers copied.':'Clipboard not available here. Use Download answers instead.');}}
+function handleChoice(button){const i=Number(button.dataset.case),choice=Number(button.dataset.pick);state.picks[i]=choice;save();document.querySelectorAll('.option').forEach(b=>{const selected=Number(b.dataset.pick)===choice;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',selected?'true':'false');const dot=b.querySelector('.option-dot');dot.textContent=selected?'✓':String.fromCharCode(65+Number(b.dataset.pick));});const fb=$('microFeedback');fb.hidden=false;fb.classList.toggle('right',choice===caseFiles[i].correct);fb.textContent=choice===caseFiles[i].correct?caseFiles[i].right:caseFiles[i].wrong;}
+function updateAnswer(el){const i=current-1;if(i<0||i>4)return;state.answers[i]=el.value;const wc=wordCount(el.value),done=wc>=17;$('wordCount').textContent=wc+' words'+(done?' · drafted':'');$('wordCount').classList.toggle('ready',done);$('answerDot').classList.toggle('done',done);$('draftStatus').textContent=done?'Draft ready':'Your own words';updateHeader();nav();save();}
+function selectMoment(moment){if(state.warmup.includes(moment)||state.warmup.length>=4)return;state.warmup.push(moment);save();render();}
+$('timerButton').addEventListener('click',()=>running?pauseTimer():startTimer());
+$('clearButton').addEventListener('click',()=>{if(confirm('Clear all five responses, names, and activity progress stored in this browser? This cannot be undone.')){pauseTimer();state=fresh();current=0;try{localStorage.removeItem(KEY)}catch(e){}render();toast('Local activity data cleared.')}});
+document.addEventListener('click',event=>{const target=event.target.closest('button');if(!target)return;
+ if(target.hasAttribute('data-go')){go(target.dataset.go);return;}
+ if(target.id==='begin'){if(!state.started)startTimer();go(1);return;}
+ if(target.hasAttribute('data-pick')){handleChoice(target);return;}
+ if(target.hasAttribute('data-hint')){const i=Number(target.dataset.hint);state.hints[i]=Math.min(2,(Number(state.hints[i])||0)+1);render();return;}
+ if(target.hasAttribute('data-moment')){selectMoment(target.dataset.moment);return;}
+ if(target.id==='resetSequence'){state.warmup=[];render();return;}
+ if(target.id==='downloadAnswers'){download();return;}
+ if(target.id==='printAnswers'){window.print();return;}
+ if(target.id==='copyAnswers'){copy();return;}
+});
+document.addEventListener('input',event=>{const el=event.target;if(el.id==='caseAnswer'){updateAnswer(el);return;}if(el.id==='name1'){state.name1=el.value;save();return;}if(el.id==='name2'){state.name2=el.value;save();return;}if(el.id==='followup'){state.followup=el.value;save();return;}});
+document.addEventListener('change',event=>{if(event.target.id==='period'){state.period=event.target.value;save();}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncClock()});
+window.addEventListener('beforeunload',()=>{syncClock();save();});
+render();
+})();
+</script>
+</body>
+</html>
