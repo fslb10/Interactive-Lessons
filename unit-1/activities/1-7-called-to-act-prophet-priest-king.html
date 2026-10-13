@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0b1628">
+  <meta name="description" content="HRE4M1 student activity: practise the baptismal mission of prophet, priest, and king through three realistic decisions.">
+  <title>Called to Act | HRE4M1</title>
+  <style>
+    :root {
+      --navy:#0c1728;--deep:#091321;--panel:#122238;--panel2:#152840;
+      --line:rgba(219,229,242,.14);--line2:rgba(219,229,242,.22);
+      --text:#f1f4f9;--muted:#bdc9d8;--subtle:#8e9eaf;--gold:#f0c986;
+      --goldDeep:#ae8050;--ink:#1e2939;--paper:#f8f6f1;--paper2:#f0ede5;
+      --shadow:0 22px 70px rgba(0,0,0,.24);--radius:20px;
+      --accent:#dca880;--accent-rgb:220,168,128;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-width:320px;background:var(--navy);color:var(--text);font-family:Inter,"Segoe UI",Aptos,Arial,sans-serif;font-size:16px;line-height:1.56}
+    button, input, textarea, select{font:inherit}
+    button{cursor:pointer}
+    a{color:inherit}
+    :focus-visible{outline:3px solid #f5ce88;outline-offset:4px}
+    ::selection{background:#f1ce91;color:#1a293f}
+    .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .ambient{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 600px 500px at 78% 3%,rgba(92,109,143,.18),transparent 69%),radial-gradient(ellipse 700px 500px at 16% 90%,rgba(133,79,56,.10),transparent 76%),linear-gradient(140deg,#0b1424 0%,#0d1a2d 66%,#0b1629 100%)}
+    .topbar{height:78px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:0 clamp(18px,3vw,40px);background:rgba(8,17,31,.74);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+    .brand{display:flex;align-items:center;gap:13px;min-width:0}
+    .brandmark{width:42px;height:42px;display:grid;place-items:center;border:1px solid rgba(240,201,134,.52);border-radius:50%;color:var(--gold);font-family:Georgia,serif;font-size:23px;flex:none;box-shadow:inset 0 0 0 4px rgba(240,201,134,.06)}
+    .brandtext strong{font-size:13px;letter-spacing:.18em;color:#f0d5a8;display:block;line-height:1.35}
+    .brandtext span{color:var(--muted);font-size:12px;display:block;letter-spacing:.05em}
+    .header-right{display:flex;align-items:center;gap:12px}
+    .autostatus{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--subtle)}
+    .autostatus:before{content:"";width:7px;height:7px;border-radius:50%;background:#87baa6;display:inline-block;box-shadow:0 0 9px rgba(116,184,150,.4)}
+    .timer{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:40px;padding:5px 6px 5px 14px;background:rgba(255,255,255,.035)}
+    .timer time{font-variant-numeric:tabular-nums;font-weight:700;letter-spacing:.06em;font-size:14px;color:#f8e5be;min-width:51px}
+    .timer button{width:31px;height:31px;background:rgba(255,255,255,.08);border:0;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:13px}
+    .timer.low time{color:#ffb0a2}
+    .top-download{background:transparent;border:1px solid rgba(240,201,134,.45);color:#f6dcae;border-radius:30px;padding:9px 15px;font-size:12px;font-weight:700;letter-spacing:.02em}
+    .top-download:hover{background:rgba(240,201,134,.09)}
+    .shell{max-width:1560px;margin:0 auto;display:grid;grid-template-columns:270px minmax(0,1fr);min-height:calc(100vh - 78px)}
+    .sidebar{padding:38px 23px 30px 27px;border-right:1px solid var(--line);background:rgba(6,14,27,.23);align-self:stretch}
+    .sidebar-inner{position:sticky;top:117px}
+    .side-eyebrow,.eyebrow{color:var(--gold);font-size:11px;text-transform:uppercase;letter-spacing:.22em;font-weight:800}
+    .sidebar h2{font-family:Georgia,serif;font-weight:400;font-size:27px;line-height:1.18;margin:13px 0 10px}
+    .sidebar p{color:var(--subtle);font-size:12px;line-height:1.7;margin:0 0 28px}
+    .nav-list{display:grid;gap:6px}
+    .nav-step{display:flex;gap:13px;align-items:center;width:100%;padding:12px 10px;text-align:left;background:transparent;border:1px solid transparent;border-radius:12px;color:#adbdcf;transition:.2s}
+    .nav-step .n{width:31px;height:31px;border:1px solid rgba(220,234,255,.15);border-radius:9px;display:grid;place-items:center;font-size:12px;font-weight:800;flex:none}
+    .nav-step .txt{display:block;min-width:0}
+    .nav-step .txt strong{display:block;font-size:13px;color:inherit;font-weight:650;line-height:1.3}
+    .nav-step .txt small{display:block;color:#899aad;font-size:11px;margin-top:3px}
+    .nav-step[aria-current="step"]{background:rgba(228,184,120,.12);border-color:rgba(240,201,134,.28);color:#f5e0b9}
+    .nav-step[aria-current="step"] .n{border-color:rgba(240,201,134,.42);background:rgba(240,201,134,.14)}
+    .nav-step:hover:not([aria-current="step"]){background:rgba(255,255,255,.045);color:white}
+    .nav-step.complete .n{background:rgba(100,170,142,.18);color:#b7e9cd;border-color:rgba(115,202,157,.32)}
+    .side-progress{margin-top:31px;padding-top:25px;border-top:1px solid var(--line)}
+    .progress-caption{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:12px;margin-bottom:12px}
+    .progress-caption strong{color:#f7ddae}
+    .track{height:5px;border-radius:5px;background:rgba(255,255,255,.11);overflow:hidden}
+    .track span{display:block;width:0%;height:100%;background:linear-gradient(90deg,#a97850,#f8d59a);border-radius:5px;transition:width .35s}
+    .privacy-note{font-size:11px;color:#8e9eaf;line-height:1.7;margin-top:13px}
+    .side-bottom{margin-top:30px}
+    .side-bottom button{background:none;border:none;padding:7px 0;color:#91a4ba;font-size:11px;text-decoration:underline;text-underline-offset:3px}
+    main{min-width:0;padding:clamp(24px,3.2vw,50px) clamp(18px,4.1vw,72px) 100px}
+    .view{max-width:1000px;margin:0 auto;animation:slidein .24s ease both}
+    .view[hidden]{display:none!important}
+    @keyframes slidein{from{opacity:.7;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .stage-meta{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin-bottom:18px}
+    .meta-line{width:32px;height:1px;background:#d9b98a}
+    .minute-badge{margin-left:auto;padding:5px 10px;border:1px solid rgba(240,201,134,.25);border-radius:30px;color:#edd5ac;font-size:11px;font-weight:700;letter-spacing:.03em}
+    h1,h2,h3,h4,p{overflow-wrap:break-word}
+    .display{font-family:Georgia,"Times New Roman",serif;font-size:clamp(46px,6vw,82px);font-weight:400;line-height:1.04;letter-spacing:-.035em;margin:14px 0 18px}
+    .display em{font-style:italic;color:#ebc888}
+    .subtitle{font-size:clamp(16px,2vw,19px);color:#c5d1de;max-width:720px;line-height:1.7;margin:0 0 28px}
+    .hero-top{display:grid;grid-template-columns:1fr minmax(190px,285px);gap:30px;align-items:center;padding:13px 0 35px}
+    .artmark{width:100%;aspect-ratio:1;max-height:296px;border-radius:50%;border:1px solid rgba(236,204,160,.25);position:relative;display:grid;place-items:center;background:radial-gradient(circle at 50% 45%,rgba(212,178,125,.1),transparent 65%)}
+    .artmark:before,.artmark:after{content:"";position:absolute;border:1px solid rgba(226,193,145,.15);border-radius:50%;inset:10%}
+    .artmark:after{inset:23%;transform:rotate(12deg);border-style:dashed}
+    .artmark .cross{font-family:Georgia,serif;font-size:110px;color:#e1c69c;font-weight:400;line-height:1;z-index:1;text-shadow:0 0 40px rgba(228,190,140,.2)}
+    .orbit{position:absolute;display:grid;place-items:center;width:67px;height:67px;border-radius:50%;background:#17273c;border:1px solid rgba(233,194,135,.4);box-shadow:0 11px 25px rgba(0,0,0,.22);color:#edd1a2;letter-spacing:.02em;font-size:10px;font-weight:800;text-transform:uppercase;z-index:2}
+    .orbit.o1{top:-8px;left:50%;transform:translateX(-50%)}
+    .orbit.o2{bottom:12%;left:-10px}
+    .orbit.o3{bottom:12%;right:-10px}
+    .section-title{font-family:Georgia,serif;font-size:clamp(27px,3vw,37px);font-weight:400;letter-spacing:-.01em;line-height:1.2;margin:8px 0 15px}
+    .section-brief{font-size:16px;color:#c1cedc;max-width:770px;line-height:1.68;margin:0 0 23px}
+    .intro-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0 28px}
+    .mission-card{background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:15px;padding:22px 18px;min-height:190px;position:relative;overflow:hidden}
+    .mission-card:before{content:"";position:absolute;inset:0 0 auto;height:3px;background:var(--mc)}
+    .mission-card .minititle{font-size:10px;letter-spacing:.16em;color:var(--mc);text-transform:uppercase;font-weight:800;margin-bottom:9px}
+    .mission-card h3{font-family:Georgia,serif;font-size:28px;font-weight:400;margin:0 0 9px}
+    .mission-card p{font-size:13px;color:#b9c7d6;line-height:1.65;margin:0}
+    .mission-card small{display:block;color:#e1caa7;font-size:11px;margin-top:11px}
+    .intro-bottom{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:15px}
+    .panel-dark,.panel-soft{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:var(--radius);padding:25px}
+    .panel-dark h3,.panel-soft h3{font-size:18px;font-weight:650;margin:0 0 12px}
+    .label{font-size:11px;font-weight:750;color:#d5e0ec;letter-spacing:.08em;text-transform:uppercase;display:block;margin:12px 0 8px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .field,select,.input-line{width:100%;border-radius:10px;border:1px solid rgba(203,218,236,.25);background:#0d1b2d;color:#f4f7fa;padding:11px 13px;min-height:44px;transition:border .15s}
+    .field::placeholder{color:#8493a8}
+    .field:focus,select:focus{border-color:#edc88f;outline:2px solid rgba(240,201,134,.16);outline-offset:1px}
+    .tiny-hint{font-size:11px;color:#91a5ba;margin:10px 0 0;line-height:1.6}
+    .flow-list{list-style:none;display:grid;gap:12px;padding:0;margin:13px 0 0}
+    .flow-list li{display:flex;gap:12px;align-items:flex-start;font-size:13px;color:#c5d1dd}
+    .flow-list b{font-size:12px;color:#f8d7a3;border-radius:50%;border:1px solid #b89666;width:26px;height:26px;display:grid;place-items:center;flex:none}
+    .callout{margin-top:18px;border-left:3px solid #e6c286;background:rgba(242,204,146,.07);border-radius:0 11px 11px 0;padding:13px 16px;font-size:13px;color:#e1d3bc;line-height:1.65}
+    .section-head{margin-bottom:23px}
+    .section-head h1{font-family:Georgia,serif;font-weight:400;font-size:clamp(36px,5vw,57px);line-height:1.12;letter-spacing:-.025em;margin:9px 0 15px}
+    .section-head p{font-size:16px;color:#bdcbd9;margin:0;max-width:790px}
+    .case-page{--accent:#d7b181;--accent-rgb:215,177,129}
+    .case-page.case-blue{--accent:#94c8c5;--accent-rgb:148,200,197}
+    .case-page.case-rose{--accent:#deaba9;--accent-rgb:222,171,169}
+    .case-page.case-gold{--accent:#e2c27e;--accent-rgb:226,194,126}
+    .case-label{color:var(--accent);font-weight:800;letter-spacing:.20em;font-size:11px;text-transform:uppercase}
+    .scenario-wrap{display:grid;grid-template-columns:minmax(0,1.17fr) minmax(260px,.83fr);gap:17px;align-items:start;margin:22px 0 28px}
+    .scenario-card{background:#f6f4ee;color:#1d2d3c;border-radius:17px;box-shadow:var(--shadow);padding:27px;position:relative;overflow:hidden}
+    .scenario-card:before{content:"";height:5px;background:var(--accent);position:absolute;left:0;right:0;top:0}
+    .scene-kicker{font-size:10px;font-weight:850;letter-spacing:.18em;color:#7d5e39;text-transform:uppercase}
+    .scenario-card h3{font-family:Georgia,serif;font-size:26px;font-weight:400;line-height:1.2;margin:11px 0 13px}
+    .scenario-card p{font-size:14px;line-height:1.72;margin:0 0 14px;color:#364251}
+    .scenario-card p:last-child{margin-bottom:0}
+    .scenario-side{border:1px solid rgba(var(--accent-rgb),.32);background:rgba(var(--accent-rgb),.06);padding:25px;border-radius:17px}
+    .scenario-side .small-tag{color:var(--accent);font-size:10px;letter-spacing:.17em;text-transform:uppercase;font-weight:800}
+    .scenario-side h3{font-family:Georgia,serif;font-weight:400;font-size:24px;margin:11px 0}
+    .scenario-side p{font-size:13px;color:#bed0df;line-height:1.75;margin:0 0 12px}
+    .scenario-side .stakes{padding-top:14px;border-top:1px solid rgba(var(--accent-rgb),.24);color:#e6d9c5}
+    .chat{display:grid;gap:10px;margin:16px 0 19px}
+    .bubble{padding:10px 13px;border-radius:10px 10px 10px 3px;background:#e7eaf0;font-size:12px;color:#233244;max-width:90%;line-height:1.5}
+    .bubble.right{border-radius:10px 10px 3px 10px;justify-self:end;background:#d6e7dc;max-width:88%}
+    .bubble b{display:block;font-size:10px;color:#5d6f7f;margin-bottom:2px}
+    .brief-box{background:#e7e9e5;border:1px solid #d8dbd6;border-radius:11px;padding:15px 17px;margin:15px 0;color:#263848;font-size:13px;line-height:1.6}
+    .brief-box b{color:#4a584c}
+    .choice-panel{margin:25px 0}
+    .question-no{display:flex;align-items:center;gap:10px;margin:0 0 12px;color:#f6d6a2;font-size:11px;font-weight:750;text-transform:uppercase;letter-spacing:.14em}
+    .question-no b{background:rgba(241,207,151,.12);border:1px solid rgba(240,201,134,.32);color:#f3d7a6;border-radius:50%;display:grid;place-items:center;width:26px;height:26px;font-size:12px}
+    .question-head{margin:0 0 17px;font-family:Georgia,serif;font-weight:400;font-size:25px;line-height:1.3}
+    .choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .option-card,.role-option{cursor:pointer;position:relative;display:block;border:1px solid var(--line2);border-radius:13px;background:rgba(255,255,255,.042);padding:18px 18px 17px 49px;transition:background .2s,border-color .2s,transform .2s;min-height:105px}
+    .option-card:hover,.role-option:hover{background:rgba(255,255,255,.077);transform:translateY(-1px)}
+    .option-card input,.role-option input{position:absolute;width:22px;height:22px;accent-color:#edc992;top:16px;left:16px;margin:0}
+    .option-card:has(input:checked),.role-option:has(input:checked){border-color:var(--accent);background:rgba(var(--accent-rgb),.105);box-shadow:inset 0 0 0 1px rgba(var(--accent-rgb),.17)}
+    .option-card strong{display:block;font-size:14px;color:#e8f0f6;line-height:1.5;margin:0 0 7px}
+    .option-card small{font-size:12px;color:#9eb2c4;line-height:1.52;display:block}
+    .option-card:has(input:checked) strong{color:#fff4df}
+    .own-answer{margin-top:11px}
+    .own-answer[hidden]{display:none}
+    .write-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:18px 0 30px}
+    .write-block{background:rgba(255,255,255,.035);border:1px solid var(--line);padding:21px;border-radius:14px}
+    .write-block.wide{grid-column:1/-1}
+    .write-block h3{font-size:14px;font-weight:700;margin:0 0 5px}
+    .write-block p{font-size:12px;color:#aebed0;line-height:1.65;margin:0 0 13px}
+    textarea.field{min-height:106px;resize:vertical;line-height:1.6;font-size:14px;padding:13px 14px}
+    .write-block textarea{min-height:104px}
+    .field-count{display:flex;justify-content:space-between;gap:9px;font-size:11px;color:#879bb0;margin:8px 0 0}
+    .role-selector{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:12px 0 24px}
+    .role-option{min-height:91px;padding:16px 11px 13px 45px}
+    .role-option strong{display:block;font-family:Georgia,serif;font-size:18px;font-weight:400;color:#f4e3c8}
+    .role-option small{display:block;color:#9aafc2;font-size:11px;margin-top:3px}
+    .scripture-gate{background:rgba(240,201,134,.055);border:1px solid rgba(240,201,134,.29);border-radius:16px;overflow:hidden;margin:13px 0 27px}
+    .gate-top{padding:21px 23px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+    .gate-top b{display:block;font-family:Georgia,serif;font-size:22px;font-weight:400;color:#f4dfb6}
+    .gate-top p{font-size:12px;color:#c2c1b6;margin:4px 0 0}
+    .gate-button{flex:none;border-radius:25px;background:#efd2a1;color:#152238;border:0;font-size:12px;font-weight:800;padding:12px 17px}
+    .gate-button:hover{background:#f9dfb5}
+    .scripture-panel{padding:2px 23px 24px}
+    .scripture-panel[hidden],.after-scripture[hidden]{display:none}
+    .scripture-panel .lesson-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .lesson-tile{padding:17px 15px;border:1px solid rgba(240,201,134,.19);border-radius:12px;background:rgba(255,255,255,.038)}
+    .lesson-tile .tilen{font-size:10px;letter-spacing:.14em;color:#f6d398;text-transform:uppercase;font-weight:800}
+    .lesson-tile p{font-size:12px;line-height:1.7;color:#d0d3cf;margin:8px 0 0}
+    .scripture-ref{margin-top:13px;font-size:12px;color:#e0cba7}
+    .scripture-ref a{text-underline-offset:3px}
+    .scripture-ref a:hover{color:#fff2d4}
+    .after-scripture{margin:17px 0 9px}
+    .after-scripture .write-block{border-color:rgba(240,201,134,.29)}
+    .foot-guide{display:flex;gap:9px;align-items:flex-start;color:#95a8ba;font-size:12px;margin:16px 0}
+    .foot-guide .tick{color:#c9d9aa}
+    .step-controls{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:35px 0 0;padding-top:23px;border-top:1px solid var(--line)}
+    .btn{border-radius:11px;border:1px solid transparent;padding:13px 20px;min-height:47px;display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;font-weight:760;font-size:13px}
+    .btn-primary{background:linear-gradient(135deg,#ffdfaa,#d9ac70);color:#1a2634;box-shadow:0 9px 22px rgba(180,125,65,.12)}
+    .btn-primary:hover{filter:brightness(1.08)}
+    .btn-secondary{background:rgba(255,255,255,.07);border-color:var(--line2);color:#e6edf5}
+    .btn-secondary:hover{background:rgba(255,255,255,.12)}
+    .step-message{color:#9cafc0;font-size:11px;text-align:right;margin-right:auto;margin-left:10px;line-height:1.5}
+    .synthesis-bridge{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0 23px}
+    .synth-card{background:#f8f5ee;color:#233046;border-radius:14px;padding:21px 19px;border-top:4px solid var(--edge);min-height:190px}
+    .synth-card h3{font-family:Georgia,serif;font-weight:400;font-size:24px;margin:4px 0 8px}
+    .synth-card p{font-size:13px;line-height:1.65;color:#485363;margin:0}
+    .synth-card .synth-q{display:block;margin-top:12px;font-size:12px;font-weight:800;color:#605541}
+    .reflection-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:20px 0}
+    .reflection-grid .wide{grid-column:1/-1}
+    .reflection-grid textarea{min-height:88px}
+    .reflection-grid .wide textarea{min-height:102px}
+    .reflection-grid select{margin-top:8px}
+    .debate-board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:20px 0}
+    .debate-card{border:1px solid var(--line2);background:rgba(255,255,255,.045);padding:24px 20px;border-radius:17px;min-height:220px}
+    .debate-card .num{font-size:11px;letter-spacing:.17em;font-weight:800;color:#e9c58b}
+    .debate-card h3{font-family:Georgia,serif;font-weight:400;font-size:25px;line-height:1.25;margin:15px 0 10px}
+    .debate-card p{font-size:13px;color:#adbece;margin:0}
+    .ready-panel{margin-top:22px;padding:25px;border-radius:17px;background:linear-gradient(120deg,rgba(236,200,143,.16),rgba(255,255,255,.035));border:1px solid rgba(236,200,143,.26)}
+    .ready-panel h3{font-family:Georgia,serif;font-size:26px;font-weight:400;margin:0 0 10px;color:#f1d6a8}
+    .ready-panel p{font-size:13px;line-height:1.68;color:#cfdae4;margin:0 0 20px}
+    .button-group{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .teacher-box{margin-top:17px;border:1px solid var(--line);border-radius:13px;padding:14px 17px;color:#b6c7d8;font-size:12px;line-height:1.75}
+    .teacher-box summary{cursor:pointer;color:#f0d6a8;font-weight:750;font-size:12px}
+    .teacher-box p{margin:12px 0 5px}
+    .teacher-box ul{margin:8px 0 4px;padding-left:20px}
+    .modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:rgba(3,9,17,.8);backdrop-filter:blur(6px);padding:20px}
+    .modal[hidden]{display:none}
+    .modal-card{max-width:480px;width:100%;border:1px solid rgba(240,201,134,.35);background:#17263b;border-radius:19px;padding:30px;box-shadow:var(--shadow)}
+    .modal-card h2{font-family:Georgia,serif;font-weight:400;font-size:31px;margin:0 0 9px}
+    .modal-card p{color:#c0cfde;font-size:14px;margin:0 0 24px}
+    .modal-actions{display:flex;gap:10px;justify-content:flex-end}
+    .toast{position:fixed;bottom:25px;left:50%;transform:translate(-50%,16px);background:#f0d5a5;color:#172236;box-shadow:0 14px 40px rgba(0,0,0,.3);padding:12px 17px;border-radius:13px;font-size:13px;font-weight:750;opacity:0;pointer-events:none;transition:.25s;z-index:200;max-width:min(500px,calc(100vw - 36px));text-align:center}
+    .toast.show{transform:translate(-50%,0);opacity:1}
+    #print-sheet{display:none}
+    footer.app-footer{max-width:1000px;margin:35px auto 0;color:#768da5;font-size:11px;line-height:1.65;border-top:1px solid var(--line);padding-top:20px}
+    @media(max-width:1180px){.shell{grid-template-columns:224px minmax(0,1fr)}.sidebar{padding:28px 13px}.hero-top{grid-template-columns:1fr 220px}.orbit{height:53px;width:53px;font-size:9px}.artmark .cross{font-size:90px}.intro-bottom{grid-template-columns:1fr 1fr}}
+    @media(max-width:890px){.topbar{height:68px}.shell{display:block}.sidebar{border-right:0;padding:12px 18px;border-bottom:1px solid var(--line)}.sidebar-inner{position:static;display:block}.sidebar h2,.sidebar p,.side-eyebrow,.side-bottom,.side-progress{display:none}.nav-list{display:flex;overflow-x:auto;gap:8px;scrollbar-width:thin}.nav-step{min-width:107px;width:auto;flex:none;gap:6px;padding:8px}.nav-step .n{width:26px;height:26px;font-size:10px}.nav-step .txt strong{font-size:11px}.nav-step .txt small{display:none}main{padding:30px 22px 80px}.sidebar{position:sticky;top:68px;z-index:45;background:#0c1729}.hero-top{grid-template-columns:1fr 170px;gap:13px}.artmark{max-width:170px}.artmark .cross{font-size:76px}.orbit{height:47px;width:47px}.scenario-wrap{grid-template-columns:1fr}.scenario-side{padding:19px}.scenario-side .stakes{margin-top:10px}.intro-bottom{grid-template-columns:1fr 1fr}.top-download{padding:8px 10px}}
+    @media(max-width:650px){.topbar{padding:0 13px}.brandtext span{display:none}.brandtext strong{font-size:11px;letter-spacing:.09em}.brandmark{width:34px;height:34px;font-size:19px}.header-right{gap:7px}.autostatus{display:none}.top-download{font-size:16px;width:35px;height:35px;padding:0;display:grid;place-items:center;border-radius:50%;white-space:nowrap}.download-label{display:none}.timer{gap:5px;padding:5px 5px 5px 8px}.timer time{font-size:12px;min-width:42px}.timer button{width:27px;height:27px}.hero-top{grid-template-columns:1fr}.artmark{display:none}.intro-cards,.synthesis-bridge,.debate-board{grid-template-columns:1fr}.mission-card{min-height:auto}.intro-bottom,.form-row,.choice-grid,.write-grid,.reflection-grid{grid-template-columns:1fr}.role-selector{grid-template-columns:1fr}.role-option{min-height:60px;padding-top:10px;padding-bottom:8px}.scripture-panel .lesson-grid{grid-template-columns:1fr}.gate-top{display:block}.gate-button{margin-top:15px}.step-controls{gap:7px}.step-message{display:none}.btn{padding:12px 14px}.section-head h1{font-size:39px}.scenario-card{padding:22px}.section-title{font-size:31px}.minute-badge{margin-left:0}.write-block.wide,.reflection-grid .wide{grid-column:auto}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+    @media print{
+      @page{size:letter;margin:15mm}
+      body{background:#fff;color:#152235;font:11pt/1.45 Arial,sans-serif}
+      .ambient,.topbar,.shell,.toast,.modal,.app-footer{display:none!important}
+      #print-sheet{display:block!important}
+      #print-sheet h1{font:26pt Georgia,serif;color:#1a2b45;margin:0 0 4mm}
+      #print-sheet .print-meta{font-size:10pt;color:#485361;border-bottom:2px solid #c9b07b;padding-bottom:4mm;margin-bottom:7mm}
+      #print-sheet h2{font:18pt Georgia,serif;color:#1c3550;margin-top:9mm;border-bottom:1px solid #aaa;padding-bottom:2mm;break-after:avoid}
+      #print-sheet h3{font-size:11pt;letter-spacing:0;color:#2c496a;margin:3mm 0 1mm;break-after:avoid}
+      #print-sheet p{white-space:pre-wrap;margin:0 0 2mm;overflow-wrap:anywhere}
+      #print-sheet section{break-inside:avoid}
+      #print-sheet .print-small{font-size:9pt;color:#646464}
+    }
+  </style>
+</head>
+<body>
+<div class="ambient" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="brand"><div class="brandmark" aria-hidden="true">✝</div><div class="brandtext"><strong>HRE4M1 <span aria-hidden="true">/</span> CHRIST &amp; CULTURE</strong><span>UNIT 1.7 | JESUS AND HIS THREEFOLD MISSION</span></div></div>
+  <div class="header-right"><span class="autostatus" id="save-indicator" aria-live="polite">Saved on this device</span><div class="timer" id="timerbox"><span class="sr-only">Activity timer</span><time id="clock">25:00</time><button id="timer-toggle" type="button" aria-label="Start timer" title="Start or pause timer">▶</button></div><button class="top-download" id="quick-download" type="button" aria-label="Download student responses"><span class="download-label">Save responses</span><span aria-hidden="true"> ↧</span></button></div>
+</header>
+<div class="shell" id="app-shell">
+  <aside class="sidebar" aria-label="Activity navigation"><div class="sidebar-inner">
+    <div class="side-eyebrow">Your activity</div><h2>Called<br>to Act<span style="color:#e7c391">.</span></h2><p>Three decisions. Three dimensions of discipleship. One question: What would you do?</p>
+    <nav class="nav-list" aria-label="Stages">
+      <button class="nav-step" data-jump="0" type="button"><span class="n">○</span><span class="txt"><strong>Begin here</strong><small>2 minute orientation</small></span></button>
+      <button class="nav-step" data-jump="1" type="button"><span class="n">01</span><span class="txt"><strong>The screenshot</strong><small>Case study 1</small></span></button>
+      <button class="nav-step" data-jump="2" type="button"><span class="n">02</span><span class="txt"><strong>A friend in need</strong><small>Case study 2</small></span></button>
+      <button class="nav-step" data-jump="3" type="button"><span class="n">03</span><span class="txt"><strong>The leadership test</strong><small>Case study 3</small></span></button>
+      <button class="nav-step" data-jump="4" type="button"><span class="n">04</span><span class="txt"><strong>Connect the roles</strong><small>Personal reflection</small></span></button>
+      <button class="nav-step" data-jump="5" type="button"><span class="n">✓</span><span class="txt"><strong>Class discussion</strong><small>Debrief together</small></span></button>
+    </nav>
+    <div class="side-progress"><div class="progress-caption"><span>Activity completion</span><strong id="progress-percent">0%</strong></div><div class="track" role="progressbar" aria-label="Completion percentage" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-track"><span id="progress-fill"></span></div><div class="privacy-note">Your work saves in this browser, not to a teacher's inbox. Use “Save responses” when finished.</div></div>
+    <div class="side-bottom"><button id="reset-link" type="button">Start over / clear saved work</button></div>
+  </div></aside>
+  <main id="main" tabindex="-1">
+    <section class="view" data-stage="0" aria-labelledby="intro-title">
+      <div class="stage-meta"><span class="eyebrow">Unit 1.7 · Faith lived in ordinary decisions</span><span class="meta-line"></span><span class="minute-badge">25 MINUTES · SOLO OR PARTNERS</span></div>
+      <div class="hero-top"><div><h1 class="display" id="intro-title">Called<br>to <em>Act.</em></h1><p class="subtitle">Jesus is Prophet, Priest, and King. Through Baptism, Christians share in this mission. But what does that actually look like in a group chat, a friendship, or a school decision?</p></div><div class="artmark" aria-hidden="true"><span class="cross">✝</span><span class="orbit o1">Truth</span><span class="orbit o2">Prayer</span><span class="orbit o3">Service</span></div></div>
+      <div class="stage-meta"><span class="eyebrow">One mission · Three ways to live it</span></div>
+      <div class="intro-cards">
+        <article class="mission-card" style="--mc:#deb0a4"><div class="minititle">01 · Witness</div><h3>Prophet</h3><p>Jesus reveals God's truth and challenges wrongdoing. We witness to truth, speak with courage, and defend dignity.</p><small>Truth spoken in love · CCC 785</small></article>
+        <article class="mission-card" style="--mc:#91c8c0"><div class="minititle">02 · Self-gift</div><h3>Priest</h3><p>Jesus reconciles us to God by offering Himself once for all. We share in His mission through prayer, worship, and offering our lives in love.</p><small>Intercession and self-offering · CCC 784</small></article>
+        <article class="mission-card" style="--mc:#e7c586"><div class="minititle">03 · Service</div><h3>King</h3><p>Jesus leads by serving, not dominating. We use responsibility and influence for the common good, especially for those overlooked.</p><small>Leadership that serves · CCC 786</small></article>
+      </div>
+      <div class="intro-bottom">
+        <div class="panel-dark"><h3>First, identify your team</h3><div class="form-row"><div><label class="label" for="student">Your name</label><input class="field" id="student" data-field="student" placeholder="First and last name" autocomplete="name"></div><div><label class="label" for="partner">Partner (if any)</label><input class="field" id="partner" data-field="partner" placeholder="Optional"></div></div><label class="label" for="period">Class period</label><select id="period" data-field="period"><option value="">Select if applicable</option><option>Period 1</option><option>Period 2</option><option>Period 3</option><option>Period 4</option><option>Period 5</option></select><p class="tiny-hint">Complete this alone or with one partner. Both partners should contribute to each decision.</p></div>
+        <div class="panel-soft"><h3>How the activity works</h3><ol class="flow-list"><li><b>1</b><span>Read a realistic school situation.</span></li><li><b>2</b><span>Choose a first move and explain the trade-off.</span></li><li><b>3</b><span>Connect your choice to Christ's mission and Scripture.</span></li><li><b>4</b><span>Finish with a concrete commitment and class conversation.</span></li></ol></div>
+      </div>
+      <div class="callout"><strong>Important distinction.</strong> Jesus alone is the perfect High Priest and sacrifice for sin. The common priesthood of the baptized is different from the ordained priesthood; students are reflecting on everyday prayer and self-offering, not administering sacraments.</div>
+      <div class="step-controls"><span style="font-size:12px;color:#9cafc1">2 min orientation · 15 min case studies · 3 min synthesis · 5 min debrief</span><button class="btn btn-primary" type="button" data-next="1">Begin case studies <span aria-hidden="true">→</span></button></div>
+    </section>
+
+    <section class="view case-page case-rose" data-stage="1" data-case="c1" hidden aria-labelledby="case1-title">
+      <div class="stage-meta"><span class="case-label">01 / 03 · A decision under pressure</span><span class="meta-line"></span><span class="minute-badge">5 MINUTES</span></div>
+      <div class="section-head"><h1 id="case1-title">The screenshot<br>isn't the whole story.</h1><p>A truth spreads faster than its context. What responsibility do you have when speaking up may make you unpopular?</p></div>
+      <div class="scenario-wrap"><div class="scenario-card"><span class="scene-kicker">The situation · Thursday, 8:42 p.m.</span><h3>A message in your group chat</h3><p>Your grade's group chat starts circulating a screenshot that appears to show a student, Jordan, changing numbers on a charity fundraising document. You have not seen the original file or the complete exchange.</p>
+        <div class="chat" aria-label="Fictional group chat messages"><div class="bubble"><b>Alex · 8:42</b>Someone just sent this. Did Jordan fake the fundraiser total?</div><div class="bubble"><b>Riley · 8:43</b>It looks bad. Everybody should know before tomorrow.</div><div class="bubble right"><b>You · drafting...</b>I don't have the full story.</div></div>
+        <p>A friend asks you to repost the screenshot. The next morning, Jordan will be in your first class. Several students have already turned against them.</p></div>
+        <aside class="scenario-side"><span class="small-tag">What makes this difficult</span><h3>Truth has a cost.</h3><p>If you challenge the rumour, people may accuse you of defending dishonesty. If you say nothing, the rumour may harm someone's reputation.</p><p class="stakes"><strong>Dignity at stake:</strong> Jordan's reputation, the truth about the fundraiser, and the group chat's trust.</p></aside></div>
+      <div class="choice-panel"><div class="question-no"><b>1</b> Your decision</div><h2 class="question-head">What is your best first move, before you know every fact?</h2>
+        <div class="choice-grid" role="group" aria-label="Case 1 response options">
+          <label class="option-card"><input type="radio" name="c1_choice" value="Ask the group to stop sharing, verify privately, and check on Jordan."><strong>Slow down the rumour.</strong><small>Ask the group to stop forwarding it, seek verified information privately, and check on Jordan.</small></label>
+          <label class="option-card"><input type="radio" name="c1_choice" value="Make a public post challenging the screenshot and defending Jordan immediately."><strong>Speak publicly tonight.</strong><small>Push back in the group chat immediately, even though you do not have the whole account.</small></label>
+          <label class="option-card"><input type="radio" name="c1_choice" value="Avoid the chat and wait for the adults to handle it."><strong>Step away.</strong><small>Do not add to the drama; trust staff to deal with the situation if necessary.</small></label>
+          <label class="option-card"><input type="radio" name="c1_choice" value="custom"><strong>Design another response.</strong><small>You see a better first step than the options above. Explain it below.</small></label>
+        </div><div class="own-answer" hidden><label class="label" for="c1_custom">Your proposed first move</label><textarea class="field" data-answer="c1_custom" id="c1_custom" placeholder="What would you do instead?"></textarea></div>
+      </div>
+      <div class="write-grid"><div class="write-block"><h3>Defend your decision</h3><p>Why is your choice responsible, even with missing information? Include a likely consequence for another person.</p><textarea class="field" data-answer="c1_reason" aria-label="Case 1 reasoning" placeholder="I would choose this because... A risk of my choice is..."></textarea><div class="field-count"><span>Suggested: 2–3 sentences</span><span class="count" data-count="c1_reason">0 words</span></div></div><div class="write-block"><h3>Make it concrete</h3><p>What exact message would you send, or what two actions would you take by the next school day?</p><textarea class="field" data-answer="c1_action" aria-label="Case 1 action" placeholder="My first step would be... Then I would..."></textarea><div class="field-count"><span>Suggested: 1–2 sentences</span><span class="count" data-count="c1_action">0 words</span></div></div></div>
+      <div class="question-no"><b>2</b> Connect to Jesus</div><h2 class="question-head">Which of Christ's three roles most directly guides your response?</h2><div class="role-selector" role="group" aria-label="Select office for case 1"><label class="role-option"><input type="radio" name="c1_role" value="Prophet"><strong>Prophet</strong><small>Truth and witness</small></label><label class="role-option"><input type="radio" name="c1_role" value="Priest"><strong>Priest</strong><small>Prayer and self-offering</small></label><label class="role-option"><input type="radio" name="c1_role" value="King"><strong>King</strong><small>Responsible service</small></label></div>
+      <div class="scripture-gate"><div class="gate-top"><div><b>Bring Scripture into the decision</b><p>After choosing and explaining your first move, compare it with the Gospel.</p></div><button class="gate-button" type="button" data-reveal="c1" aria-expanded="false">Open Scripture lens ↓</button></div>
+        <div class="scripture-panel" data-panel="c1" hidden><div class="lesson-grid"><div class="lesson-tile"><span class="tilen">Jesus' example</span><p>Jesus proclaims God's truth and good news to the poor (Luke 4:18–19). His prophetic mission goes beyond predicting the future; it reveals truth and calls for conversion.</p></div><div class="lesson-tile"><span class="tilen">Our Baptism</span><p>Christians share His prophetic office by holding to the faith and becoming His witnesses in the world (CCC 785).</p></div><div class="lesson-tile"><span class="tilen">A difficult question</span><p>How can you challenge misinformation without spreading it further, shaming others, or pretending to know what you have not verified?</p></div></div><div class="scripture-ref">Read: <a href="https://www.biblegateway.com/passage/?search=Luke%204%3A18-19&amp;version=NRSVCE" target="_blank" rel="noopener">Luke 4:18–19 (NRSV-CE) ↗</a> · <a href="https://www.vatican.va/content/catechism/en/part_one/section_two/chapter_three/article_9/paragraph_2_the_church_-_people_of_god%2C_body_of_christ%2C_temple_of_the_holy_spirit.html" target="_blank" rel="noopener">CCC 785 ↗</a></div></div></div>
+      <div class="after-scripture" data-after="c1" hidden><div class="write-block"><h3>Now rethink your answer</h3><p>Use the Scripture lens to explain one thing you would keep, strengthen, or change in your response. Refer to Jesus' mission, not just your opinion.</p><textarea class="field" data-answer="c1_after" aria-label="Case 1 reconsideration" placeholder="The Scripture connection challenges/supports my plan because..."></textarea><div class="field-count"><span>Suggested: 1–2 sentences</span><span class="count" data-count="c1_after">0 words</span></div></div></div>
+      <p class="foot-guide"><span class="tick">✓</span><span>There is no automatic “right answer” badge. Your responsibility is to offer a thoughtful, defensible response.</span></p>
+      <div class="step-controls"><button class="btn btn-secondary" type="button" data-prev="0">← Introduction</button><span class="step-message" data-completion="c1">Your responses autosave.</span><button class="btn btn-primary" type="button" data-next="2">Next case →</button></div>
+    </section>
+
+    <section class="view case-page case-blue" data-stage="2" data-case="c2" hidden aria-labelledby="case2-title">
+      <div class="stage-meta"><span class="case-label">02 / 03 · A friendship under strain</span><span class="meta-line"></span><span class="minute-badge">5 MINUTES</span></div>
+      <div class="section-head"><h1 id="case2-title">You can't carry<br>it all for them.</h1><p>Someone trusts you with a problem you cannot fix alone. How do you care without overstepping or abandoning them?</p></div>
+      <div class="scenario-wrap"><div class="scenario-card"><span class="scene-kicker">The situation · Tuesday, after school</span><h3>A message from a close friend</h3><p>Sam has missed two practices and seems exhausted. They tell you they are helping care for a younger sibling at home, working weekend shifts, and falling behind on assignments.</p>
+        <div class="chat" aria-label="Fictional direct message conversation"><div class="bubble"><b>Sam · 4:16</b>I don't need a huge rescue plan. I'm just overwhelmed and don't want everybody knowing.</div><div class="bubble"><b>Sam · 4:18</b>Could we talk? I really don't know where to start with everything due this week.</div><div class="bubble right"><b>You · drafting...</b>I'm here. Let's work out what would actually help.</div></div>
+        <p>Sam asks you to keep the conversation private. You want to help, but you also have your own assignments and responsibilities.</p></div>
+        <aside class="scenario-side"><span class="small-tag">What makes this difficult</span><h3>Care has limits.</h3><p>Helping could require time and sacrifice. Taking over Sam's responsibilities, however, may not be healthy or honest. Involving another person without permission could harm trust.</p><p class="stakes"><strong>Dignity at stake:</strong> Sam's agency, privacy, well-being, and your capacity to offer meaningful support.</p></aside></div>
+      <div class="choice-panel"><div class="question-no"><b>1</b> Your decision</div><h2 class="question-head">How would you respond to Sam this week?</h2>
+        <div class="choice-grid" role="group" aria-label="Case 2 response options">
+          <label class="option-card"><input type="radio" name="c2_choice" value="Listen, ask what help Sam wants, offer bounded support, and discuss a trusted adult if needed."><strong>Support without taking over.</strong><small>Listen, make a manageable plan together, offer help within your limits, and explore trusted support with Sam.</small></label>
+          <label class="option-card"><input type="radio" name="c2_choice" value="Protect Sam's privacy completely and only check in with supportive messages."><strong>Keep it between you.</strong><small>Respect the request for privacy and send encouragement, but avoid bringing others into the situation.</small></label>
+          <label class="option-card"><input type="radio" name="c2_choice" value="Complete some of Sam's assignments and cancel your plans to help immediately."><strong>Make a big sacrifice.</strong><small>Cancel your plans and do some of Sam's schoolwork to take pressure off right away.</small></label>
+          <label class="option-card"><input type="radio" name="c2_choice" value="custom"><strong>Design another response.</strong><small>You see a more thoughtful way to balance care, privacy, and responsibility.</small></label>
+        </div><div class="own-answer" hidden><label class="label" for="c2_custom">Your proposed response</label><textarea class="field" data-answer="c2_custom" id="c2_custom" placeholder="What would you do instead?"></textarea></div>
+      </div>
+      <div class="write-grid"><div class="write-block"><h3>Defend your decision</h3><p>How does your choice show care and respect? Explain one boundary or risk you would need to manage.</p><textarea class="field" data-answer="c2_reason" aria-label="Case 2 reasoning" placeholder="This response would respect Sam by... I would need to be careful about..."></textarea><div class="field-count"><span>Suggested: 2–3 sentences</span><span class="count" data-count="c2_reason">0 words</span></div></div><div class="write-block"><h3>Make it concrete</h3><p>Write two practical actions you would take, including something you would say directly to Sam.</p><textarea class="field" data-answer="c2_action" aria-label="Case 2 action" placeholder="I would say... A practical next step could be..."></textarea><div class="field-count"><span>Suggested: 1–2 sentences</span><span class="count" data-count="c2_action">0 words</span></div></div></div>
+      <div class="question-no"><b>2</b> Connect to Jesus</div><h2 class="question-head">Which of Christ's three roles most directly guides your response?</h2><div class="role-selector" role="group" aria-label="Select office for case 2"><label class="role-option"><input type="radio" name="c2_role" value="Prophet"><strong>Prophet</strong><small>Truth and witness</small></label><label class="role-option"><input type="radio" name="c2_role" value="Priest"><strong>Priest</strong><small>Prayer and self-offering</small></label><label class="role-option"><input type="radio" name="c2_role" value="King"><strong>King</strong><small>Responsible service</small></label></div>
+      <div class="scripture-gate"><div class="gate-top"><div><b>Bring Scripture into the decision</b><p>Compare the human cost of helping with Christ's model of self-gift.</p></div><button class="gate-button" type="button" data-reveal="c2" aria-expanded="false">Open Scripture lens ↓</button></div>
+        <div class="scripture-panel" data-panel="c2" hidden><div class="lesson-grid"><div class="lesson-tile"><span class="tilen">Jesus' example</span><p>Jesus, the true High Priest, offers Himself to reconcile humanity with God (Hebrews 9:11–14). His saving sacrifice is unique and complete.</p></div><div class="lesson-tile"><span class="tilen">Our Baptism</span><p>Through Christ, baptized Christians offer spiritual sacrifices, pray for others, and dedicate ordinary acts of love to God (CCC 784; Romans 12:1).</p></div><div class="lesson-tile"><span class="tilen">A difficult question</span><p>How can prayer and self-giving lead to helpful action while respecting Sam's freedom, your limits, and the need for adult support when appropriate?</p></div></div><div class="scripture-ref">Read: <a href="https://www.biblegateway.com/passage/?search=Hebrews%209%3A11-14&amp;version=NRSVCE" target="_blank" rel="noopener">Hebrews 9:11–14 (NRSV-CE) ↗</a> · <a href="https://www.vatican.va/content/catechism/en/part_one/section_two/chapter_three/article_9/paragraph_2_the_church_-_people_of_god%2C_body_of_christ%2C_temple_of_the_holy_spirit.html" target="_blank" rel="noopener">CCC 784 ↗</a></div></div></div>
+      <div class="after-scripture" data-after="c2" hidden><div class="write-block"><h3>Now rethink your answer</h3><p>How does Jesus' priestly self-giving challenge your plan to support Sam? Identify one change, or defend what you would keep.</p><textarea class="field" data-answer="c2_after" aria-label="Case 2 reconsideration" placeholder="Christ's example helps me see that..."></textarea><div class="field-count"><span>Suggested: 1–2 sentences</span><span class="count" data-count="c2_after">0 words</span></div></div></div>
+      <p class="foot-guide"><span class="tick">✓</span><span>Caring for someone does not mean becoming their counsellor or doing their schoolwork. If safety becomes a concern, involve a trusted adult promptly.</span></p>
+      <div class="step-controls"><button class="btn btn-secondary" type="button" data-prev="1">← Previous case</button><span class="step-message" data-completion="c2">Your responses autosave.</span><button class="btn btn-primary" type="button" data-next="3">Next case →</button></div>
+    </section>
+
+    <section class="view case-page case-gold" data-stage="3" data-case="c3" hidden aria-labelledby="case3-title">
+      <div class="stage-meta"><span class="case-label">03 / 03 · Influence and responsibility</span><span class="meta-line"></span><span class="minute-badge">5 MINUTES</span></div>
+      <div class="section-head"><h1 id="case3-title">Who gets<br>a voice?</h1><p>You have real influence over a school event. How can leadership serve others without becoming a popularity contest?</p></div>
+      <div class="scenario-wrap"><div class="scenario-card"><span class="scene-kicker">The situation · Student leadership meeting</span><h3>One remaining presentation slot</h3><p>Your school's student committee is planning a community assembly. Only one five-minute student presentation slot remains.</p><div class="brief-box"><b>Proposal A:</b> A highly popular club wants extra time for its successful campaign. Members argue that the extra segment will draw a larger audience.<hr style="border:0;border-top:1px solid #ccd0cd;margin:13px 0"><b>Proposal B:</b> A small student group wants to present a practical proposal to help new students feel included. It has never had assembly time.</div><p>The chair asks you to recommend a decision. You know friends in the popular club expect you to support them, but you are also responsible to the wider school community.</p></div>
+        <aside class="scenario-side"><span class="small-tag">What makes this difficult</span><h3>Service is a choice.</h3><p>Popularity and attendance matter, but so do fairness and belonging. You could use your position to protect friendships, reward success, or make room for neglected voices.</p><p class="stakes"><strong>Dignity at stake:</strong> students whose voices are regularly heard and those rarely included.</p></aside></div>
+      <div class="choice-panel"><div class="question-no"><b>1</b> Your decision</div><h2 class="question-head">What would you recommend to the committee, and why?</h2>
+        <div class="choice-grid" role="group" aria-label="Case 3 response options">
+          <label class="option-card"><input type="radio" name="c3_choice" value="Recommend an inclusive process with clear criteria and hear from both groups before allocating the slot."><strong>Establish fair criteria.</strong><small>Ask both groups to make their case, then assess community benefit, inclusion, and the assembly's purpose transparently.</small></label>
+          <label class="option-card"><input type="radio" name="c3_choice" value="Give the new group the remaining slot to address past lack of visibility."><strong>Prioritize the unheard group.</strong><small>Give the last slot to the smaller group to correct an imbalance, even if the popular club is frustrated.</small></label>
+          <label class="option-card"><input type="radio" name="c3_choice" value="Support the established popular club to ensure a successful assembly."><strong>Support proven turnout.</strong><small>Give the slot to the popular club because they have delivered strong results for previous events.</small></label>
+          <label class="option-card"><input type="radio" name="c3_choice" value="custom"><strong>Design another response.</strong><small>Find a practical alternative that respects time limits and people's dignity.</small></label>
+        </div><div class="own-answer" hidden><label class="label" for="c3_custom">Your proposed recommendation</label><textarea class="field" data-answer="c3_custom" id="c3_custom" placeholder="What would you recommend instead?"></textarea></div>
+      </div>
+      <div class="write-grid"><div class="write-block"><h3>Defend your decision</h3><p>Whose needs and rights matter here? Explain the trade-off you accept and why it serves the school.</p><textarea class="field" data-answer="c3_reason" aria-label="Case 3 reasoning" placeholder="I would recommend... The strongest reason is... The trade-off is..."></textarea><div class="field-count"><span>Suggested: 2–3 sentences</span><span class="count" data-count="c3_reason">0 words</span></div></div><div class="write-block"><h3>Make it concrete</h3><p>Write two things you would say at the meeting so others understand your decision, including those who disagree.</p><textarea class="field" data-answer="c3_action" aria-label="Case 3 action" placeholder="To the committee I would say... To the group not selected I would say..."></textarea><div class="field-count"><span>Suggested: 1–2 sentences</span><span class="count" data-count="c3_action">0 words</span></div></div></div>
+      <div class="question-no"><b>2</b> Connect to Jesus</div><h2 class="question-head">Which of Christ's three roles most directly guides your response?</h2><div class="role-selector" role="group" aria-label="Select office for case 3"><label class="role-option"><input type="radio" name="c3_role" value="Prophet"><strong>Prophet</strong><small>Truth and witness</small></label><label class="role-option"><input type="radio" name="c3_role" value="Priest"><strong>Priest</strong><small>Prayer and self-offering</small></label><label class="role-option"><input type="radio" name="c3_role" value="King"><strong>King</strong><small>Responsible service</small></label></div>
+      <div class="scripture-gate"><div class="gate-top"><div><b>Bring Scripture into the decision</b><p>Compare your understanding of leadership with Jesus' understanding.</p></div><button class="gate-button" type="button" data-reveal="c3" aria-expanded="false">Open Scripture lens ↓</button></div>
+        <div class="scripture-panel" data-panel="c3" hidden><div class="lesson-grid"><div class="lesson-tile"><span class="tilen">Jesus' example</span><p>Jesus teaches that greatness is expressed through service, not control or status (Mark 10:42–45). He is King, but His kingship is radically humble.</p></div><div class="lesson-tile"><span class="tilen">Our Baptism</span><p>Christians share in Christ's royal office by serving, exercising self-mastery, and caring especially for the poor and suffering (CCC 786).</p></div><div class="lesson-tile"><span class="tilen">A difficult question</span><p>When your own friends benefit from your authority, what could you give up to serve the wider community more fairly?</p></div></div><div class="scripture-ref">Read: <a href="https://www.biblegateway.com/passage/?search=Mark%2010%3A42-45&amp;version=NRSVCE" target="_blank" rel="noopener">Mark 10:42–45 (NRSV-CE) ↗</a> · <a href="https://www.vatican.va/content/catechism/en/part_one/section_two/chapter_three/article_9/paragraph_2_the_church_-_people_of_god%2C_body_of_christ%2C_temple_of_the_holy_spirit.html" target="_blank" rel="noopener">CCC 786 ↗</a></div></div></div>
+      <div class="after-scripture" data-after="c3" hidden><div class="write-block"><h3>Now rethink your answer</h3><p>Would your recommendation still be fair if you were not friends with either group? Explain how Jesus' example changes or strengthens your reasoning.</p><textarea class="field" data-answer="c3_after" aria-label="Case 3 reconsideration" placeholder="Jesus' servant leadership means that..."></textarea><div class="field-count"><span>Suggested: 1–2 sentences</span><span class="count" data-count="c3_after">0 words</span></div></div></div>
+      <p class="foot-guide"><span class="tick">✓</span><span>Servant leadership may require making an unpopular decision, explaining it honestly, and listening to people who disagree.</span></p>
+      <div class="step-controls"><button class="btn btn-secondary" type="button" data-prev="2">← Previous case</button><span class="step-message" data-completion="c3">Your responses autosave.</span><button class="btn btn-primary" type="button" data-next="4">Connect all three →</button></div>
+    </section>
+
+    <section class="view" data-stage="4" hidden aria-labelledby="reflect-title">
+      <div class="stage-meta"><span class="eyebrow">04 / Synthesis · What changes in your life?</span><span class="meta-line"></span><span class="minute-badge">3 MINUTES</span></div><div class="section-head"><h1 id="reflect-title">One person.<br>Three ways to serve.</h1><p>In each case, one role of Jesus may have been more obvious, but all three are connected. Truth without love can wound. Service without truth can mislead. Prayer without action can become an excuse to avoid responsibility.</p></div>
+      <div class="synthesis-bridge"><div class="synth-card" style="--edge:#dfa99e"><h3>Prophet</h3><p>Witness to God's truth, protect human dignity, and speak courageously with love.</p><span class="synth-q">Where might I need courage?</span></div><div class="synth-card" style="--edge:#91c7c1"><h3>Priest</h3><p>Join prayer and self-offering to real acts of love without claiming to replace Christ's sacrifice.</p><span class="synth-q">Whom can I pray for and support?</span></div><div class="synth-card" style="--edge:#dcb877"><h3>King</h3><p>Lead with humility. Treat responsibility as a chance to serve, not to gain status.</p><span class="synth-q">How can I use my influence?</span></div></div>
+      <div class="question-no"><b>✓</b> Your closing reflection</div><h2 class="question-head">Move beyond the case studies.</h2>
+      <div class="reflection-grid"><div class="write-block"><h3>Which role is most difficult for you?</h3><p>Choose one, then give a specific reason. There is no penalty for acknowledging a challenge.</p><select data-answer="final_hardest" aria-label="Most difficult office"><option value="">Choose a role</option><option value="Prophet">Prophet, speaking truth with courage</option><option value="Priest">Priest, prayer and generous self-offering</option><option value="King">King, humble service and leadership</option></select></div><div class="write-block"><h3>Why this one?</h3><p>Think about a realistic difficulty, such as pressure, inconvenience, fear, or the risk of being misunderstood.</p><textarea class="field" data-answer="final_why" aria-label="Reason this role is difficult" placeholder="This is challenging because..." style="min-height:80px"></textarea><div class="field-count"><span>Suggested: 1–2 sentences</span><span class="count" data-count="final_why">0 words</span></div></div><div class="write-block wide"><h3>A specific step within the next seven days</h3><p>Describe something you can actually do. Name the action, the setting, and whose dignity or well-being it could serve. You do not have to disclose a private situation.</p><textarea class="field" data-answer="final_commitment" aria-label="Personal commitment" placeholder="Within the next week, I will... at/in... because..."></textarea><div class="field-count"><span>Suggested: 2–3 sentences</span><span class="count" data-count="final_commitment">0 words</span></div></div></div>
+      <div class="callout"><strong>The central question:</strong> If every baptized Christian shares Christ's priestly, prophetic, and kingly mission (CCC 783–786), what should other people actually experience because of the way we live?</div>
+      <div class="step-controls"><button class="btn btn-secondary" type="button" data-prev="3">← Previous case</button><span class="step-message" id="reflection-status">Save your work after the discussion.</span><button class="btn btn-primary" type="button" data-next="5">Class discussion →</button></div>
+    </section>
+
+    <section class="view" data-stage="5" hidden aria-labelledby="discuss-title">
+      <div class="stage-meta"><span class="eyebrow">05 / Debrief · Discuss together</span><span class="meta-line"></span><span class="minute-badge">5 MINUTES · CLASS CONVERSATION</span></div><div class="section-head"><h1 id="discuss-title">What would<br>Jesus ask of us?</h1><p>You have made three decisions. Now put the ideas in conversation with your classmates. Listen for reasons, not just agreement.</p></div>
+      <div class="debate-board"><article class="debate-card"><span class="num">01 / Truth</span><h3>When should you speak up?</h3><p>In the rumour case, could confronting the group make the harm worse? What does truthful, courageous love require when the facts are uncertain?</p></article><article class="debate-card"><span class="num">02 / Self-gift</span><h3>When does helping go too far?</h3><p>In the friendship case, what is the difference between generous service and taking over? How can prayer lead to responsible action?</p></article><article class="debate-card"><span class="num">03 / Leadership</span><h3>Whose interests come first?</h3><p>In the committee case, would you make the same choice if your friends had nothing to gain? How do you recognize the common good?</p></article></div>
+      <div class="ready-panel"><h3>Finish by saving your work.</h3><p>Your responses are saved locally as you type, but they have not been sent to your teacher. Download your written answers, or print them to PDF, and submit them according to your teacher's instructions.</p><div class="button-group"><button class="btn btn-primary" type="button" id="download-final">↓ Download my answers (.txt)</button><button class="btn btn-secondary" type="button" id="print-final">Print / save as PDF</button><button class="btn btn-secondary" type="button" id="project-mode">Project discussion ↗</button></div><p class="tiny-hint" style="margin-top:16px">Your choices are not auto-graded. The goal is to explain how Scripture and the threefold mission shape ethical decisions.</p></div>
+      <details class="teacher-box"><summary>Teacher facilitation notes (optional)</summary><p><b>Timing:</b> ask students to compare responses for 60 seconds, then choose one question from each discussion card. If time is limited, use the final question: “Which role would have made the greatest difference in your school this week?”</p><ul><li><b>Look for:</b> distinctions between courage and rash judgment; compassion and rescuing; service and personal gain.</li><li><b>Accept:</b> different defensible first moves if supported by sound reasoning, human dignity, and the Scripture lens.</li><li><b>Clarify:</b> the laity's common priesthood is not the same as the ordained ministerial priesthood, and students must not assume they can replace trained adults when someone is in danger.</li></ul><p><b>Source alignment:</b> HRE4M1 Unit 1.7, “Jesus: Prophet, King, Priest”; Luke 4:18–19; Hebrews 9:11–14; Mark 10:42–45; CCC 783–786.</p></details>
+      <div class="step-controls"><button class="btn btn-secondary" type="button" data-prev="4">← Review reflection</button><button class="btn btn-primary" type="button" data-next="0">Return to beginning ↺</button></div>
+    </section>
+    <footer class="app-footer">HRE4M1 · Adapted from the course's Unit 1.7 lesson material. Catholic teaching: CCC 783–786. Scripture references: NRSV-CE. Case studies are fictional. This is a standalone, offline-capable classroom activity. External Bible and Catechism links require an internet connection.</footer>
+  </main>
+</div>
+<div id="print-sheet" aria-hidden="true"></div>
+<div class="toast" role="status" aria-live="polite" id="toast"></div>
+<div class="modal" id="reset-modal" hidden role="dialog" aria-modal="true" aria-labelledby="reset-title"><div class="modal-card"><h2 id="reset-title">Clear all answers?</h2><p>This will erase responses and identity fields saved in this browser, and reset the timer. Download your answers first if you want to keep them.</p><div class="modal-actions"><button type="button" class="btn btn-secondary" id="reset-cancel">Keep my work</button><button type="button" class="btn btn-primary" id="reset-confirm">Erase and restart</button></div></div></div>
+<script>
+(()=>{
+  'use strict';
+  const KEY='hre4m-called-to-act-v1';
+  const PERIOD=25*60;
+  const stageEls=[...document.querySelectorAll('[data-stage]')];
+  const navEls=[...document.querySelectorAll('[data-jump]')];
+  const defaultState=()=>({stage:0,student:'',partner:'',period:'',a:{},revealed:{},left:PERIOD,running:false,stamp:Date.now()});
+  let state=defaultState();
+  let saveAvailable=true;
+  let toastHandle=null;
+  const $=s=>document.querySelector(s);
+  const $$=s=>[...document.querySelectorAll(s)];
+  const cleanText=v=>typeof v==='string'?v:'';
+  const safeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const get=(key)=>cleanText(state.a[key]).trim();
+  const words=s=>(String(s||'').trim().match(/\S+/g)||[]).length;
+  const trimmedAnswer=(key,min=10)=>get(key).length>=min;
+  const titleCase={c1:'The screenshot is not the whole story',c2:'You cannot carry it all for them',c3:'Who gets a voice?'};
+  const choices={};
+  $$('input[type="radio"]').forEach(i=>{
+    const m=i.name.match(/^(c[123])_(choice|role)$/);if(!m)return;
+    const key=m[1]+'_'+m[2];
+    (choices[key] ||= []).push(i.value);
+  });
+  const load=()=>{
+    try{const v=localStorage.getItem(KEY);if(v){const parsed=JSON.parse(v);if(parsed&&typeof parsed==='object')state={...defaultState(),...parsed,a:parsed.a||{},revealed:parsed.revealed||{}};}}
+    catch(e){saveAvailable=false;$('#save-indicator').textContent='Auto-save unavailable';}
+    state.stage=Number.isInteger(state.stage)?Math.max(0,Math.min(5,state.stage)):0;
+    state.left=Number.isFinite(state.left)?Math.max(0,Math.min(PERIOD,state.left)):PERIOD;
+    if(state.running){const delta=Math.max(0,Math.floor((Date.now()-(state.stamp||Date.now()))/1000));state.left=Math.max(0,state.left-delta);state.running=state.left>0;}
+    state.stamp=Date.now();
+  };
+  const save=()=>{
+    state.stamp=Date.now();
+    if(!saveAvailable)return;
+    try{localStorage.setItem(KEY,JSON.stringify(state));$('#save-indicator').textContent='Saved on this device';}
+    catch(e){saveAvailable=false;$('#save-indicator').textContent='Auto-save unavailable';}
+  };
+  function toast(message){
+    const el=$('#toast');el.textContent=message;el.classList.add('show');
+    clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove('show'),3400);
+  }
+  const isCaseComplete=(k)=>{
+    const c=get(k+'_choice');
+    return !!(c&&(c!=='custom'||trimmedAnswer(k+'_custom',12))&&get(k+'_role')&&trimmedAnswer(k+'_reason',18)&&trimmedAnswer(k+'_action',18)&&state.revealed[k]&&trimmedAnswer(k+'_after',15));
+  };
+  const isReflectionComplete=()=>!!(get('final_hardest')&&trimmedAnswer('final_why',15)&&trimmedAnswer('final_commitment',18));
+  const progressCount=()=>[isCaseComplete('c1'),isCaseComplete('c2'),isCaseComplete('c3'),isReflectionComplete()].filter(Boolean).length;
+  function refreshProgress(){
+    const p=progressCount()*25;
+    $('#progress-percent').textContent=p+'%';$('#progress-fill').style.width=p+'%';
+    $('#progress-track').setAttribute('aria-valuenow',p);
+    navEls.forEach(el=>{
+      const n=Number(el.dataset.jump);
+      const complete=(n===1&&isCaseComplete('c1'))||(n===2&&isCaseComplete('c2'))||(n===3&&isCaseComplete('c3'))||(n===4&&isReflectionComplete());
+      el.classList.toggle('complete',complete);
+      const badge=el.querySelector('.n');
+      if(n>=1&&n<=4)badge.textContent=complete?'✓':String(n).padStart(2,'0');
+    });
+    ['c1','c2','c3'].forEach(k=>{
+      const msg=$('[data-completion="'+k+'"]');
+      if(msg)msg.textContent=isCaseComplete(k)?'Case completed ✓':'Autosaved · complete all prompts for progress';
+    });
+    $('#reflection-status').textContent=isReflectionComplete()?'Reflection completed ✓':'Your reflection is saved as you type.';
+  }
+  function showStage(n,{scroll=true}={}){
+    const target=Math.max(0,Math.min(5,Number(n)||0));
+    state.stage=target;
+    stageEls.forEach(s=>{s.hidden=Number(s.dataset.stage)!==target;});
+    navEls.forEach(el=>{
+      if(Number(el.dataset.jump)===target)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');
+    });
+    refreshProgress();save();
+    if(scroll){window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}
+    document.title=(['Begin here','The screenshot','A friend in need','The leadership test','Reflection','Class discussion'][target])+' | Called to Act';
+  }
+  function hydrate(){
+    $$('[data-field]').forEach(el=>{el.value=cleanText(state[el.dataset.field]);});
+    $$('[data-answer]').forEach(el=>{el.value=get(el.dataset.answer);});
+    $$('input[type=radio]').forEach(el=>{const key=el.name;el.checked=get(key)===el.value;});
+    ['c1','c2','c3'].forEach(k=>{
+      const selected=get(k+'_choice');
+      const other=stageEls.find(s=>s.dataset.case===k).querySelector('.own-answer');
+      other.hidden=selected!=='custom';
+      setRevealed(k,!!state.revealed[k],false);
+    });
+    updateCounts();refreshProgress();showStage(state.stage,{scroll:false});renderClock();
+  }
+  function setRevealed(k,value,persist=true){
+    state.revealed[k]=value;
+    const panel=$('[data-panel="'+k+'"]');
+    const button=$('[data-reveal="'+k+'"]');
+    const after=$('[data-after="'+k+'"]');
+    panel.hidden=!value;after.hidden=!value;
+    button.setAttribute('aria-expanded',String(value));
+    button.textContent=value?'Hide Scripture lens ↑':'Open Scripture lens ↓';
+    if(persist){save();refreshProgress();}
+  }
+  function updateCounts(){
+    $$('.count').forEach(el=>{const key=el.dataset.count;el.textContent=words(get(key))+' words';});
+  }
+  function tickClock(){
+    if(state.running){const now=Date.now();const seconds=Math.max(0,Math.floor((now-state.stamp)/1000));if(seconds>0){state.left=Math.max(0,state.left-seconds);state.stamp+=seconds*1000;
+      if(state.left===0){state.running=false;toast('25 minutes reached. Continue finishing or begin your discussion.');}
+      save();}}
+    renderClock();
+  }
+  function renderClock(){
+    const time=Math.max(0,Math.floor(state.left));const min=Math.floor(time/60),sec=time%60;
+    $('#clock').textContent=String(min).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+    $('#timerbox').classList.toggle('low',time<=180);
+    $('#timer-toggle').textContent=state.running?'Ⅱ':'▶';
+    $('#timer-toggle').setAttribute('aria-label',state.running?'Pause timer':'Start timer');
+    $('#timer-toggle').setAttribute('title',state.running?'Pause timer':'Start timer');
+  }
+  function toggleTimer(){
+    if(state.left<=0){state.left=PERIOD;state.running=false;}
+    if(state.running){tickClock();state.running=false;}else{state.running=true;state.stamp=Date.now();}
+    save();renderClock();
+  }
+  function startTimerIfNeeded(){if(state.left===PERIOD&&!state.running){state.running=true;state.stamp=Date.now();save();renderClock();}}
+  function handleChoiceChange(el){
+    state.a[el.name]=el.value;
+    if(el.name.endsWith('_choice')){
+      const k=el.name.split('_')[0];
+      stageEls.find(s=>s.dataset.case===k).querySelector('.own-answer').hidden=el.value!=='custom';
+    }
+    save();refreshProgress();
+  }
+  function missingForStage(n){
+    const k='c'+n;if(![1,2,3].includes(n)||isCaseComplete(k))return '';
+    const pieces=[];
+    if(!get(k+'_choice'))pieces.push('choose a first move');
+    if(get(k+'_choice')==='custom'&&!trimmedAnswer(k+'_custom',12))pieces.push('describe your alternative');
+    if(!trimmedAnswer(k+'_reason',18))pieces.push('defend your choice');
+    if(!trimmedAnswer(k+'_action',18))pieces.push('write a concrete action');
+    if(!get(k+'_role'))pieces.push('identify a role');
+    if(!state.revealed[k])pieces.push('open the Scripture lens');
+    if(!trimmedAnswer(k+'_after',15))pieces.push('rethink your answer');
+    return pieces.slice(0,3).join(', ')+(pieces.length>3?'…':'');
+  }
+  function navigate(n){
+    if(state.stage===0&&Number(n)>0)startTimerIfNeeded();
+    if(state.stage>=1&&state.stage<=3&&Number(n)>state.stage){const missing=missingForStage(state.stage);if(missing)toast('Saved as a draft. You can return to '+missing+'.');}
+    if(state.stage===4&&Number(n)>4&&!isReflectionComplete())toast('Reflection saved as a draft. You can complete it before submitting.');
+    showStage(n);
+  }
+  const str=(key,placeholder='Not yet answered')=>get(key)||placeholder;
+  const exportPlainText=()=>{
+    const lines=['HRE4M1 · CALLED TO ACT','Jesus as Prophet, Priest, and King','',
+      'Student: '+(state.student.trim()||'(not entered)'),
+      'Partner: '+(state.partner.trim()||'(none)'),
+      'Period: '+(state.period||'(not selected)'),
+      'Completed stages: '+progressCount()+' / 4',
+      ''];
+    ['c1','c2','c3'].forEach((k,i)=>{
+      lines.push('='.repeat(60));
+      lines.push('CASE '+(i+1)+': '+titleCase[k]);
+      lines.push('='.repeat(60));
+      lines.push('FIRST MOVE: '+(get(k+'_choice')==='custom'?str(k+'_custom'):str(k+'_choice')));
+      lines.push('WHY THIS CHOICE / CONSEQUENCES:',str(k+'_reason'),'');
+      lines.push('PRACTICAL ACTIONS:',str(k+'_action'),'');
+      lines.push('CHRIST\'S ROLE IDENTIFIED: '+str(k+'_role'));
+      lines.push('SCRIPTURE-BASED RECONSIDERATION:',str(k+'_after'),'');
+    });
+    lines.push('='.repeat(60),'PERSONAL REFLECTION','='.repeat(60));
+    lines.push('MOST CHALLENGING ROLE: '+str('final_hardest'));
+    lines.push('WHY:',str('final_why'),'');
+    lines.push('MY SEVEN-DAY COMMITMENT:',str('final_commitment'),'');
+    lines.push('REFERENCES: Luke 4:18-19; Hebrews 9:11-14; Mark 10:42-45; Romans 12:1; CCC 783-786.');
+    lines.push('Answers are the student\'s own reflections. No automatic grade is assigned.');
+    return lines.join('\r\n');
+  };
+  const download=(filename,text,kind='text/plain;charset=utf-8')=>{
+    const blob=new Blob(['\ufeff'+text],{type:kind});
+    const u=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(u),2500);
+  };
+  const safeFilename=s=>String(s||'student').normalize('NFKD').replace(/[^a-zA-Z0-9 _-]/g,'').trim().replace(/\s+/g,'_').slice(0,38)||'student';
+  function downloadAnswers(){
+    download('HRE4M_Called_to_Act_'+safeFilename(state.student)+'.txt',exportPlainText());
+    toast('Answers downloaded. Submit the file as your teacher instructs.');
+  }
+  function printAnswers(){
+    const sections=['c1','c2','c3'].map((k,i)=>`<section><h2>Case ${i+1}: ${safeHtml(titleCase[k])}</h2><h3>First move</h3><p>${safeHtml(get(k+'_choice')==='custom'?str(k+'_custom'):str(k+'_choice'))}</p><h3>Reasoning and consequences</h3><p>${safeHtml(str(k+'_reason'))}</p><h3>Concrete actions</h3><p>${safeHtml(str(k+'_action'))}</p><h3>Role identified</h3><p>${safeHtml(str(k+'_role'))}</p><h3>After Scripture</h3><p>${safeHtml(str(k+'_after'))}</p></section>`).join('');
+    $('#print-sheet').innerHTML=`<h1>Called to Act</h1><div class="print-meta">HRE4M1 · Jesus as Prophet, Priest, and King<br>Student: ${safeHtml(state.student||'(not entered)')} ${state.partner?' · Partner: '+safeHtml(state.partner):''} ${state.period?' · '+safeHtml(state.period):''}</div>${sections}<section><h2>Closing reflection</h2><h3>Most difficult role</h3><p>${safeHtml(str('final_hardest'))}</p><h3>Why</h3><p>${safeHtml(str('final_why'))}</p><h3>Seven-day commitment</h3><p>${safeHtml(str('final_commitment'))}</p></section><p class="print-small">Course references: Luke 4:18–19; Hebrews 9:11–14; Mark 10:42–45; Romans 12:1; CCC 783–786.</p>`;
+    window.print();
+  }
+  function setup(){
+    load();hydrate();
+    $$('[data-next],[data-prev],[data-jump]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.next??b.dataset.prev??b.dataset.jump)));
+    $$('[data-field]').forEach(el=>el.addEventListener('input',()=>{state[el.dataset.field]=el.value;save();}));
+    $$('[data-answer]').forEach(el=>el.addEventListener('input',()=>{state.a[el.dataset.answer]=el.value;save();updateCounts();refreshProgress();}));
+    $$('input[type="radio"]').forEach(el=>el.addEventListener('change',()=>handleChoiceChange(el)));
+    $$('[data-reveal]').forEach(btn=>btn.addEventListener('click',()=>{
+      const k=btn.dataset.reveal;
+      if(!state.revealed[k]&&(!get(k+'_choice')||!trimmedAnswer(k+'_reason',18))){toast('First, choose a response and explain why. Then open the Scripture lens.');return;}
+      setRevealed(k,!state.revealed[k]);
+      if(state.revealed[k])$('[data-panel="'+k+'"]').scrollIntoView({behavior:'smooth',block:'nearest'});
+    }));
+    $('#timer-toggle').addEventListener('click',toggleTimer);
+    $('#quick-download').addEventListener('click',downloadAnswers);
+    $('#download-final').addEventListener('click',downloadAnswers);
+    $('#print-final').addEventListener('click',printAnswers);
+    $('#project-mode').addEventListener('click',()=>{
+      const section=$('[data-stage="5"]');
+      if(document.fullscreenElement){document.exitFullscreen?.();return;}
+      if(section.requestFullscreen)section.requestFullscreen().catch(()=>toast('Use F11 to show the discussion full-screen.'));
+      else toast('Use F11 to show the discussion full-screen.');
+    });
+    $('#reset-link').addEventListener('click',()=>$('#reset-modal').hidden=false);
+    $('#reset-cancel').addEventListener('click',()=>$('#reset-modal').hidden=true);
+    $('#reset-modal').addEventListener('click',e=>{if(e.target===$('#reset-modal'))$('#reset-modal').hidden=true;});
+    $('#reset-confirm').addEventListener('click',()=>{
+      state=defaultState();save();hydrate();$('#reset-modal').hidden=true;toast('Saved work cleared. Ready to begin again.');
+    });
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#reset-modal').hidden)$('#reset-modal').hidden=true;});
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)tickClock();});
+    window.addEventListener('beforeunload',()=>{tickClock();save();});
+    setInterval(tickClock,900);
+  }
+  setup();
+})();
+</script>
+</body>
+</html>
